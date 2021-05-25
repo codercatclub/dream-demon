@@ -1,47 +1,44 @@
 import * as THREE from "three";
-import { RenderC, PosC } from "../components";
+import { Object3DC, TransformC } from "../components";
 import { applyQuery } from "../ecs";
 
 export const Object3DSystem = {
   init: function (world) {
-    const queries = [PosC, RenderC];
+    this.entities = applyQuery(world.entities, [TransformC, Object3DC]);
+
     this.scene = world.scene;
-
-    this.entities = applyQuery(world.entities, queries);
-
     this.objects = new Map();
 
     this.entities.forEach((ent) => {
-      const p = ent.components.get(PosC.type);
-
+      const { position: p, scale: s } = ent.components.get(TransformC.type);
       const group = new THREE.Group();
-
-      const geometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
-      const material = new THREE.MeshNormalMaterial();
-
-      const mesh = new THREE.Mesh(geometry, material);
 
       group.name = ent.id;
 
-      group.add(mesh);
-
-      // Set initial positin
+      // Set initial transforms
       group.position.set(p.x, p.y, p.z);
+      group.scale.set(s.x, s.y, s.z);
 
-      // Assign group to component data
-      ent.components.set(RenderC.type, group);
+      // Assign group id to component data
+      // that we can retrive it later
+      ent.components.set(Object3DC.type, { id: group.id });
 
       this.scene.add(group);
+
+      this.objects.set(group.id, group);
     });
   },
 
   tick: function () {
-    this.entities.forEach((ent) => {
-      const p = ent.components.get(PosC.type);
-      const group = ent.components.get(RenderC.type);
+    this.entities.forEach((ent, i) => {
+      const { position: p } = ent.components.get(TransformC.type);
+      const obj = ent.components.get(Object3DC.type);
 
-      if (group) {
-        group.position.set(p.x, p.y, p.z);
+      const obj3D = this.objects.get(obj.id);
+
+      if (obj3D) {
+        // Update postion for each group from TransformC component
+        obj3D.position.set(p.x, p.y, p.z);
       }
     });
   },
@@ -49,5 +46,5 @@ export const Object3DSystem = {
   onEntityRemove: function (id) {
     const obj = this.scene.getObjectByName(id);
     this.scene.remove(obj);
-  }
+  },
 };

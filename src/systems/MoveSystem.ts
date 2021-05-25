@@ -1,23 +1,23 @@
-import { PosC, RenderC } from "../components";
+import { TransformC, Object3DC } from "../components";
 import { applyQuery } from "../ecs";
 
 export const MoveSystem = {
   type: "MoveSystem",
   init: function (world) {
-    const queries = [PosC];
+    const queries = [TransformC];
 
     this.entities = applyQuery(world.entities, queries);
 
     this.initPos = this.entities.map((ent) => ({
-      ...ent.components.get(PosC.type),
+      ...ent.components.get(TransformC.type).position
     }));
   },
 
   tick: function (time) {
     this.entities.forEach((ent, i) => {
-      let pos = ent.components.get(PosC.type);
+      let { position } = ent.components.get(TransformC.type);
 
-      pos.y = this.initPos[i].y + Math.cos(time + i) / 2;
+      position.y = this.initPos[i].y + Math.cos(time + i) / 2;
     });
   },
 };

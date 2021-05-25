@@ -14,6 +14,7 @@ export const RenderSystem = {
     this.camera = world.activeCamera;
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
+  
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setAnimationLoop(this.animation);
 
