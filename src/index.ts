@@ -8,10 +8,10 @@ import { OrbitControlsSystem } from "./systems/OrbitControlsSystem";
 import { GeometrySystem } from "./systems/GeometrySystem";
 import { World, newEntity } from "./ecs";
 
-const Person1 = newEntity(
-  [{ ...TransformC, data: { x: 0.3, y: 0, z: 0 } }, Object3DC],
-  "Cube"
-);
+// const Person1 = newEntity(
+//   [{ ...TransformC, data: { x: 0.3, y: 0, z: 0 } }, Object3DC],
+//   "Cube"
+// );
 // const Person2 = newEntity([{ ...TransformC, data: { x: 0, y: 0.5, z: 0 } }, Object3DC]);
 
 const world = new World();

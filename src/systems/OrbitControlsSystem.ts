@@ -1,15 +1,27 @@
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { System } from "../ecs";
+import { RenderSystem } from "./RenderSystem";
 
-export const OrbitControlsSystem = {
+interface OrbitControlSystem extends System {
+  controls: OrbitControls | null;
+};
+
+export const OrbitControlsSystem: OrbitControlSystem = {
+  type: "OrbitControlsSystem",
+  controls: null,
+  entities: [],
+
   init: function (world) {
-    const entities = world.systems.filter((s) => s.type === "RenderSystem");
+    const systems = world.systems.filter((s) => s.type === "RenderSystem") as RenderSystem[];
 
-    if (entities.length > 0) {
-      const { camera, renderer } = entities[0];
+    if (systems.length > 0) {
+      const { camera, renderer } = systems[0];
 
-      this.controls = new OrbitControls(camera, renderer.domElement);
+      if (camera && renderer) {
+        this.controls = new OrbitControls(camera, renderer.domElement);
+        this.controls.update();
+      }
 
-      this.controls.update();
     }
   },
 

@@ -1,17 +1,20 @@
 import { Object3DC, GeometryC } from "../components";
 import { applyQuery } from "../ecs";
 import * as THREE from "three";
+import { System } from "../ecs";
 
-export const GeometrySystem = {
+export const GeometrySystem: System = {
+  type: "GeometrySystem",
+  entities: [],
+
   init: function (world) {
     const queries = [Object3DC, GeometryC];
-    this.scene = world.scene;
 
     this.entities = applyQuery(world.entities, queries);
 
     this.entities.forEach((ent) => {
-      const obj = ent.components.get(Object3DC.type);
-      const geo = ent.components.get(GeometryC.type);
+      const obj = ent.components.get(Object3DC.type) as typeof Object3DC.data;
+      const geo = ent.components.get(GeometryC.type) as typeof GeometryC.data;
 
       let geometry = null;
 
@@ -29,9 +32,9 @@ export const GeometrySystem = {
           const material = new THREE.MeshNormalMaterial();
           const mesh = new THREE.Mesh(geometry, material);
 
-          const obj3D = world.scene.getObjectById(obj.id);
- 
-          obj3D.add(mesh);
+          const obj3D = world.scene?.getObjectById(parseFloat(obj.id));
+
+          obj3D?.add(mesh);
         }
       }
     });

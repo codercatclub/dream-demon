@@ -1,14 +1,32 @@
-const queue = {};
-const fired = [];
+type Event = string;
 
-const Event = {
+interface Queue {
+  [key: string]: (() => void)[];
+}
+
+interface Fired {
+  [key: string]: boolean;
+}
+
+interface EventObject {
+  fire(event: Event): void;
+  on(event: Event, callback: () => void): void;
+}
+
+const queue: Queue = {};
+const fired: Fired = {};
+
+const Event: EventObject = {
   fire: (event) => {
     if (typeof queue[event] === "undefined") {
       return;
     }
 
     while (queue[event].length) {
-      queue[event].shift()();
+      const callback = queue[event].shift();
+      if (callback) {
+        callback();
+      }
     }
 
     fired[event] = true;
@@ -24,8 +42,8 @@ const Event = {
     }
 
     queue[event].push(callback);
-  }
-}
+  },
+};
 
 Object.freeze(Event);
 

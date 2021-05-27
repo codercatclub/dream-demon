@@ -29,7 +29,7 @@ export const NameC = {
 export const Object3DC = {
   type: "Object3DC",
   data: {
-    id: null,
+    id: "",
   },
 };
 

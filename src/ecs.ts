@@ -1,10 +1,39 @@
 import * as THREE from "three";
 
+export interface Component {
+  type: string;
+  data: unknown;
+}
+
+export interface Entity {
+  id: number;
+  name: string;
+  components: Map<string, unknown>;
+}
+
+export interface System {
+  type: string;
+  entities: Entity[];
+
+  init(world: World): void;
+  tick?(time: number, delta: number): void;
+  onFrameStart?(time: number, delta: number): void;
+  onFrameEnd?(time: number, delta: number): void;
+  onEntityRemove?(id: number): void;
+}
+
+export interface WorldLike {
+  init(): void;
+  addEntity(entity: Entity): this;
+  removeEntity(id: number): this;
+  registerSystem(system: System): this;
+}
+
 const generateID = () =>
   Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));
 
-export const newEntity = (components, name = "") => {
-  const cmp = new Map();
+export function newEntity (components: Component[], name = ""): Entity {
+  const cmp: Map<string, unknown> = new Map();
   const id = generateID();
 
   components.forEach((c) => cmp.set(c.type, c.data));
@@ -14,8 +43,8 @@ export const newEntity = (components, name = "") => {
   return ent;
 };
 
-export const applyQuery = (entities, queries) => {
-  const filtered = [];
+export const applyQuery = (entities: Entity[], queries: Component[]): Entity[] => {
+  const filtered: Entity[] = [];
 
   for (let i = 0; i < entities.length; i++) {
     let pass = true;
@@ -38,35 +67,37 @@ export const applyQuery = (entities, queries) => {
   return filtered;
 };
 
-export class World {
-  private entities;
-  private systems;
-  scene = null;
-  activeCamera = null;
+export class World implements WorldLike {
+  entities: Entity[];
+  systems: System[]; 
+  scene: THREE.Scene | null;
+  activeCamera: THREE.PerspectiveCamera | null;
 
   constructor() {
     this.entities = [];
     this.systems = [];
     this.scene = new THREE.Scene();
+    this.activeCamera = null;
   }
-
-  addEntity(entity) {
+  
+  init() {
+    this.systems.forEach((s) => s.init(this));
+  }
+  
+  addEntity(entity: Entity) {
     this.entities.push(entity);
     return this;
   }
 
-  removeEntity(id) {
+  removeEntity(id: number) {
     this.entities = this.entities.filter((ent) => ent.id !== id);
     // Notify all of the systems
     this.systems.forEach((s) => s.onEntityRemove ? s.onEntityRemove(id) : null);
-  }
-
-  registerSystem(system) {
-    this.systems.push(system);
     return this;
   }
 
-  init() {
-    this.systems.forEach((s) => s.init(this));
+  registerSystem(system: System) {
+    this.systems.push(system);
+    return this;
   }
 }
