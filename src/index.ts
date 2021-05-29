@@ -1,4 +1,3 @@
-import { CamC, TransformC, Object3DC, GeometryC } from "./components";
 import { Object3DSystem } from "./systems/Object3DSystem";
 import { MoveSystem } from "./systems/MoveSystem";
 import { StatsSystem } from "./systems/StatsSystem";
@@ -6,60 +5,96 @@ import { RenderSystem } from "./systems/RenderSystem";
 import { CameraSystem } from "./systems/CameraSystem";
 import { OrbitControlsSystem } from "./systems/OrbitControlsSystem";
 import { GeometrySystem } from "./systems/GeometrySystem";
-import { World, newEntity } from "./ecs";
+import { AssetSystem } from "./systems/AssetSystem";
+import { LightSystem } from "./systems/LightSystem";
+import { newEntity, World, extend } from "./ecs";
+import { Asset, Camera, StandardPrimitive } from "./achetypes";
+import { Vector3 } from "three";
+import {
+  MovingC,
+  Object3DC,
+  PointLightC,
+  TransformC,
+  MaterialC,
+} from "./components";
+import { MaterialSystem } from "./systems/MaterialSystem";
+import { AssetManager } from "./assetManager";
 
-// const Person1 = newEntity(
-//   [{ ...TransformC, data: { x: 0.3, y: 0, z: 0 } }, Object3DC],
-//   "Cube"
-// );
-// const Person2 = newEntity([{ ...TransformC, data: { x: 0, y: 0.5, z: 0 } }, Object3DC]);
+(async () => {
+  const assetManager = new AssetManager();
 
-const world = new World();
+  assetManager
+    .addAsset("assets/models/chair.glb", "chair")
+    .addAsset("assets/models/branch.glb", "branch");
 
-const idToRemove = [];
+  // Wait untill all assets are loaded
+  await assetManager.load();
 
-for (let i = 0; i < 100; i++) {
-  const ent = newEntity([
-    {
-      ...TransformC,
-      data: {
-        ...TransformC.data,
-        position: { x: i / 10 - 1.3, y: i / 10, z: 0 },
-        scale: { x: 1, y: i, z: 1 },
-      },
-    },
-    { ...GeometryC, data: { type: i % 2 === 0 ? "Box" : "Sphere" } },
-    Object3DC,
-  ]);
-  if (i % 2 === 0) {
-    idToRemove.push(ent.id);
+  const world = new World(assetManager.assets);
+
+  const idToRemove: number[] = [];
+
+  for (let i = 0; i < 50; i++) {
+    const type = i % 2 === 0 ? "Box" : "Sphere";
+
+    const prim = StandardPrimitive(
+      type,
+      new Vector3(Math.cos(i / 10 - 1.3), i / 10, Math.sin(i / 5))
+    );
+    const movingPrim = extend(prim, [
+      { ...MovingC, data: { speed: 2.0, amplitude: 2.0 } },
+    ]);
+
+    // Mark every second object for deletion
+    if (i % 2 === 0) {
+      idToRemove.push(movingPrim.id);
+    }
+
+    world.addEntity(movingPrim);
   }
-  world.addEntity(ent);
-}
 
-// // Test remove
-// setTimeout(() => {
-//   idToRemove.forEach(id => {
-//     world.removeEntity(id)
-//   })
-// }, 3000)
+  // // Test remove
+  // setTimeout(() => {
+  //   idToRemove.forEach(id => {
+  //     world.removeEntity(id)
+  //   })
+  // }, 3000)
 
-const mainCam = newEntity(
-  [{ ...TransformC, data: { ...TransformC.data, position: { x: 0, y: 0, z: 3 } } }, CamC],
-  "Camera"
-);
+  const chair = extend(Asset("assets/models/chair.glb"), [MaterialC]);
 
-// const chair = newEntity([GLTFModelC, TransformC, Object3DC])
+  [
+    Camera(new Vector3(0, 0, 4)),
+    Asset("assets/models/branch.glb"),
+    chair,
+  ].forEach((ent) => {
+    world.addEntity(ent);
+  });
 
-world.addEntity(mainCam);
+  const light1 = newEntity([
+    { ...PointLightC, data: { ...PointLightC.data, color: 0xff00ff } },
+    Object3DC,
+    TransformC,
+    { ...MovingC, data: { speed: 0.5, amplitude: 3.0 } },
+  ]);
 
-world
-  .registerSystem(CameraSystem)
-  .registerSystem(RenderSystem)
-  .registerSystem(Object3DSystem)
-  .registerSystem(GeometrySystem)
-  .registerSystem(MoveSystem)
-  .registerSystem(StatsSystem)
-  .registerSystem(OrbitControlsSystem);
+  world
+    .addEntity(Asset("assets/models/branch.glb", new Vector3(1, 0, 0)))
+    .addEntity(Asset("assets/models/branch.glb", new Vector3(0, 1, 0)))
+    .addEntity(light1);
 
-world.init();
+  world
+    .registerSystem(CameraSystem)
+    .registerSystem(RenderSystem)
+    .registerSystem(Object3DSystem)
+    .registerSystem(GeometrySystem)
+    .registerSystem(MoveSystem)
+    .registerSystem(AssetSystem)
+    .registerSystem(StatsSystem)
+    .registerSystem(LightSystem)
+    .registerSystem(OrbitControlsSystem)
+    .registerSystem(MaterialSystem);
+
+  console.log("[D] world: ", world);
+
+  world.init();
+})();

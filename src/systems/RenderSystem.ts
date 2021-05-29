@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { System } from "../ecs";
 
 export interface RenderSystem extends System {
-  camera: THREE.Camera | null;
+  camera: THREE.PerspectiveCamera | null;
   scene: THREE.Scene | null;
   renderer: THREE.WebGLRenderer | null;
   clock: THREE.Clock | null;
@@ -11,6 +11,7 @@ export interface RenderSystem extends System {
   onFrameStart(time: number, delta: number): void;
   onFrameEnd(time: number, delta: number): void;
   tick(time: number, delta: number): void;
+  onWindowResize(): void;
 }
 
 export const RenderSystem: RenderSystem = {
@@ -37,13 +38,15 @@ export const RenderSystem: RenderSystem = {
     this.renderer.setAnimationLoop(this.animation);
 
     document.body.appendChild(this.renderer.domElement);
+
+    window.addEventListener("resize", this.onWindowResize.bind(this), false);
   },
 
   animation: function () {
     if (!this.clock || !this.scene || !this.camera || !this.renderer) return;
 
-    var delta = this.clock.getDelta();
-    var elapsedTime = this.clock.elapsedTime;
+    const delta = this.clock.getDelta();
+    const elapsedTime = this.clock.elapsedTime;
 
     this.onFrameStart(elapsedTime, delta);
 
@@ -54,8 +57,12 @@ export const RenderSystem: RenderSystem = {
     this.onFrameEnd(elapsedTime, delta);
   },
 
-  tick: function (time, delta) {
-    this.systems.forEach((s) => (s.tick ? s.tick(time, delta) : null));
+  onWindowResize: function () {    
+    if (this.camera && this.renderer) {
+      this.camera.aspect = window.innerWidth / window.innerHeight;
+      this.camera.updateProjectionMatrix();
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+    }
   },
 
   onFrameStart: function (time, delta) {
@@ -68,5 +75,9 @@ export const RenderSystem: RenderSystem = {
     this.systems.forEach((s) =>
       s.onFrameEnd ? s.onFrameEnd(time, delta) : null
     );
+  },
+
+  tick: function (time, delta) {
+    this.systems.forEach((s) => (s.tick ? s.tick(time, delta) : null));
   },
 };

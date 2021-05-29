@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import { Object3D } from "three";
+import { Asset } from "./assetManager";
 
 export interface Component {
   type: string;
@@ -32,18 +34,21 @@ export interface WorldLike {
 const generateID = () =>
   Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));
 
-export function newEntity (components: Component[], name = ""): Entity {
-  const cmp: Map<string, unknown> = new Map();
-  const id = generateID();
+export const newEntity = (components: Component[], name = ""): Entity =>
+  extend({ name, id: generateID(), components: new Map() }, components);
+
+export const extend = (entity: Entity, components: Component[]): Entity => {
+  const cmp = new Map(entity.components);
 
   components.forEach((c) => cmp.set(c.type, c.data));
 
-  const ent = { name, id, components: cmp };
-
-  return ent;
+  return { ...entity, components: cmp };
 };
 
-export const applyQuery = (entities: Entity[], queries: Component[]): Entity[] => {
+export const applyQuery = (
+  entities: Entity[],
+  queries: Component[]
+): Entity[] => {
   const filtered: Entity[] = [];
 
   for (let i = 0; i < entities.length; i++) {
@@ -67,23 +72,38 @@ export const applyQuery = (entities: Entity[], queries: Component[]): Entity[] =
   return filtered;
 };
 
+type AssetMap = Map<string, Object3D>;
+
 export class World implements WorldLike {
+  private _assets: AssetMap;
   entities: Entity[];
-  systems: System[]; 
+  systems: System[];
   scene: THREE.Scene | null;
   activeCamera: THREE.PerspectiveCamera | null;
 
-  constructor() {
+  constructor(assets: Asset[]) {
+    this._assets = new Map();
+
+    assets.forEach(a => {
+      if (a.obj) {
+        this._assets.set(a.src, a.obj);
+      }
+    })
+
     this.entities = [];
     this.systems = [];
     this.scene = new THREE.Scene();
     this.activeCamera = null;
   }
-  
+
+  public get assets(): AssetMap {
+    return this._assets;
+  }
+
   init() {
     this.systems.forEach((s) => s.init(this));
   }
-  
+
   addEntity(entity: Entity) {
     this.entities.push(entity);
     return this;
@@ -92,7 +112,9 @@ export class World implements WorldLike {
   removeEntity(id: number) {
     this.entities = this.entities.filter((ent) => ent.id !== id);
     // Notify all of the systems
-    this.systems.forEach((s) => s.onEntityRemove ? s.onEntityRemove(id) : null);
+    this.systems.forEach((s) =>
+      s.onEntityRemove ? s.onEntityRemove(id) : null
+    );
     return this;
   }
 

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "target": "ES6",
     "noEmit": true,
     "esModuleInterop": true,
     // Ensure that Babel can safely transpile files in the TypeScript project

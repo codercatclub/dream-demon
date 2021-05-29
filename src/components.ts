@@ -1,23 +1,21 @@
+import * as THREE from "three";
+
 export const TransformC = {
   type: "TransformC",
   data: {
-    position: {
-      x: 0,
-      y: 0,
-      z: 0,
-    },
-    rotation: {
-      x: 0,
-      y: 0,
-      z: 0,
-    },
-    scale: {
-      x: 1,
-      y: 1,
-      z: 1,
-    }
+    position: new THREE.Vector3(),
+    rotation: new THREE.Vector3(),
+    scale: new THREE.Vector3(1, 1, 1)
   },
 };
+
+export const MovingC = {
+  type: "MovingC",
+  data: {
+    speed: 1.0,
+    amplitude: 1.0
+  }
+}
 
 export const NameC = {
   type: "NameC",
@@ -53,6 +51,20 @@ export const GeometryC = {
 export const GLTFModelC = {
   type: "GLTFModelC",
   data: {
-    uri: "assets/moder.chair.glb",
+    src: "assets/models/chair.glb",
   },
+};
+
+export const PointLightC = {
+  type: "PointLightC",
+  data: {
+    color: 0xffffff,
+    intensity: 1.0,
+    distance: 100,
+  },
+};
+
+export const MaterialC = {
+  type: "MaterialC",
+  data: null,
 };

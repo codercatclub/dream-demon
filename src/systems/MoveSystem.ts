@@ -1,25 +1,34 @@
 import { System } from "../ecs";
-import { TransformC } from "../components";
+import { TransformC, MovingC } from "../components";
 import { applyQuery } from "../ecs";
+import { Vector3 } from "three";
 
 interface MoveSystem extends System {
-  initPos: typeof TransformC.data.position[];
+  initValues: {
+    position: Vector3,
+    speed: number,
+    amplitude: number
+  }[];
 }
 
 export const MoveSystem: MoveSystem = {
   type: "MoveSystem",
-  initPos: [],
+  initValues: [],
   entities: [],
 
   init: function (world) {
-    this.entities = applyQuery(world.entities, [TransformC]);
+    this.entities = applyQuery(world.entities, [TransformC, MovingC]);
 
-    this.initPos = this.entities.map((ent) => {
+    this.initValues = this.entities.map((ent) => {
       const { position } = ent.components.get(
         TransformC.type
       ) as typeof TransformC.data;
+      const { speed, amplitude } = ent.components.get(
+        MovingC.type
+      ) as typeof MovingC.data;
+
       return {
-        ...position,
+        position: position.clone(), speed, amplitude,
       };
     });
   },
@@ -29,8 +38,9 @@ export const MoveSystem: MoveSystem = {
       let { position } = ent.components.get(
         TransformC.type
       ) as typeof TransformC.data;
+      const iv =  this.initValues[i];
 
-      position.y = this.initPos[i].y + Math.cos(time + i) / 2;
+      position.y = iv.position.y + Math.cos(time + i * iv.speed) * iv.amplitude;
     });
   },
 };
