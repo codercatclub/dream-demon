@@ -25,7 +25,8 @@ import { AssetManager } from "./assetManager";
 
   assetManager
     .addAsset("assets/models/chair.glb", "chair")
-    .addAsset("assets/models/branch.glb", "branch");
+    .addAsset("assets/models/branch.glb", "branch")
+    .addAsset("assets/models/ground_patch.fbx", "ground_patch");
 
   // Wait untill all assets are loaded
   await assetManager.load();
@@ -53,7 +54,7 @@ import { AssetManager } from "./assetManager";
     world.addEntity(movingPrim);
   }
 
-  // // Test remove
+  // // Test entity remove
   // setTimeout(() => {
   //   idToRemove.forEach(id => {
   //     world.removeEntity(id)
@@ -80,7 +81,22 @@ import { AssetManager } from "./assetManager";
   world
     .addEntity(Asset("assets/models/branch.glb", new Vector3(1, 0, 0)))
     .addEntity(Asset("assets/models/branch.glb", new Vector3(0, 1, 0)))
+    .addEntity(Asset("assets/models/ground_patch.fbx", new Vector3(0, 0, 0)))
     .addEntity(light1);
+
+  // Test entity add
+  setTimeout(() => {
+    for(let i = 0; i < 10; i++) {
+      world.addEntity(
+        extend(Asset(
+          "assets/models/branch.glb",
+          new Vector3(i, 0, 0),
+          new Vector3(0, i * 45, 0),
+          new Vector3(1, 1, 1)
+        ), [MaterialC, MovingC])
+      );
+    }
+  }, 3000);
 
   world
     .registerSystem(CameraSystem)
@@ -95,6 +111,17 @@ import { AssetManager } from "./assetManager";
     .registerSystem(MaterialSystem);
 
   console.log("[D] world: ", world);
+
+  // // Serialization test
+  // world.entities.forEach((ent) => {
+  //   console.log(
+  //     JSON.stringify(
+  //       { ...ent, components: Array.from(ent.components.entries()) },
+  //       null,
+  //       2
+  //     )
+  //   );
+  // });
 
   world.init();
 })();

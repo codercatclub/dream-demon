@@ -1,5 +1,5 @@
 import { LoadingManager, Object3D } from "three";
-import { loadGLTF } from "./loaders";
+import { Loader, loaders } from "./loaders";
 
 export interface Asset {
   tag: string;
@@ -43,7 +43,7 @@ export class AssetManager {
     };
 
     this._manager.onError = function (url) {
-      console.log("There was an error loading " + url);
+      console.log("[-] There was an error loading " + url);
     };
   }
 
@@ -57,12 +57,43 @@ export class AssetManager {
   }
 
   public async load() {
-    const promises = this._assets.map((asset) => loadGLTF(asset.src));
+    const promises = this._assets.map((asset) => {
+      const extension = asset.src.split(".").pop();
+      
+      if (!extension) {
+        console.log(
+          "[-] Failed to extract extension form asset source path.",
+          asset.src
+        );
+        return;
+      }
+
+      let loader: Loader | null = null;
+
+      switch (extension) {
+        case "glb":
+          loader = loaders["glb"];
+          break;
+
+        case "fbx":
+          loader = loaders["fbx"];
+          break;
+      }
+
+      if (!loader) {
+        console.log('[-] Unknown loader for asset type.', asset);
+        return;
+      }
+
+      return loader(asset.src);
+    });
 
     const models = await Promise.all(promises);
 
     models.forEach((m, i) => {
-      this._assets[i].obj = m.scene;
+      if (m) {
+        this._assets[i].obj = m;
+      }
     });
   }
 }

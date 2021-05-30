@@ -15,12 +15,14 @@ export interface Entity {
 
 export interface System {
   type: string;
+  queries: Component[];
   entities: Entity[];
 
   init(world: World): void;
   tick?(time: number, delta: number): void;
   onFrameStart?(time: number, delta: number): void;
   onFrameEnd?(time: number, delta: number): void;
+  onEntityAdd?(ent: Entity): void;
   onEntityRemove?(id: number): void;
 }
 
@@ -106,6 +108,11 @@ export class World implements WorldLike {
 
   addEntity(entity: Entity) {
     this.entities.push(entity);
+
+    this.systems.forEach((s) =>
+      s.onEntityAdd ? s.onEntityAdd(entity) : null
+    );
+  
     return this;
   }
 
@@ -115,6 +122,7 @@ export class World implements WorldLike {
     this.systems.forEach((s) =>
       s.onEntityRemove ? s.onEntityRemove(id) : null
     );
+  
     return this;
   }
 

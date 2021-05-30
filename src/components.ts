@@ -37,7 +37,7 @@ export const CamC = {
     fov: 70,
     aspect: window.innerWidth / window.innerHeight,
     near: 0.01,
-    far: 10,
+    far: 1000,
   },
 };
 

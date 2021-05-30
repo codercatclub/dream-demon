@@ -1,36 +1,45 @@
-import { System } from "../ecs";
+import { System, World } from "../ecs";
 import { TransformC, GLTFModelC, Object3DC } from "../components";
-import { applyQuery } from "../ecs";
+import { applyQuery, Entity } from "../ecs";
 
-export const AssetSystem: System = {
+interface AssetSystem extends System {
+  world: World | null;
+  processEntity(ent: Entity): void;
+}
+
+export const AssetSystem: AssetSystem = {
   type: "AssetSystem",
+  world: null,
+  queries: [TransformC, GLTFModelC, Object3DC],
   entities: [],
 
   init: function (world) {
-    this.entities = applyQuery(world.entities, [
-      TransformC,
-      GLTFModelC,
-      Object3DC,
-    ]);
+    this.world = world;
+    this.entities = applyQuery(world.entities, this.queries);
+    this.entities.forEach(this.processEntity.bind(this));
+  },
 
-    this.entities.forEach((ent) => {
-      const { src } = ent.components.get(
-        GLTFModelC.type
-      ) as typeof GLTFModelC.data;
-      const { id } = ent.components.get(
-        Object3DC.type
-      ) as typeof Object3DC.data;
+  processEntity: function (ent: Entity) {
+    const { src } = ent.components.get(
+      GLTFModelC.type
+    ) as typeof GLTFModelC.data;
+    const { id } = ent.components.get(Object3DC.type) as typeof Object3DC.data;
 
-      const parent = world.scene?.getObjectById(parseFloat(id));
+    if (this.world) {
+      const parent = this.world.scene?.getObjectById(parseFloat(id));
 
-      const asset = world.assets.get(src);
-
+      const asset = this.world.assets.get(src);
       if (!asset) {
         console.log(`[-] ${src} is not found in preloaded assets`);
         return;
       }
 
-      parent?.add(asset);
-    });
+      parent?.add(asset.clone());
+    }
+  },
+
+  onEntityAdd: function (ent) {
+    const entities = applyQuery([ent], this.queries);
+    entities.forEach(this.processEntity.bind(this));
   },
 };

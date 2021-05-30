@@ -14,40 +14,46 @@ const getObject3d = (ent: Entity, world: World): Object3D | undefined => {
 };
 
 interface MaterialSystem extends System {
-  initPos: typeof TransformC.data.position[];
+  world: World;
+  processEntity: (ent: Entity) => void;
 }
 
 export const MaterialSystem: MaterialSystem = {
   type: "MaterialSystem",
-  initPos: [],
+  queries: [TransformC, Object3DC, MaterialC],
   entities: [],
 
   init: function (world) {
-    this.entities = applyQuery(world.entities, [
-      TransformC,
-      Object3DC,
-      MaterialC,
-    ]);
+    this.world = world;
+    this.entities = applyQuery(world.entities, this.queries);
+    this.entities.forEach(this.processEntity.bind(this));
+  },
 
-    this.entities.forEach((ent) => {
-      const parent = getObject3d(ent, world);
+  processEntity: function(ent) {
+    if (!this.world) return;
+  
+    const parent = getObject3d(ent, this.world);
 
-      const uniforms = {
-        colorB: { type: "vec3", value: new Color(0xacb6e5) },
-        colorA: { type: "vec3", value: new Color(0x74ebd5) },
-      };
+    const uniforms = {
+      colorB: { type: "vec3", value: new Color(0xacb6e5) },
+      colorA: { type: "vec3", value: new Color(0x74ebd5) },
+    };
 
-      const material = new ShaderMaterial({
-        uniforms: uniforms,
-        vertexShader: CCBasicVert,
-        fragmentShader: CCBasicFrag,
-      });
+    const material = new ShaderMaterial({
+      uniforms: uniforms,
+      vertexShader: CCBasicVert,
+      fragmentShader: CCBasicFrag,
+    });
 
-      parent?.traverse((obj) => {
-        if (obj.type === "Mesh") {
-          (obj as Mesh).material = material;
-        }
-      });
+    parent?.traverse((obj) => {
+      if (obj.type === "Mesh") {
+        (obj as Mesh).material = material;
+      }
     });
   },
+
+  onEntityAdd: function (ent) {
+    const entities = applyQuery([ent], this.queries);
+    entities.forEach(this.processEntity.bind(this));
+  }
 };
