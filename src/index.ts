@@ -28,6 +28,21 @@ import { AssetManager } from "./assetManager";
     .addAsset("assets/models/branch.glb", "branch")
     .addAsset("assets/models/ground_patch.fbx", "ground_patch");
 
+  assetManager.onItemLoadStart = (idx, assets) => {
+    const event = new CustomEvent("on-item-load-start", { detail: { idx, assets } });
+    window.dispatchEvent(event);
+  };
+
+  assetManager.onItemLoadEnd = (idx, assets) => {
+    const event = new CustomEvent("on-item-load-end", { detail: { idx, assets } });
+    window.dispatchEvent(event);
+  };
+
+  assetManager.onLoadEnd = () => {
+    const event = new CustomEvent("on-load-end");
+    window.dispatchEvent(event);
+  };
+
   // Wait untill all assets are loaded
   await assetManager.load();
 
@@ -86,14 +101,17 @@ import { AssetManager } from "./assetManager";
 
   // Test entity add
   setTimeout(() => {
-    for(let i = 0; i < 10; i++) {
+    for (let i = 0; i < 10; i++) {
       world.addEntity(
-        extend(Asset(
-          "assets/models/branch.glb",
-          new Vector3(i, 0, 0),
-          new Vector3(0, i * 45, 0),
-          new Vector3(1, 1, 1)
-        ), [MaterialC, MovingC])
+        extend(
+          Asset(
+            "assets/models/branch.glb",
+            new Vector3(i, 0, 0),
+            new Vector3(0, i * 45, 0),
+            new Vector3(1, 1, 1)
+          ),
+          [MaterialC, MovingC]
+        )
       );
     }
   }, 3000);

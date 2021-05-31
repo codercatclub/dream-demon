@@ -1,4 +1,4 @@
-import { DefaultLoadingManager, Object3D } from "three";
+import { Object3D } from "three";
 import { getLoader, LoaderResult } from "./loaders";
 
 const getFileExtension = (path: string) => path.split(".").pop();
@@ -11,35 +11,6 @@ export interface Asset {
 
 export class AssetManager {
   private _assets: Asset[] = [];
-  private _manager;
-
-  constructor() {
-    this._manager = DefaultLoadingManager;
-
-    // this._manager.onStart = function (url, itemsLoaded, itemsTotal) {
-    //   console.log("[D] Loading started. Total items:",itemsTotal);
-    // };
-
-    // this._manager.onProgress = function (url, itemsLoaded, itemsTotal) {
-    //   console.log("[D] Loading progress", url, itemsLoaded, itemsTotal);
-    // };
-
-    // this._manager.itemStart = function (url) {
-    //   console.log("[D] Start loading", url);
-    // };
-
-    // this._manager.itemEnd = function (url) {
-    //   console.log("[D] Ended loading", url);
-    // };
-
-    // this._manager.onLoad = function () {
-    //   console.log("[D] Loading complete!");
-    // };
-
-    // this._manager.onError = function (url) {
-    //   console.log("[-] There was an error loading " + url);
-    // };
-  }
 
   public get assets() {
     return this._assets;
@@ -48,22 +19,6 @@ export class AssetManager {
   public addAsset(src: string, tag: string) {
     this._assets.push({ src, tag, obj: null });
     return this;
-  }
-
-  public onLoadStart() {
-    console.log("[D] Starting loading assets!");
-  }
-
-  public onItemLoadStart(idx: number, assets: Asset[]) {
-    console.log("[D] Start: ", idx, assets[idx].src);
-  }
-
-  public onItemLoadFinish(idx: number, assets: Asset[]) {
-    console.log("[D] Finish: ", idx, assets[idx].src);
-  }
-
-  public onLoadFinish() {
-    console.log("[D] Finish loading all assets!");
   }
 
   public async load() {
@@ -94,7 +49,7 @@ export class AssetManager {
 
     for (const p of promises) {
       p.then(() => {
-        this.onItemLoadFinish(idx, this._assets);
+        this.onItemLoadEnd(idx, this._assets);
         idx++;
       });
     }
@@ -107,7 +62,11 @@ export class AssetManager {
       }
     });
 
-    this.onLoadFinish();
+    this.onLoadEnd();
   }
-}
 
+  public onLoadStart() {}
+  public onItemLoadStart(_idx: number, _assets: Asset[]) {}
+  public onItemLoadEnd(_idx: number, _assets: Asset[]) {}
+  public onLoadEnd() {}
+}
