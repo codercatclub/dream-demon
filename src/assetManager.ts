@@ -1,5 +1,7 @@
-import { LoadingManager, Object3D } from "three";
-import { Loader, loaders } from "./loaders";
+import { DefaultLoadingManager, Object3D } from "three";
+import { getLoader, LoaderResult } from "./loaders";
+
+const getFileExtension = (path: string) => path.split(".").pop();
 
 export interface Asset {
   tag: string;
@@ -12,39 +14,31 @@ export class AssetManager {
   private _manager;
 
   constructor() {
-    this._manager = new LoadingManager();
+    this._manager = DefaultLoadingManager;
 
-    this._manager.onStart = function (url, itemsLoaded, itemsTotal) {
-      console.log(
-        "Started loading file: " +
-          url +
-          ".\nLoaded " +
-          itemsLoaded +
-          " of " +
-          itemsTotal +
-          " files."
-      );
-    };
+    // this._manager.onStart = function (url, itemsLoaded, itemsTotal) {
+    //   console.log("[D] Loading started. Total items:",itemsTotal);
+    // };
 
-    this._manager.onLoad = function () {
-      console.log("Loading complete!");
-    };
+    // this._manager.onProgress = function (url, itemsLoaded, itemsTotal) {
+    //   console.log("[D] Loading progress", url, itemsLoaded, itemsTotal);
+    // };
 
-    this._manager.onProgress = function (url, itemsLoaded, itemsTotal) {
-      console.log(
-        "Loading file: " +
-          url +
-          ".\nLoaded " +
-          itemsLoaded +
-          " of " +
-          itemsTotal +
-          " files."
-      );
-    };
+    // this._manager.itemStart = function (url) {
+    //   console.log("[D] Start loading", url);
+    // };
 
-    this._manager.onError = function (url) {
-      console.log("[-] There was an error loading " + url);
-    };
+    // this._manager.itemEnd = function (url) {
+    //   console.log("[D] Ended loading", url);
+    // };
+
+    // this._manager.onLoad = function () {
+    //   console.log("[D] Loading complete!");
+    // };
+
+    // this._manager.onError = function (url) {
+    //   console.log("[-] There was an error loading " + url);
+    // };
   }
 
   public get assets() {
@@ -56,37 +50,54 @@ export class AssetManager {
     return this;
   }
 
+  public onLoadStart() {
+    console.log("[D] Starting loading assets!");
+  }
+
+  public onItemLoadStart(idx: number, assets: Asset[]) {
+    console.log("[D] Start: ", idx, assets[idx].src);
+  }
+
+  public onItemLoadFinish(idx: number, assets: Asset[]) {
+    console.log("[D] Finish: ", idx, assets[idx].src);
+  }
+
+  public onLoadFinish() {
+    console.log("[D] Finish loading all assets!");
+  }
+
   public async load() {
-    const promises = this._assets.map((asset) => {
-      const extension = asset.src.split(".").pop();
-      
-      if (!extension) {
+    this.onLoadStart();
+
+    const promises = this._assets.reduce((result, asset, idx) => {
+      const ext = getFileExtension(asset.src);
+
+      if (!ext) {
         console.log(
           "[-] Failed to extract extension form asset source path.",
           asset.src
         );
-        return;
+        return result;
       }
 
-      let loader: Loader | null = null;
+      const loader = getLoader(ext);
 
-      switch (extension) {
-        case "glb":
-          loader = loaders["glb"];
-          break;
-
-        case "fbx":
-          loader = loaders["fbx"];
-          break;
+      if (loader) {
+        this.onItemLoadStart(idx, this._assets);
+        return result.concat([loader(asset.src)]);
       }
 
-      if (!loader) {
-        console.log('[-] Unknown loader for asset type.', asset);
-        return;
-      }
+      return result;
+    }, [] as LoaderResult[]);
 
-      return loader(asset.src);
-    });
+    let idx = 0;
+
+    for (const p of promises) {
+      p.then(() => {
+        this.onItemLoadFinish(idx, this._assets);
+        idx++;
+      });
+    }
 
     const models = await Promise.all(promises);
 
@@ -95,5 +106,8 @@ export class AssetManager {
         this._assets[i].obj = m;
       }
     });
+
+    this.onLoadFinish();
   }
 }
+

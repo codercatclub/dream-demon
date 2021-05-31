@@ -1,42 +1,40 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
-import { Group } from "three";
+import { Group, LoadingManager } from "three";
 
-export type LoaderType = "fbx" | "glb";
+export type LoaderResult = Promise<Group>;
+export type Loader = (src: string) => LoaderResult;
 
-export type Loader = (src: string) => Promise<Group>;
+const fbxLoader = new FBXLoader();
+const gltfLoader = new GLTFLoader();
 
-export type Loaders = {
-  [key in LoaderType]: Loader;
-};
-
-export const loadFBX = (src: string): Promise<Group> =>
+export const loadFBX: Loader = (src): Promise<Group> =>
   new Promise((resolve, reject) => {
-    const loader = new FBXLoader();
-    loader.load(
-      src,
-      resolve,
-      function (xhr) {
-        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-      },
-      reject
-    );
+    fbxLoader.load(src, resolve, () => {}, reject);
   });
 
-export const loadGLTF = (src: string): Promise<Group> =>
+export const loadGLTF: Loader = (src): Promise<Group> =>
   new Promise((resolve, reject) => {
-    const loader = new GLTFLoader();
-    loader.load(
+    gltfLoader.load(
       src,
       (gltf) => resolve(gltf.scene),
-      function (xhr) {
-        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-      },
+      () => {},
       reject
     );
   });
 
-export const loaders: Loaders = {
+const loaders = {
   fbx: loadFBX,
   glb: loadGLTF,
+};
+
+export const getLoader = (extension: string): Loader | null => {
+  if (!Object.keys(loaders).includes(extension)) {
+    console.log(`[-] loading ${extension} is not supported.`);
+    return null;
+  }
+
+  const type = extension as keyof typeof loaders;
+
+  return loaders[type];
 };
