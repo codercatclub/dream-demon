@@ -1,19 +1,20 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
-import { Group, LoadingManager } from "three";
+import { Group, Texture, TextureLoader } from "three";
 
-export type LoaderResult = Promise<Group>;
-export type Loader = (src: string) => LoaderResult;
+export type LoaderResult<T> = Promise<T>;
+export type Loader<T> = (src: string) => LoaderResult<T>;
 
 const fbxLoader = new FBXLoader();
 const gltfLoader = new GLTFLoader();
+const textureLoader = new TextureLoader();
 
-export const loadFBX: Loader = (src): Promise<Group> =>
+export const loadFBX: Loader<Group> = (src) =>
   new Promise((resolve, reject) => {
     fbxLoader.load(src, resolve, () => {}, reject);
   });
 
-export const loadGLTF: Loader = (src): Promise<Group> =>
+export const loadGLTF: Loader<Group> = (src) =>
   new Promise((resolve, reject) => {
     gltfLoader.load(
       src,
@@ -23,18 +24,24 @@ export const loadGLTF: Loader = (src): Promise<Group> =>
     );
   });
 
-const loaders = {
+export const loadTexture: Loader<Texture> = (src) =>
+  new Promise((resolve, reject) => {
+    textureLoader.load(
+      src,
+      resolve,
+      () => {},
+      reject
+    );
+  });
+
+export const loaders = {
   fbx: loadFBX,
   glb: loadGLTF,
+  jpg: loadTexture
 };
 
-export const getLoader = (extension: string): Loader | null => {
-  if (!Object.keys(loaders).includes(extension)) {
-    console.log(`[-] loading ${extension} is not supported.`);
-    return null;
-  }
+export type AssetType = keyof typeof loaders;
 
-  const type = extension as keyof typeof loaders;
-
+export function getLoader(type: AssetType): (Loader<Group | Texture> | null) {
   return loaders[type];
 };

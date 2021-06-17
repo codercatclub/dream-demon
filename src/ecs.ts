@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Object3D } from "three";
+import { Object3D, Texture } from "three";
 import { Asset } from "./assetManager";
 
 export interface Component {
@@ -74,7 +74,7 @@ export const applyQuery = (
   return filtered;
 };
 
-type AssetMap = Map<string, Object3D>;
+type AssetMap = Map<string, (Object3D | Texture)>;
 
 export class World implements WorldLike {
   private _assets: AssetMap;

@@ -1,12 +1,19 @@
-import { Object3D } from "three";
-import { getLoader, LoaderResult } from "./loaders";
+import { Object3D, Texture, Group } from "three";
+import { AssetType, getLoader, LoaderResult, loaders } from "./loaders";
 
-const getFileExtension = (path: string) => path.split(".").pop();
+const getFileExtension = (path: string) => path.split(".").pop() ?? '';
+const extensionToType = (ext: string): AssetType | undefined => {
+  if (Object.keys(loaders).includes(ext)) {
+    return ext as AssetType;
+  }
+  return;
+} 
 
 export interface Asset {
+  type: AssetType;
   tag: string;
   src: string;
-  obj: Object3D | null;
+  obj: Object3D | Texture | null;
 }
 
 export class AssetManager {
@@ -17,7 +24,11 @@ export class AssetManager {
   }
 
   public addAsset(src: string, tag: string) {
-    this._assets.push({ src, tag, obj: null });
+    const ext = getFileExtension(src);
+    const type = extensionToType(ext);
+    if (type) {
+      this._assets.push({ type, src, tag, obj: null });
+    }
     return this;
   }
 
@@ -25,17 +36,7 @@ export class AssetManager {
     this.onLoadStart();
 
     const promises = this._assets.reduce((result, asset, idx) => {
-      const ext = getFileExtension(asset.src);
-
-      if (!ext) {
-        console.log(
-          "[-] Failed to extract extension form asset source path.",
-          asset.src
-        );
-        return result;
-      }
-
-      const loader = getLoader(ext);
+      const loader = getLoader(asset.type);
 
       if (loader) {
         this.onItemLoadStart(idx, this._assets);
@@ -43,7 +44,7 @@ export class AssetManager {
       }
 
       return result;
-    }, [] as LoaderResult[]);
+    }, [] as LoaderResult<Group | Texture>[]);
 
     let idx = 0;
 
@@ -65,8 +66,23 @@ export class AssetManager {
     this.onLoadEnd();
   }
 
-  public onLoadStart() {}
-  public onItemLoadStart(_idx: number, _assets: Asset[]) {}
-  public onItemLoadEnd(_idx: number, _assets: Asset[]) {}
-  public onLoadEnd() {}
+  public onLoadStart() {
+    const event = new CustomEvent("on-load-start");
+    window.dispatchEvent(event);
+  }
+
+  public onItemLoadStart(idx: number, assets: Asset[]) {
+    const event = new CustomEvent("on-item-load-start", { detail: { idx, assets } });
+    window.dispatchEvent(event);
+  }
+
+  public onItemLoadEnd(idx: number, assets: Asset[]) {
+    const event = new CustomEvent("on-item-load-end", { detail: { idx, assets } });
+    window.dispatchEvent(event);
+  }
+  
+  public onLoadEnd() {
+    const event = new CustomEvent("on-load-end");
+    window.dispatchEvent(event);
+  }
 }

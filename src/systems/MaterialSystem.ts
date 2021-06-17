@@ -3,23 +3,19 @@ import { TransformC, Object3DC, MaterialC } from "../components";
 import { applyQuery, Entity, World } from "../ecs";
 import { ShaderMaterial, Color, Mesh, Object3D } from "three";
 
-// @ts-ignore
-import CCBasicVert from "../shaders/CCBasicVert.glsl";
-// @ts-ignore
-import CCBasicFrag from "../shaders/CCBasicFrag.glsl";
-
 const getObject3d = (ent: Entity, world: World): Object3D | undefined => {
   const { id } = ent.components.get(Object3DC.type) as typeof Object3DC.data;
   return world.scene?.getObjectById(parseFloat(id));
 };
 
 interface MaterialSystem extends System {
-  world: World;
+  world: World | null;
   processEntity: (ent: Entity) => void;
 }
 
 export const MaterialSystem: MaterialSystem = {
   type: "MaterialSystem",
+  world: null,
   queries: [TransformC, Object3DC, MaterialC],
   entities: [],
 
@@ -31,18 +27,21 @@ export const MaterialSystem: MaterialSystem = {
 
   processEntity: function(ent) {
     if (!this.world) return;
+    const { shader, color1, color2 } = ent.components.get(
+      MaterialC.type
+    ) as typeof MaterialC.data;
   
     const parent = getObject3d(ent, this.world);
 
     const uniforms = {
-      colorB: { type: "vec3", value: new Color(0xacb6e5) },
-      colorA: { type: "vec3", value: new Color(0x74ebd5) },
+      colorB: { type: "vec3", value: color1 },
+      colorA: { type: "vec3", value: color2 },
     };
 
     const material = new ShaderMaterial({
       uniforms: uniforms,
-      vertexShader: CCBasicVert,
-      fragmentShader: CCBasicFrag,
+      vertexShader: require(`../shaders/${shader}Vert.glsl`),
+      fragmentShader: require(`../shaders/${shader}Frag.glsl`),
     });
 
     parent?.traverse((obj) => {

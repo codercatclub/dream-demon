@@ -26,48 +26,34 @@ import { AssetManager } from "./assetManager";
   assetManager
     .addAsset("assets/models/chair.glb", "chair")
     .addAsset("assets/models/branch.glb", "branch")
-    .addAsset("assets/models/ground_patch.fbx", "ground_patch");
-
-  assetManager.onItemLoadStart = (idx, assets) => {
-    const event = new CustomEvent("on-item-load-start", { detail: { idx, assets } });
-    window.dispatchEvent(event);
-  };
-
-  assetManager.onItemLoadEnd = (idx, assets) => {
-    const event = new CustomEvent("on-item-load-end", { detail: { idx, assets } });
-    window.dispatchEvent(event);
-  };
-
-  assetManager.onLoadEnd = () => {
-    const event = new CustomEvent("on-load-end");
-    window.dispatchEvent(event);
-  };
+    .addAsset("assets/models/ground_patch.fbx", "ground_patch")
+    .addAsset("assets/textures/env.jpg", "env_texture");
 
   // Wait untill all assets are loaded
   await assetManager.load();
 
   const world = new World(assetManager.assets);
 
-  const idToRemove: number[] = [];
+  // const idToRemove: number[] = [];
 
-  for (let i = 0; i < 50; i++) {
-    const type = i % 2 === 0 ? "Box" : "Sphere";
+  // for (let i = 0; i < 50; i++) {
+  //   const type = i % 2 === 0 ? "Box" : "Sphere";
 
-    const prim = StandardPrimitive(
-      type,
-      new Vector3(Math.cos(i / 10 - 1.3), i / 10, Math.sin(i / 5))
-    );
-    const movingPrim = extend(prim, [
-      { ...MovingC, data: { speed: 2.0, amplitude: 2.0 } },
-    ]);
+  //   const prim = StandardPrimitive(
+  //     type,
+  //     new Vector3(Math.cos(i / 10 - 1.3), i / 10, Math.sin(i / 5))
+  //   );
+  //   const movingPrim = extend(prim, [
+  //     { ...MovingC, data: { speed: 2.0, amplitude: 2.0 } },
+  //   ]);
 
-    // Mark every second object for deletion
-    if (i % 2 === 0) {
-      idToRemove.push(movingPrim.id);
-    }
+  //   // Mark every second object for deletion
+  //   if (i % 2 === 0) {
+  //     idToRemove.push(movingPrim.id);
+  //   }
 
-    world.addEntity(movingPrim);
-  }
+  //   world.addEntity(movingPrim);
+  // }
 
   // // Test entity remove
   // setTimeout(() => {
@@ -76,21 +62,29 @@ import { AssetManager } from "./assetManager";
   //   })
   // }, 3000)
 
-  const chair = extend(Asset("assets/models/chair.glb"), [MaterialC]);
+  const chair = Asset("assets/models/chair.glb");
 
   [
     Camera(new Vector3(0, 0, 4)),
-    Asset("assets/models/branch.glb"),
+    extend(Asset("assets/models/branch.glb"), [
+      { ...MaterialC, data: { ...MaterialC.data, shader: "Test" } },
+    ]),
     chair,
   ].forEach((ent) => {
     world.addEntity(ent);
   });
 
   const light1 = newEntity([
-    { ...PointLightC, data: { ...PointLightC.data, color: 0xff00ff } },
+    {
+      ...PointLightC,
+      data: { ...PointLightC.data, color: 0xffffff, intensity: 4 },
+    },
     Object3DC,
-    TransformC,
-    { ...MovingC, data: { speed: 0.5, amplitude: 3.0 } },
+    {
+      ...TransformC,
+      data: { ...TransformC.data, position: new Vector3(0, 2, 2) },
+    },
+    // { ...MovingC, data: { speed: 0.5, amplitude: 3.0 } },
   ]);
 
   world
@@ -100,21 +94,21 @@ import { AssetManager } from "./assetManager";
     .addEntity(light1);
 
   // Test entity add
-  setTimeout(() => {
-    for (let i = 0; i < 10; i++) {
-      world.addEntity(
-        extend(
-          Asset(
-            "assets/models/branch.glb",
-            new Vector3(i, 0, 0),
-            new Vector3(0, i * 45, 0),
-            new Vector3(1, 1, 1)
-          ),
-          [MaterialC, MovingC]
-        )
-      );
-    }
-  }, 3000);
+  // setTimeout(() => {
+  //   for (let i = 0; i < 10; i++) {
+  //     world.addEntity(
+  //       extend(
+  //         Asset(
+  //           "assets/models/branch.glb",
+  //           new Vector3(i, 0, 0),
+  //           new Vector3(0, i * 45, 0),
+  //           new Vector3(1, 1, 1)
+  //         ),
+  //         [MaterialC, /* MovingC */]
+  //       )
+  //     );
+  //   }
+  // }, 3000);
 
   world
     .registerSystem(CameraSystem)

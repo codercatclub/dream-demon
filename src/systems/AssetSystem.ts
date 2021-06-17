@@ -1,6 +1,37 @@
 import { System, World } from "../ecs";
 import { TransformC, GLTFModelC, Object3DC } from "../components";
 import { applyQuery, Entity } from "../ecs";
+import {
+  EquirectangularReflectionMapping,
+  Mesh,
+  MeshStandardMaterial,
+  Object3D,
+  Texture,
+} from "three";
+
+const setEnvTexture = (asset: Object3D, world: World): void => {
+  asset.traverse((obj) => {
+    if (obj.type === "Mesh") {
+      const o = obj as Mesh;
+      const texture = world.assets.get(
+        "assets/textures/env.jpg"
+      ) as Texture;
+
+      if (!texture) {
+        return;
+      }
+
+      texture.mapping = EquirectangularReflectionMapping;
+
+      (o.material as MeshStandardMaterial).envMap = texture;
+      // (o.material as MeshStandardMaterial).map = null;
+      // (o.material as MeshStandardMaterial).normalMap = null;
+      // (o.material as MeshStandardMaterial).roughness = 0;
+      (o.material as MeshStandardMaterial).metalness = 0;
+      (o.material as MeshStandardMaterial).needsUpdate = true;
+    }
+  });
+}
 
 interface AssetSystem extends System {
   world: World | null;
@@ -25,17 +56,28 @@ export const AssetSystem: AssetSystem = {
     ) as typeof GLTFModelC.data;
     const { id } = ent.components.get(Object3DC.type) as typeof Object3DC.data;
 
-    if (this.world) {
-      const parent = this.world.scene?.getObjectById(parseFloat(id));
-
-      const asset = this.world.assets.get(src);
-      if (!asset) {
-        console.log(`[-] ${src} is not found in preloaded assets`);
-        return;
-      }
-
-      parent?.add(asset.clone());
+    if (!this.world) {
+      return;
     }
+
+    const parent = this.world.scene?.getObjectById(parseFloat(id));
+
+    if (!parent) {
+      return;
+    }
+
+    const asset = this.world.assets.get(src) as Object3D;
+
+    if (!asset) {
+      console.log(`[-] ${src} is not found in preloaded assets`);
+      return;
+    }
+
+    // We need to assign environmental texture to every asset
+    // for PBR shader to work correctly
+    setEnvTexture(asset, this.world);
+
+    parent?.add(asset.clone());
   },
 
   onEntityAdd: function (ent) {

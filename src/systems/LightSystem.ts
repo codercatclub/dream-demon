@@ -1,7 +1,7 @@
 import { System } from "../ecs";
 import { PointLightC, TransformC, Object3DC } from "../components";
 import { applyQuery } from "../ecs";
-import { PointLight } from "three";
+import { PointLight, HemisphereLight, PMREMGenerator } from "three";
 
 interface LightSystem extends System {
   initPos: typeof TransformC.data.position[];
@@ -30,6 +30,10 @@ export const LightSystem: LightSystem = {
       const parent = world.scene?.getObjectById(parseFloat(id));
 
       const light = new PointLight(color, intensity, distance);
+
+      // TODO...
+      const light2 = new HemisphereLight( 0xffffbb, 0x080820, 2 );
+      parent?.add( light2 );
 
       parent?.add(light);
     });

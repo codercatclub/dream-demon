@@ -34,6 +34,10 @@ export const RenderSystem: RenderSystem = {
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
 
+    this.renderer.physicallyCorrectLights = true;
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.outputEncoding = THREE.sRGBEncoding;
+
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setAnimationLoop(this.animation);
 

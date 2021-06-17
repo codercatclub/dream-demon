@@ -1,11 +1,11 @@
-import * as THREE from "three";
+import { Vector3, Color } from "three";
 
 export const TransformC = {
   type: "TransformC",
   data: {
-    position: new THREE.Vector3(),
-    rotation: new THREE.Vector3(),
-    scale: new THREE.Vector3(1, 1, 1)
+    position: new Vector3(),
+    rotation: new Vector3(),
+    scale: new Vector3(1, 1, 1)
   },
 };
 
@@ -66,5 +66,9 @@ export const PointLightC = {
 
 export const MaterialC = {
   type: "MaterialC",
-  data: null,
+  data: {
+    shader: 'CCBasic',
+    color1: new Color(0xacb6e5),
+    color2: new Color(0x74ebd5)
+  },
 };
