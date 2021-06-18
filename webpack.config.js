@@ -5,6 +5,7 @@ module.exports = {
   entry: {
     bundle: './src/index.ts',
     ui: './src/ui/index.ts',
+    examples: './src/examples/index.ts'
   },
   mode: 'development',
   output: {
@@ -38,6 +39,10 @@ module.exports = {
         {
           from: 'src/index.html',
           to: '.',
+        },
+        {
+          from: 'src/examples/index.html',
+          to: 'examples.html',
         },
         {
           from: 'assets',

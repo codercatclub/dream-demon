@@ -74,7 +74,7 @@ export const applyQuery = (
   return filtered;
 };
 
-type AssetMap = Map<string, (Object3D | Texture)>;
+type AssetMap = Map<string, Object3D | Texture>;
 
 export class World implements WorldLike {
   private _assets: AssetMap;
@@ -83,19 +83,27 @@ export class World implements WorldLike {
   scene: THREE.Scene | null;
   activeCamera: THREE.PerspectiveCamera | null;
 
-  constructor(assets: Asset[]) {
+  constructor(assets?: Asset[]) {
     this._assets = new Map();
 
-    assets.forEach(a => {
+    assets?.forEach((a) => {
       if (a.obj) {
         this._assets.set(a.src, a.obj);
       }
-    })
+    });
 
     this.entities = [];
     this.systems = [];
     this.scene = new THREE.Scene();
-    this.activeCamera = null;
+    // Set default camera. Can be overriden by render system
+    this.activeCamera = new THREE.PerspectiveCamera(
+      70,
+      window.innerWidth / window.innerHeight,
+      0.01,
+      1000
+    );
+
+    this.activeCamera.position.set(0, 0, 1);
   }
 
   public get assets(): AssetMap {
@@ -109,10 +117,8 @@ export class World implements WorldLike {
   addEntity(entity: Entity) {
     this.entities.push(entity);
 
-    this.systems.forEach((s) =>
-      s.onEntityAdd ? s.onEntityAdd(entity) : null
-    );
-  
+    this.systems.forEach((s) => (s.onEntityAdd ? s.onEntityAdd(entity) : null));
+
     return this;
   }
 
@@ -122,12 +128,16 @@ export class World implements WorldLike {
     this.systems.forEach((s) =>
       s.onEntityRemove ? s.onEntityRemove(id) : null
     );
-  
+
     return this;
   }
 
   registerSystem(system: System) {
     this.systems.push(system);
     return this;
+  }
+
+  destroy() {
+    document.querySelector('#world')?.remove();
   }
 }

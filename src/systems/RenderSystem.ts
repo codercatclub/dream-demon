@@ -22,6 +22,7 @@ export const RenderSystem: RenderSystem = {
   systems: [],
   clock: null,
   entities: [],
+  queries: [],
 
   init: function (world) {
     this.animation = this.animation.bind(this);
@@ -41,8 +42,11 @@ export const RenderSystem: RenderSystem = {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setAnimationLoop(this.animation);
 
+    this.renderer.domElement.id = 'world';
+
     document.body.appendChild(this.renderer.domElement);
 
+    // TODO (Kirill): Remove resize event listener on world.destroy
     window.addEventListener("resize", this.onWindowResize.bind(this), false);
   },
 

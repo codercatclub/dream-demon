@@ -3,14 +3,16 @@ import { applyQuery } from "../ecs";
 import * as THREE from "three";
 import { System } from "../ecs";
 
-export const GeometrySystem: System = {
-  type: "GeometrySystem",
+/**
+ * System responsible for creating basic primitives such as Box or Shere
+ */
+export const BasicPrimitivesSystem: System = {
+  type: "BasicPrimitivesSystem",
   entities: [],
+  queries:  [Object3DC, GeometryC],
 
   init: function (world) {
-    const queries = [Object3DC, GeometryC];
-
-    this.entities = applyQuery(world.entities, queries);
+    this.entities = applyQuery(world.entities, this.queries);
 
     this.entities.forEach((ent) => {
       const obj = ent.components.get(Object3DC.type) as typeof Object3DC.data;

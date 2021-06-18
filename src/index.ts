@@ -4,7 +4,7 @@ import { StatsSystem } from "./systems/StatsSystem";
 import { RenderSystem } from "./systems/RenderSystem";
 import { CameraSystem } from "./systems/CameraSystem";
 import { OrbitControlsSystem } from "./systems/OrbitControlsSystem";
-import { GeometrySystem } from "./systems/GeometrySystem";
+import { BasicPrimitivesSystem } from "./systems/BasicPrimitivesSystem";
 import { AssetSystem } from "./systems/AssetSystem";
 import { LightSystem } from "./systems/LightSystem";
 import { newEntity, World, extend } from "./ecs";
@@ -114,7 +114,7 @@ import { AssetManager } from "./assetManager";
     .registerSystem(CameraSystem)
     .registerSystem(RenderSystem)
     .registerSystem(Object3DSystem)
-    .registerSystem(GeometrySystem)
+    .registerSystem(BasicPrimitivesSystem)
     .registerSystem(MoveSystem)
     .registerSystem(AssetSystem)
     .registerSystem(StatsSystem)
