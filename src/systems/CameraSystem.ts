@@ -6,11 +6,10 @@ import { System } from "../ecs";
 export const CameraSystem: System = {
   type: "CameraSystem",
   entities: [],
+  queries: [CamC, TransformC],
 
   init: function (world) {
-    const queries = [CamC, TransformC];
-
-    this.entities = applyQuery(world.entities, queries);
+    this.entities = applyQuery(world.entities, this.queries);
 
     this.entities.forEach((ent) => {
       const camData = ent.components.get(CamC.type) as typeof CamC.data;

@@ -1,7 +1,7 @@
 import { System } from "../ecs";
 import { TransformC, Object3DC, MaterialC } from "../components";
 import { applyQuery, Entity, World } from "../ecs";
-import { ShaderMaterial, Color, Mesh, Object3D } from "three";
+import { ShaderMaterial, Mesh, Object3D } from "three";
 
 const getObject3d = (ent: Entity, world: World): Object3D | undefined => {
   const { id } = ent.components.get(Object3DC.type) as typeof Object3DC.data;

@@ -10,6 +10,7 @@ export const StatsSystem: StatsSystem = {
   type: "StatsSystem",
   entities: [],
   stats: new Stats(),
+  queries: [],
 
   init: function () {
     this.stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom

@@ -10,6 +10,7 @@ export const OrbitControlsSystem: OrbitControlSystem = {
   type: "OrbitControlsSystem",
   controls: null,
   entities: [],
+  queries: [],
 
   init: function (world) {
     const systems = world.systems.filter((s) => s.type === "RenderSystem") as RenderSystem[];

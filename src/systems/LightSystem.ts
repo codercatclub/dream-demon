@@ -1,7 +1,7 @@
 import { System } from "../ecs";
 import { PointLightC, TransformC, Object3DC } from "../components";
 import { applyQuery } from "../ecs";
-import { PointLight, HemisphereLight, PMREMGenerator } from "three";
+import { PointLight, HemisphereLight } from "three";
 
 interface LightSystem extends System {
   initPos: typeof TransformC.data.position[];
@@ -11,13 +11,14 @@ export const LightSystem: LightSystem = {
   type: "LightSystem",
   initPos: [],
   entities: [],
+  queries: [
+    TransformC,
+    Object3DC,
+    PointLightC,
+  ],
 
   init: function (world) {
-    this.entities = applyQuery(world.entities, [
-      TransformC,
-      Object3DC,
-      PointLightC,
-    ]);
+    this.entities = applyQuery(world.entities, this.queries);
 
     this.entities.forEach((ent) => {
       const { id } = ent.components.get(
