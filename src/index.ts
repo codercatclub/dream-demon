@@ -8,10 +8,9 @@ import { BasicPrimitivesSystem } from "./systems/BasicPrimitivesSystem";
 import { AssetSystem } from "./systems/AssetSystem";
 import { LightSystem } from "./systems/LightSystem";
 import { newEntity, World, extend } from "./ecs";
-import { Asset, Camera, StandardPrimitive } from "./achetypes";
+import { Asset, Camera } from "./achetypes";
 import { Vector3 } from "three";
 import {
-  MovingC,
   Object3DC,
   PointLightC,
   TransformC,
@@ -33,34 +32,6 @@ import { AssetManager } from "./assetManager";
   await assetManager.load();
 
   const world = new World(assetManager.assets);
-
-  // const idToRemove: number[] = [];
-
-  // for (let i = 0; i < 50; i++) {
-  //   const type = i % 2 === 0 ? "Box" : "Sphere";
-
-  //   const prim = StandardPrimitive(
-  //     type,
-  //     new Vector3(Math.cos(i / 10 - 1.3), i / 10, Math.sin(i / 5))
-  //   );
-  //   const movingPrim = extend(prim, [
-  //     { ...MovingC, data: { speed: 2.0, amplitude: 2.0 } },
-  //   ]);
-
-  //   // Mark every second object for deletion
-  //   if (i % 2 === 0) {
-  //     idToRemove.push(movingPrim.id);
-  //   }
-
-  //   world.addEntity(movingPrim);
-  // }
-
-  // // Test entity remove
-  // setTimeout(() => {
-  //   idToRemove.forEach(id => {
-  //     world.removeEntity(id)
-  //   })
-  // }, 3000)
 
   const chair = Asset("assets/models/chair.glb");
 
@@ -92,23 +63,6 @@ import { AssetManager } from "./assetManager";
     .addEntity(Asset("assets/models/branch.glb", new Vector3(0, 1, 0)))
     .addEntity(Asset("assets/models/ground_patch.fbx", new Vector3(0, 0, 0)))
     .addEntity(light1);
-
-  // Test entity add
-  // setTimeout(() => {
-  //   for (let i = 0; i < 10; i++) {
-  //     world.addEntity(
-  //       extend(
-  //         Asset(
-  //           "assets/models/branch.glb",
-  //           new Vector3(i, 0, 0),
-  //           new Vector3(0, i * 45, 0),
-  //           new Vector3(1, 1, 1)
-  //         ),
-  //         [MaterialC, /* MovingC */]
-  //       )
-  //     );
-  //   }
-  // }, 3000);
 
   world
     .registerSystem(CameraSystem)

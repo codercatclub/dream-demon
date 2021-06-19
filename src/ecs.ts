@@ -138,6 +138,11 @@ export class World implements WorldLike {
   }
 
   destroy() {
-    document.querySelector('#world')?.remove();
+    this._assets = new Map();
+    this.entities = [];
+    this.systems = [];
+    this.scene = null;
+    this.activeCamera = null;
+    document.querySelector("#world")?.remove();
   }
 }

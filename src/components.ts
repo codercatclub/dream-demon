@@ -5,7 +5,7 @@ export const TransformC = {
   data: {
     position: new Vector3(),
     rotation: new Vector3(),
-    scale: new Vector3(1, 1, 1)
+    scale: new Vector3(1, 1, 1),
   },
 };
 
@@ -13,9 +13,9 @@ export const MovingC = {
   type: "MovingC",
   data: {
     speed: 1.0,
-    amplitude: 1.0
-  }
-}
+    amplitude: 1.0,
+  },
+};
 
 export const NameC = {
   type: "NameC",
@@ -67,8 +67,13 @@ export const PointLightC = {
 export const MaterialC = {
   type: "MaterialC",
   data: {
-    shader: 'CCBasic',
+    shader: "CCBasic",
     color1: new Color(0xacb6e5),
-    color2: new Color(0x74ebd5)
+    color2: new Color(0x74ebd5),
   },
+};
+
+export const IntervalSpawnerC = {
+  type: "IntervalSpawnerC",
+  data: null,
 };
