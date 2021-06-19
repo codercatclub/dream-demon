@@ -2,6 +2,7 @@ import simpleCube from "./simpleCube";
 import manyCubes from "./manyCubes";
 import removeEntities from "./removeEntities";
 import addEntity from "./addEntities";
+import customShader from "./customShader";
 
 /**
  * This is a bootstrap script for example page.
@@ -13,6 +14,7 @@ const worlds: [string, () => { init: () => void; destroy: () => void }][] = [
   ["Many Cubes", manyCubes],
   ["Remove Entities", removeEntities],
   ["Add Entities", addEntity],
+  ["Custom Shader", customShader],
 ];
 
 const queryString = window.location.search;

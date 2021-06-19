@@ -68,3 +68,4 @@ export const StandardPrimitive = (
     { ...GeometryC, data: { type } },
     Object3DC,
   ]);
+  
