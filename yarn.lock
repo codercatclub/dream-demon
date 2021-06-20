@@ -662,11 +662,6 @@ bindings@^1.5.0:
   dependencies:
     file-uri-to-path "1.0.0"
 
-bitecs@^0.3.4:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/bitecs/-/bitecs-0.3.4.tgz#98bd9e98ff9143074b0181d7f10ce0fdc48d8680"
-  integrity sha512-jzcURQyU+itIzQ6PZkLQ1JdtiKlWFHPQWfr6aiOhv/1YWD+5BUwnlnainusBPmUy9VKsUkkF7wt3Q2FXfyGktg==
-
 body-parser@1.19.0:
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.19.0.tgz#96b2709e57c9c4e09a6fd66a8fd979844f69f08a"
@@ -1132,11 +1127,6 @@ dns-txt@^2.0.2:
   integrity sha1-uR2Ab10nGI5Ks+fRB9iBocxGQrY=
   dependencies:
     buffer-indexof "^1.0.0"
-
-ecsy@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/ecsy/-/ecsy-0.4.2.tgz#5d0c78fb248c81f587dfc05c01cb39e8bb2233ab"
-  integrity sha512-dVKOkuz1IsRvS7GlHcWghUtMZzXr70h6b+SQEHlKy2RgsCRNDzdYr6a43Q6HafuquA/67YFZCQt8zqadq/jlLA==
 
 ee-first@1.1.1:
   version "1.1.1"

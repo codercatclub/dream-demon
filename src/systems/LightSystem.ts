@@ -2,6 +2,7 @@ import { System } from "../ecs/index";
 import { PointLightC, TransformC, Object3DC } from "../ecs/components";
 import { applyQuery } from "../ecs/index";
 import { PointLight, HemisphereLight } from "three";
+import { getObject3d, getComponent } from "./utils";
 
 interface LightSystem extends System {
   initPos: typeof TransformC.data.position[];
@@ -21,14 +22,8 @@ export const LightSystem: LightSystem = {
     this.entities = applyQuery(world.entities, this.queries);
 
     this.entities.forEach((ent) => {
-      const { id } = ent.components.get(
-        Object3DC.type
-      ) as typeof Object3DC.data;
-      const { color, intensity, distance } = ent.components.get(
-        PointLightC.type
-      ) as typeof PointLightC.data;
-
-      const parent = world.scene?.getObjectById(parseFloat(id));
+      const { color, intensity, distance } = getComponent(ent, PointLightC);
+      const parent = getObject3d(ent, world);
 
       const light = new PointLight(color, intensity, distance);
 

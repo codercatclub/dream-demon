@@ -8,30 +8,28 @@ import {
   Object3D,
   Texture,
 } from "three";
+import { getObject3d, getComponent } from "./utils";
 
 const setEnvTexture = (asset: Object3D, world: World): void => {
   asset.traverse((obj) => {
     if (obj.type === "Mesh") {
       const o = obj as Mesh;
-      const texture = world.assets.get(
-        "assets/textures/env.jpg"
-      ) as Texture;
+      const texture = world.assets.get("assets/textures/env.jpg") as Texture;
 
       if (!texture) {
+        console.warn(
+          "Environmental texture is not loaded. PBR materials will not render correctly."
+        );
         return;
       }
 
       texture.mapping = EquirectangularReflectionMapping;
 
       (o.material as MeshStandardMaterial).envMap = texture;
-      // (o.material as MeshStandardMaterial).map = null;
-      // (o.material as MeshStandardMaterial).normalMap = null;
-      // (o.material as MeshStandardMaterial).roughness = 0;
-      // (o.material as MeshStandardMaterial).metalness = 0;
       (o.material as MeshStandardMaterial).needsUpdate = true;
     }
   });
-}
+};
 
 interface AssetSystem extends System {
   world: World | null;
@@ -51,18 +49,16 @@ export const AssetSystem: AssetSystem = {
   },
 
   processEntity: function (ent: Entity) {
-    const { src } = ent.components.get(
-      GLTFModelC.type
-    ) as typeof GLTFModelC.data;
-    const { id } = ent.components.get(Object3DC.type) as typeof Object3DC.data;
+    const { src } = getComponent(ent, GLTFModelC);
 
     if (!this.world) {
       return;
     }
 
-    const parent = this.world.scene?.getObjectById(parseFloat(id));
-
+    const parent = getObject3d(ent, this.world);
+  
     if (!parent) {
+      console.warn('Can not attach asset to the scene. Entity is missing Object3D component.')
       return;
     }
 

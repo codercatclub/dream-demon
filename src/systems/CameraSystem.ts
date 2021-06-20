@@ -3,6 +3,8 @@ import { applyQuery } from "../ecs/index";
 import * as THREE from "three";
 import { System } from "../ecs/index";
 import { RenderSystem } from "./RenderSystem";
+import { getComponent } from "./utils";
+
 
 export const CameraSystem: System = {
   type: "CameraSystem",
@@ -13,10 +15,8 @@ export const CameraSystem: System = {
     this.entities = applyQuery(world.entities, this.queries);
 
     this.entities.forEach((ent) => {
-      const camData = ent.components.get(CamC.type) as typeof CamC.data;
-      const { position } = ent.components.get(
-        TransformC.type
-      ) as typeof TransformC.data;
+      const camData = getComponent(ent, CamC);
+      const { position } = getComponent(ent, TransformC);
 
       const cam = new THREE.PerspectiveCamera(
         camData.fov,

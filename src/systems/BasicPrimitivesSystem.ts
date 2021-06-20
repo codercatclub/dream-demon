@@ -2,6 +2,7 @@ import { Object3DC, GeometryC } from "../ecs/components";
 import { applyQuery, Entity, World} from "../ecs/index";
 import * as THREE from "three";
 import { System } from "../ecs/index";
+import { getObject3d, getComponent } from "./utils";
 
 interface BasicPrimitivesSystem extends System {
   world: World | null;
@@ -24,8 +25,7 @@ export const BasicPrimitivesSystem: BasicPrimitivesSystem = {
   },
 
   processEntity: function (ent) {
-    const obj = ent.components.get(Object3DC.type) as typeof Object3DC.data;
-    const geo = ent.components.get(GeometryC.type) as typeof GeometryC.data;
+    const geo = getComponent(ent, GeometryC);
 
     let geometry = null;
 
@@ -39,11 +39,11 @@ export const BasicPrimitivesSystem: BasicPrimitivesSystem = {
           break;
       }
 
-      if (geometry) {
+      if (geometry && this.world) {
         const material = new THREE.MeshNormalMaterial();
         const mesh = new THREE.Mesh(geometry, material);
 
-        const obj3D = this.world?.scene?.getObjectById(parseFloat(obj.id));
+        const obj3D = getObject3d(ent, this.world);
 
         obj3D?.add(mesh);
       }
