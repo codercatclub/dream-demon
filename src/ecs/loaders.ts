@@ -1,5 +1,6 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { Group, Texture, TextureLoader } from "three";
 
 export type LoaderResult<T> = Promise<T>;
@@ -7,6 +8,11 @@ export type Loader<T> = (src: string) => LoaderResult<T>;
 
 const fbxLoader = new FBXLoader();
 const gltfLoader = new GLTFLoader();
+
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
+gltfLoader.setDRACOLoader(dracoLoader);
+
 const textureLoader = new TextureLoader();
 
 export const loadFBX: Loader<Group> = (src) =>

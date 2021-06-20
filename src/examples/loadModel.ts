@@ -17,6 +17,7 @@ export default async () => {
   assetManager
     .addAsset("assets/models/chair.glb", "chair")
     .addAsset("assets/models/branch.glb", "branch")
+    .addAsset("assets/models/girlinchair.glb", "girlinchair")
     .addAsset("assets/textures/env.jpg", "env_tex"); // Environmental texture for PBR material.
 
   // Wait untill all assets are loaded
@@ -26,8 +27,13 @@ export default async () => {
 
   const cam = Camera(new Vector3(0, 2, 4));
 
-  const chair = Asset("assets/models/chair.glb");
-  const branch = Asset("assets/models/branch.glb");
+  const chair = Asset({ src: "assets/models/chair.glb" });
+  const branch = Asset({ src: "assets/models/branch.glb" });
+  const girl = Asset({
+    src: "assets/models/girlinchair.glb",
+    scale: new Vector3(0.18, 0.18, 0.18),
+    position: new Vector3(0, 0, 0.9)
+  });
 
   const light = PointLight(0xffffff, 2, new Vector3(2, 2, 0));
   const skyLight = HemisphereLight({ position: new Vector3(2, 2, 0) });
@@ -35,6 +41,7 @@ export default async () => {
   world
     .addEntity(cam)
     .addEntity(chair)
+    .addEntity(girl)
     .addEntity(branch)
     .addEntity(light)
     .addEntity(skyLight);

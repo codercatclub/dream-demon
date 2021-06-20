@@ -12,12 +12,19 @@ import { Vector3 } from "three";
 
 /** Helper functions to construct commonly used Entities */
 
-export const Asset = (
-  src: string,
+interface AssetArchetype {
+  src: string;
+  position?: Vector3;
+  rotation?: Vector3;
+  scale?: Vector3;
+}
+
+export const Asset = ({
+  src,
   position = new Vector3(),
   rotation = new Vector3(),
   scale = new Vector3(1, 1, 1)
-): Entity =>
+}: AssetArchetype): Entity =>
   newEntity([
     { ...GLTFModelC, data: { src } },
     { ...TransformC, data: { position, rotation, scale } },
