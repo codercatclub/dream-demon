@@ -69,7 +69,7 @@ export const AssetSystem: AssetSystem = {
     const asset = this.world.assets.get(src) as Object3D;
 
     if (!asset) {
-      console.log(`[-] ${src} is not found in preloaded assets`);
+      console.warn(`${src} is not found in preloaded assets`);
       return;
     }
 

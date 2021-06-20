@@ -42,6 +42,7 @@ export const loaders = {
 
 export type AssetType = keyof typeof loaders;
 
-export function getLoader(type: AssetType): (Loader<Group | Texture> | null) {
+/** Get coresponding loader for a type. Type is come from file extension */
+export function getLoader(type: AssetType): (Loader<Group | Texture>) {
   return loaders[type];
 };

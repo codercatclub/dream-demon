@@ -14,7 +14,9 @@ import { CameraSystem } from "../systems/CameraSystem";
 export default async () => {
   const assetManager = new AssetManager();
 
-  assetManager.addAsset("assets/models/chair.glb", "chair");
+  assetManager
+    .addAsset("assets/models/chair.glb", "chair")
+    .addAsset("assets/models/branch.glb", "branch");
 
   // Wait untill all assets are loaded
   await assetManager.load();
@@ -22,10 +24,11 @@ export default async () => {
   const world = new World(assetManager.assets);
 
   const cam = Camera(new Vector3(0, 2, 4));
-  const chair = extend(Asset("assets/models/chair.glb"), [MaterialC]);
+  const chair = Asset("assets/models/chair.glb");
+  const branch = Asset("assets/models/branch.glb");
   const light = PointLight(0xffffff, 20, new Vector3(2, 2, 0));
 
-  world.addEntity(cam).addEntity(chair).addEntity(light);
+  world.addEntity(cam).addEntity(chair).addEntity(branch).addEntity(light);
 
   world
     .registerSystem(RenderSystem)
