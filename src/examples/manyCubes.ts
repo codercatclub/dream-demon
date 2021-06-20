@@ -1,9 +1,9 @@
 import { Object3DSystem } from "../systems/Object3DSystem";
 import { RenderSystem } from "../systems/RenderSystem";
 import { CameraSystem } from "../systems/CameraSystem";
-import { Camera, StandardPrimitive } from "../achetypes";
+import { Camera, StandardPrimitive } from "../ecs/achetypes";
 import { BasicPrimitivesSystem } from "../systems/BasicPrimitivesSystem";
-import { World } from "../ecs";
+import { World } from "../ecs/index";
 import { Vector3 } from "three";
 import { IntervalSpawnSystem } from "../systems/IntervalSpawnSystem";
 

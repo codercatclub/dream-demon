@@ -1,5 +1,5 @@
-import { World, newEntity } from "../ecs";
-import { TransformC, GeometryC, Object3DC } from "../components";
+import { World, newEntity } from "../ecs/index";
+import { TransformC, GeometryC, Object3DC } from "../ecs/components";
 import { RenderSystem } from "../systems/RenderSystem";
 import { BasicPrimitivesSystem } from "../systems/BasicPrimitivesSystem";
 import { Object3DSystem } from "../systems/Object3DSystem";

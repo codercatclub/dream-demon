@@ -1,5 +1,5 @@
 import { html, css } from "./utils";
-import { Asset } from "../assetManager";
+import { Asset } from "../ecs/assetManager";
 
 interface ProgressEvent extends CustomEvent {
   detail: {
@@ -27,13 +27,13 @@ export default class LoadingScreen extends HTMLElement {
 
     const styleString = css`
       #loading-screen {
+        display: none;
         position: fixed;
         top: 0;
         bottom: 0;
         left: 0;
         right: 0;
         background-color: rgb(255, 255, 255);
-        display: flex;
         justify-content: center;
         align-items: center;
         z-index: 50;
@@ -92,6 +92,12 @@ export default class LoadingScreen extends HTMLElement {
       }
     }) as EventListener);
 
+    window.addEventListener("on-load-start", (() => {
+        if (loadingScreenEl) {
+          loadingScreenEl.style.display = 'flex';
+        }
+    }) as EventListener);
+  
     window.addEventListener("on-load-end", (() => {
         if (loadingScreenEl) {
           loadingScreenEl.style.display = 'none';

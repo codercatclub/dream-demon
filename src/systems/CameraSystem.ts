@@ -1,7 +1,7 @@
-import { CamC, TransformC } from "../components";
-import { applyQuery } from "../ecs";
+import { CamC, TransformC } from "../ecs/components";
+import { applyQuery } from "../ecs/index";
 import * as THREE from "three";
-import { System } from "../ecs";
+import { System } from "../ecs/index";
 import { RenderSystem } from "./RenderSystem";
 
 export const CameraSystem: System = {

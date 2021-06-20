@@ -6,8 +6,10 @@ import {
   GeometryC,
   PointLightC,
 } from "./components";
-import { newEntity, Entity } from "./ecs";
+import { newEntity, Entity } from "./index";
 import { Vector3 } from "three";
+
+/** Helper functions to construct commonly used Entities */
 
 export const Asset = (
   src: string,

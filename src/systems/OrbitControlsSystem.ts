@@ -1,5 +1,5 @@
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { System } from "../ecs";
+import { System } from "../ecs/index";
 import { RenderSystem } from "./RenderSystem";
 
 interface OrbitControlSystem extends System {

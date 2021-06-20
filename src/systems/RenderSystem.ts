@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { System } from "../ecs";
+import { System } from "../ecs/index";
 
 export interface RenderSystem extends System {
   camera: THREE.PerspectiveCamera | null;

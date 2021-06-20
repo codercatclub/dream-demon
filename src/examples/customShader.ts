@@ -1,11 +1,10 @@
-import { World, newEntity } from "../ecs";
-import { TransformC, GeometryC, Object3DC, MaterialC } from "../components";
+import { World, newEntity } from "../ecs/index";
+import { TransformC, GeometryC, Object3DC, MaterialC } from "../ecs/components";
 import { RenderSystem } from "../systems/RenderSystem";
 import { BasicPrimitivesSystem } from "../systems/BasicPrimitivesSystem";
 import { Object3DSystem } from "../systems/Object3DSystem";
 import { MaterialSystem } from "../systems/MaterialSystem";
 import { OrbitControlsSystem } from "../systems/OrbitControlsSystem";
-import { Vector3 } from "three";
 
 /** Adds a cube. Nothig more to say :) */
 export default async () => {

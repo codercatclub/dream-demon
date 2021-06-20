@@ -1,7 +1,7 @@
-import { Object3DC, GeometryC } from "../components";
-import { applyQuery, Entity, World} from "../ecs";
+import { Object3DC, GeometryC } from "../ecs/components";
+import { applyQuery, Entity, World} from "../ecs/index";
 import * as THREE from "three";
-import { System } from "../ecs";
+import { System } from "../ecs/index";
 
 interface BasicPrimitivesSystem extends System {
   world: World | null;

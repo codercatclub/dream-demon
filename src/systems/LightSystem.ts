@@ -1,6 +1,6 @@
-import { System } from "../ecs";
-import { PointLightC, TransformC, Object3DC } from "../components";
-import { applyQuery } from "../ecs";
+import { System } from "../ecs/index";
+import { PointLightC, TransformC, Object3DC } from "../ecs/components";
+import { applyQuery } from "../ecs/index";
 import { PointLight, HemisphereLight } from "three";
 
 interface LightSystem extends System {

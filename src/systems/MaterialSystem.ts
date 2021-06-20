@@ -1,6 +1,6 @@
-import { System } from "../ecs";
-import { TransformC, Object3DC, MaterialC } from "../components";
-import { applyQuery, Entity, World } from "../ecs";
+import { System } from "../ecs/index";
+import { TransformC, Object3DC, MaterialC } from "../ecs/components";
+import { applyQuery, Entity, World } from "../ecs/index";
 import { ShaderMaterial, Mesh, Object3D } from "three";
 
 const getObject3d = (ent: Entity, world: World): Object3D | undefined => {

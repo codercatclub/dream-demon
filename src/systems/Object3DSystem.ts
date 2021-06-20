@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { Object3DC, TransformC } from "../components";
-import { applyQuery, Entity, System, World } from "../ecs";
+import { Object3DC, TransformC } from "../ecs/components";
+import { applyQuery, Entity, System, World } from "../ecs/index";
 
 interface Object3DSystem extends System {
   world: World | null;

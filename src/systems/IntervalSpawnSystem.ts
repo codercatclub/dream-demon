@@ -1,6 +1,6 @@
-import { newEntity, System, World } from "../ecs";
-import { TransformC, IntervalSpawnerC, Object3DC } from "../components";
-import { applyQuery } from "../ecs";
+import { newEntity, System, World } from "../ecs/index";
+import { TransformC, IntervalSpawnerC, Object3DC } from "../ecs/components";
+import { applyQuery } from "../ecs/index";
 import { Vector3 } from "three";
 
 interface IntervalSpawnSystem extends System {

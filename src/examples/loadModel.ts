@@ -1,11 +1,10 @@
-import { extend, World } from "../ecs";
+import { World } from "../ecs/index";
 import { RenderSystem } from "../systems/RenderSystem";
 import { Object3DSystem } from "../systems/Object3DSystem";
-import { AssetManager } from "../assetManager";
-import { Asset, Camera, PointLight } from "../achetypes";
+import { AssetManager } from "../ecs/assetManager";
+import { Asset, Camera, PointLight } from "../ecs/achetypes";
 import { AssetSystem } from "../systems/AssetSystem";
 import { OrbitControlsSystem } from "../systems/OrbitControlsSystem";
-import { MaterialC } from "../components";
 import { LightSystem } from "../systems/LightSystem";
 import { Vector3 } from "three";
 import { CameraSystem } from "../systems/CameraSystem";

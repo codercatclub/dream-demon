@@ -4,7 +4,7 @@ import removeEntities from "./removeEntities";
 import addEntity from "./addEntities";
 import customShader from "./customShader";
 import loadModel from "./loadModel";
-import { World } from "../ecs";
+import { World } from "../ecs/index";
 
 /**
  * This is a bootstrap script for example page.

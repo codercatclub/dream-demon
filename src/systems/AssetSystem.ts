@@ -1,6 +1,6 @@
-import { System, World } from "../ecs";
-import { TransformC, GLTFModelC, Object3DC } from "../components";
-import { applyQuery, Entity } from "../ecs";
+import { System, World } from "../ecs/index";
+import { TransformC, GLTFModelC, Object3DC } from "../ecs/components";
+import { applyQuery, Entity } from "../ecs/index";
 import {
   EquirectangularReflectionMapping,
   Mesh,

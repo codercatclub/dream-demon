@@ -1,6 +1,6 @@
-import { Entity, System } from "../ecs";
-import { TransformC, MovingC } from "../components";
-import { applyQuery } from "../ecs";
+import { Entity, System } from "../ecs/index";
+import { TransformC, MovingC } from "../ecs/components";
+import { applyQuery } from "../ecs/index";
 import { Vector3 } from "three";
 
 interface MoveSystem extends System {
