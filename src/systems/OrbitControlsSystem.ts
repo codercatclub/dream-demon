@@ -9,7 +9,6 @@ interface OrbitControlSystem extends System {
 export const OrbitControlsSystem: OrbitControlSystem = {
   type: "OrbitControlsSystem",
   controls: null,
-  entities: [],
   queries: [],
 
   init: function (world) {

@@ -13,7 +13,6 @@ export const MaterialSystem: MaterialSystem = {
   type: "MaterialSystem",
   world: null,
   queries: [TransformC, Object3DC, MaterialC],
-  entities: [],
 
   init: function (world) {
     this.world = world;

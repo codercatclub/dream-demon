@@ -6,6 +6,7 @@ import { getComponent } from "./utils";
 interface Object3DSystem extends System {
   world: World | null;
   objects: Map<number, THREE.Object3D>;
+  entities: Entity [];
   processEntity: (ent: Entity) => void;
 }
 

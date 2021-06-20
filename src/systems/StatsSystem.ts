@@ -8,7 +8,6 @@ interface StatsSystem extends System {
 
 export const StatsSystem: StatsSystem = {
   type: "StatsSystem",
-  entities: [],
   stats: new Stats(),
   queries: [],
 

@@ -3,7 +3,7 @@ import { TransformC, GeometryC, Object3DC } from "../ecs/components";
 import { RenderSystem } from "../systems/RenderSystem";
 import { BasicPrimitivesSystem } from "../systems/BasicPrimitivesSystem";
 import { Object3DSystem } from "../systems/Object3DSystem";
-import { LightSystem } from "../systems/LightSystem";
+import { PointLightSystem } from "../systems/PointLightSystem";
 
 /** Adds a cube. Nothig more to say :) */
 export default async () => {
@@ -17,7 +17,7 @@ export default async () => {
     .registerSystem(RenderSystem) // Render system should be always first
     .registerSystem(Object3DSystem)
     .registerSystem(BasicPrimitivesSystem)
-    .registerSystem(LightSystem);
+    .registerSystem(PointLightSystem);
   
   return world;
 };

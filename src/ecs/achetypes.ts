@@ -5,6 +5,7 @@ import {
   CamC,
   GeometryC,
   PointLightC,
+  HemisphereLightC,
 } from "./components";
 import { newEntity, Entity } from "./index";
 import { Vector3 } from "three";
@@ -77,6 +78,24 @@ export const PointLight = (
     {
       ...PointLightC,
       data: { ...PointLightC.data, color, intensity },
+    },
+    Object3DC,
+    {
+      ...TransformC,
+      data: { ...TransformC.data, position },
+    },
+  ]);
+
+export const HemisphereLight = ({
+  skyColor = 0xffffbb,
+  groundColor = 0x080820,
+  intensity = 2,
+  position = new Vector3(0, 0, 0)
+}) =>
+  newEntity([
+    {
+      ...HemisphereLightC,
+      data: { ...PointLightC.data, skyColor, groundColor, intensity },
     },
     Object3DC,
     {

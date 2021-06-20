@@ -16,7 +16,7 @@ export interface Entity {
 export interface System {
   type: string;
   queries: Component[];
-  entities: Entity[];
+  entities?: Entity[];
 
   init(world: World): void;
   tick?(time: number, delta: number): void;

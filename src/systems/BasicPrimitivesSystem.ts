@@ -14,7 +14,6 @@ interface BasicPrimitivesSystem extends System {
  */
 export const BasicPrimitivesSystem: BasicPrimitivesSystem = {
   type: "BasicPrimitivesSystem",
-  entities: [],
   world: null,
   queries: [Object3DC, GeometryC],
 

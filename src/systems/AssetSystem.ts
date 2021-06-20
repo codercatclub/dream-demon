@@ -40,7 +40,6 @@ export const AssetSystem: AssetSystem = {
   type: "AssetSystem",
   world: null,
   queries: [TransformC, GLTFModelC, Object3DC],
-  entities: [],
 
   init: function (world) {
     this.world = world;

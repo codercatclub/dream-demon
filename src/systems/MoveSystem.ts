@@ -10,10 +10,11 @@ interface MoveSystem extends System {
     speed: number;
     amplitude: number;
   }[];
+  entities: Entity[];
 }
 
 const getInitValues = (ent: Entity) => {
-  const { position } =getComponent(ent, TransformC)
+  const { position } = getComponent(ent, TransformC);
   const { speed, amplitude } = getComponent(ent, MovingC);
 
   return {

@@ -21,7 +21,6 @@ export const RenderSystem: RenderSystem = {
   renderer: null,
   systems: [],
   clock: null,
-  entities: [],
   queries: [],
 
   init: function (world) {

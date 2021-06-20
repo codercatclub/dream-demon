@@ -3,7 +3,7 @@ import { TransformC, Object3DC, GeometryC } from "./ecs/components";
 import { RenderSystem } from "./systems/RenderSystem";
 import { BasicPrimitivesSystem } from "./systems/BasicPrimitivesSystem";
 import { Object3DSystem } from "./systems/Object3DSystem";
-import { LightSystem } from "./systems/LightSystem";
+import { PointLightSystem } from "./systems/PointLightSystem";
 
 const world = new World();
 
@@ -15,6 +15,6 @@ world
   .registerSystem(RenderSystem) // Render system should be always first
   .registerSystem(Object3DSystem)
   .registerSystem(BasicPrimitivesSystem)
-  .registerSystem(LightSystem);
+  .registerSystem(PointLightSystem);
 
 world.init();

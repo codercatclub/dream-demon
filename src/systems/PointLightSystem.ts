@@ -1,17 +1,11 @@
 import { System } from "../ecs/index";
 import { PointLightC, TransformC, Object3DC } from "../ecs/components";
 import { applyQuery } from "../ecs/index";
-import { PointLight, HemisphereLight } from "three";
+import { PointLight } from "three";
 import { getObject3d, getComponent } from "./utils";
 
-interface LightSystem extends System {
-  initPos: typeof TransformC.data.position[];
-}
-
-export const LightSystem: LightSystem = {
-  type: "LightSystem",
-  initPos: [],
-  entities: [],
+export const PointLightSystem: System = {
+  type: "PointLightSystem",
   queries: [
     TransformC,
     Object3DC,
@@ -26,10 +20,6 @@ export const LightSystem: LightSystem = {
       const parent = getObject3d(ent, world);
 
       const light = new PointLight(color, intensity, distance);
-
-      // TODO...
-      const light2 = new HemisphereLight( 0xffffbb, 0x080820, 2 );
-      parent?.add( light2 );
 
       parent?.add(light);
     });

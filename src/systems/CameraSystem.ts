@@ -8,7 +8,6 @@ import { getComponent } from "./utils";
 
 export const CameraSystem: System = {
   type: "CameraSystem",
-  entities: [],
   queries: [CamC, TransformC],
 
   init: function (world) {

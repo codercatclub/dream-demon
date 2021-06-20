@@ -1,10 +1,11 @@
-import { newEntity, System, World } from "../ecs/index";
+import { newEntity, System, World, Entity } from "../ecs/index";
 import { TransformC, IntervalSpawnerC, Object3DC } from "../ecs/components";
 import { applyQuery } from "../ecs/index";
 import { Vector3 } from "three";
 
 interface IntervalSpawnSystem extends System {
   world: World | null;
+  entities: Entity[];
   lastTime: number;
   count: number;
 }

@@ -64,6 +64,15 @@ export const PointLightC = {
   },
 };
 
+export const HemisphereLightC = {
+  type: "PointLightC",
+  data: {
+    skyColor: 0xffffbb,
+    groundColor: 0x080820,
+    intensity: 2.0,
+  },
+};
+
 export const MaterialC = {
   type: "MaterialC",
   data: {
