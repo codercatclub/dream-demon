@@ -2,6 +2,7 @@ import { CamC, TransformC } from "../components";
 import { applyQuery } from "../ecs";
 import * as THREE from "three";
 import { System } from "../ecs";
+import { RenderSystem } from "./RenderSystem";
 
 export const CameraSystem: System = {
   type: "CameraSystem",
@@ -30,7 +31,10 @@ export const CameraSystem: System = {
 
       ent.components.set(CamC.type, cam);
 
-      world.activeCamera = cam;
+      // TODO (Kirill): Overriding render system default camera is not idel. There should be a setCamera method or something more generic.
+      // perhaps render system should search for existing camera... 
+      const renderSystem = world.systems.filter((s) => s.type === "RenderSystem")[0] as RenderSystem;
+      renderSystem.camera = cam;
     });
   },
 };

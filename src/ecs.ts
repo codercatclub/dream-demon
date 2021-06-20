@@ -81,7 +81,6 @@ export class World implements WorldLike {
   entities: Entity[];
   systems: System[];
   scene: THREE.Scene | null;
-  activeCamera: THREE.PerspectiveCamera | null;
 
   constructor(assets?: Asset[]) {
     this._assets = new Map();
@@ -95,15 +94,6 @@ export class World implements WorldLike {
     this.entities = [];
     this.systems = [];
     this.scene = new THREE.Scene();
-    // Set default camera. Can be overriden by render system
-    this.activeCamera = new THREE.PerspectiveCamera(
-      70,
-      window.innerWidth / window.innerHeight,
-      0.01,
-      1000
-    );
-
-    this.activeCamera.position.set(0, 0, 1);
   }
 
   public get assets(): AssetMap {
@@ -138,11 +128,6 @@ export class World implements WorldLike {
   }
 
   destroy() {
-    this._assets = new Map();
-    this.entities = [];
-    this.systems = [];
-    this.scene = null;
-    this.activeCamera = null;
     document.querySelector("#world")?.remove();
   }
 }

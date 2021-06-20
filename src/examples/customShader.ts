@@ -8,7 +8,7 @@ import { OrbitControlsSystem } from "../systems/OrbitControlsSystem";
 import { Vector3 } from "three";
 
 /** Adds a cube. Nothig more to say :) */
-export default () => {
+export default async () => {
   const world = new World();
 
   // Make custom material component that use TestFrag and TestVert shaders.

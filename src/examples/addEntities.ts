@@ -8,7 +8,7 @@ import { IntervalSpawnerC } from "../components";
 import { IntervalSpawnSystem } from "../systems/IntervalSpawnSystem";
 
 /** This example demonstrate how to add entities at runtime */
-export default () => {
+export default async () => {
   const world = new World();
 
   const cube = StandardPrimitive("Sphere");

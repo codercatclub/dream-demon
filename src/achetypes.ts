@@ -4,6 +4,7 @@ import {
   GLTFModelC,
   CamC,
   GeometryC,
+  PointLightC,
 } from "./components";
 import { newEntity, Entity } from "./ecs";
 import { Vector3 } from "three";
@@ -12,7 +13,7 @@ export const Asset = (
   src: string,
   position = new Vector3(),
   rotation = new Vector3(),
-  scale = new Vector3(1, 1, 1),
+  scale = new Vector3(1, 1, 1)
 ): Entity =>
   newEntity([
     { ...GLTFModelC, data: { src } },
@@ -36,13 +37,9 @@ export const Camera = (
           ...TransformC.data,
           position,
           rotation,
-          fov,
-          aspect,
-          near,
-          far,
         },
       },
-      CamC,
+      { ...CamC, data: { ...CamC.data, fov, aspect, near, far } },
     ],
     "Camera"
   );
@@ -68,4 +65,20 @@ export const StandardPrimitive = (
     { ...GeometryC, data: { type } },
     Object3DC,
   ]);
-  
+
+export const PointLight = (
+  color = 0xffffff,
+  intensity = 20,
+  position = new Vector3(0, 0, 0)
+) =>
+  newEntity([
+    {
+      ...PointLightC,
+      data: { ...PointLightC.data, color, intensity },
+    },
+    Object3DC,
+    {
+      ...TransformC,
+      data: { ...TransformC.data, position },
+    },
+  ]);

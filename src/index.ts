@@ -76,8 +76,6 @@ import { AssetManager } from "./assetManager";
     .registerSystem(OrbitControlsSystem)
     .registerSystem(MaterialSystem);
 
-  console.log("[D] world: ", world);
-
   // // Serialization test
   // world.entities.forEach((ent) => {
   //   console.log(

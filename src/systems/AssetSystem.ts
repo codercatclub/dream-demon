@@ -27,7 +27,7 @@ const setEnvTexture = (asset: Object3D, world: World): void => {
       // (o.material as MeshStandardMaterial).map = null;
       // (o.material as MeshStandardMaterial).normalMap = null;
       // (o.material as MeshStandardMaterial).roughness = 0;
-      (o.material as MeshStandardMaterial).metalness = 0;
+      // (o.material as MeshStandardMaterial).metalness = 0;
       (o.material as MeshStandardMaterial).needsUpdate = true;
     }
   });

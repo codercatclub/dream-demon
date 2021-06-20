@@ -22,7 +22,6 @@ export const OrbitControlsSystem: OrbitControlSystem = {
         this.controls = new OrbitControls(camera, renderer.domElement);
         this.controls.update();
       }
-
     }
   },
 
