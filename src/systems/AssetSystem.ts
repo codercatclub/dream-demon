@@ -10,6 +10,28 @@ import {
 } from "three";
 import { getObject3d, getComponent } from "./utils";
 
+
+const findChild = (obj: Object3D, name: string) => 
+  obj.children.find((c) => c.name === name)
+
+const getObjectByPath = (obj: Object3D, path: string): Object3D | undefined => {
+  const parts = path.split("/");
+
+  parts.shift();
+  
+  let result: Object3D | undefined;
+  
+  for (let i = 0; i < parts.length; i++) {
+    if (result) {
+      result = findChild(result, parts[i]);
+    } else {
+      result = findChild(obj, parts[i]);
+    }
+  }
+
+  return result;
+};
+
 const setEnvTexture = (asset: Object3D, world: World): void => {
   asset.traverse((obj) => {
     if (obj.type === "Mesh") {
@@ -48,24 +70,35 @@ export const AssetSystem: AssetSystem = {
   },
 
   processEntity: function (ent: Entity) {
-    const { src } = getComponent(ent, GLTFModelC);
+    const { src, part } = getComponent(ent, GLTFModelC);
 
     if (!this.world) {
       return;
     }
 
     const parent = getObject3d(ent, this.world);
-  
+
     if (!parent) {
-      console.warn('Can not attach asset to the scene. Entity is missing Object3D component.')
+      console.warn(
+        "Can not attach asset to the scene. Entity is missing Object3D component."
+      );
       return;
     }
 
-    const asset = this.world.assets.get(src) as Object3D;
+    let asset = this.world.assets.get(src) as Object3D;
 
     if (!asset) {
       console.warn(`${src} is not found in preloaded assets`);
       return;
+    }
+
+    if (part) {
+      const obj = getObjectByPath(asset, part);
+      if (obj) {
+        asset = obj;
+      } else {
+        console.warn(`Can not fine part ${part} in object ${src}`)
+      }
     }
 
     // We need to assign environmental texture to every asset

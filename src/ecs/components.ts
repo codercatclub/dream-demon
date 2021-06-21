@@ -52,6 +52,7 @@ export const GLTFModelC = {
   type: "GLTFModelC",
   data: {
     src: "assets/models/chair.glb",
+    part: ''
   },
 };
 

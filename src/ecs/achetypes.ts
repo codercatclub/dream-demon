@@ -7,13 +7,14 @@ import {
   PointLightC,
   HemisphereLightC,
 } from "./components";
-import { newEntity, Entity } from "./index";
+import { newEntity, Entity, newComponent } from "./index";
 import { Vector3 } from "three";
 
 /** Helper functions to construct commonly used Entities */
 
 interface AssetArchetype {
   src: string;
+  part?: string;
   position?: Vector3;
   rotation?: Vector3;
   scale?: Vector3;
@@ -21,14 +22,15 @@ interface AssetArchetype {
 
 export const Asset = ({
   src,
+  part,
   position = new Vector3(),
   rotation = new Vector3(),
-  scale = new Vector3(1, 1, 1)
+  scale = new Vector3(1, 1, 1),
 }: AssetArchetype): Entity =>
   newEntity([
-    { ...GLTFModelC, data: { src } },
-    { ...TransformC, data: { position, rotation, scale } },
-    Object3DC,
+    newComponent(GLTFModelC, { src, part }),
+    newComponent(TransformC, { position, rotation, scale }),
+    newComponent(Object3DC),
   ]);
 
 export const Camera = (
@@ -41,15 +43,11 @@ export const Camera = (
 ) =>
   newEntity(
     [
-      {
-        ...TransformC,
-        data: {
-          ...TransformC.data,
-          position,
-          rotation,
-        },
-      },
-      { ...CamC, data: { ...CamC.data, fov, aspect, near, far } },
+      newComponent(TransformC, {
+        position,
+        rotation,
+      }),
+      newComponent(CamC, { fov, aspect, near, far }),
     ],
     "Camera"
   );
@@ -63,17 +61,9 @@ export const StandardPrimitive = (
   scale = new Vector3(1, 1, 1)
 ) =>
   newEntity([
-    {
-      ...TransformC,
-      data: {
-        ...TransformC.data,
-        position,
-        rotation,
-        scale,
-      },
-    },
-    { ...GeometryC, data: { type } },
-    Object3DC,
+    newComponent(TransformC, { position, rotation, scale }),
+    newComponent(GeometryC, { type }),
+    newComponent(Object3DC),
   ]);
 
 export const PointLight = (
@@ -82,31 +72,19 @@ export const PointLight = (
   position = new Vector3(0, 0, 0)
 ) =>
   newEntity([
-    {
-      ...PointLightC,
-      data: { ...PointLightC.data, color, intensity },
-    },
-    Object3DC,
-    {
-      ...TransformC,
-      data: { ...TransformC.data, position },
-    },
+    newComponent(PointLightC, { color, intensity }),
+    newComponent(Object3DC),
+    newComponent(TransformC, { position }),
   ]);
 
 export const HemisphereLight = ({
   skyColor = 0xffffbb,
   groundColor = 0x080820,
   intensity = 2,
-  position = new Vector3(0, 0, 0)
+  position = new Vector3(0, 0, 0),
 }) =>
   newEntity([
-    {
-      ...HemisphereLightC,
-      data: { ...PointLightC.data, skyColor, groundColor, intensity },
-    },
-    Object3DC,
-    {
-      ...TransformC,
-      data: { ...TransformC.data, position },
-    },
+    newComponent(HemisphereLightC, { skyColor, groundColor, intensity }),
+    newComponent(Object3DC),
+    newComponent(TransformC, { position }),
   ]);

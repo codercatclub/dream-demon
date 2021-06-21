@@ -2,9 +2,9 @@ import * as THREE from "three";
 import { Object3D, Texture } from "three";
 import { Asset } from "./assetManager";
 
-export interface Component {
+export interface Component<T> {
   type: string;
-  data: unknown;
+  data: T;
 }
 
 export interface Entity {
@@ -15,7 +15,7 @@ export interface Entity {
 
 export interface System {
   type: string;
-  queries: Component[];
+  queries: Component<unknown>[];
   entities?: Entity[];
 
   init(world: World): void;
@@ -36,10 +36,16 @@ export interface WorldLike {
 const generateID = () =>
   Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));
 
-export const newEntity = (components: Component[], name = ""): Entity =>
+export const newEntity = (
+  components: Component<unknown>[],
+  name = ""
+): Entity =>
   extend({ name, id: generateID(), components: new Map() }, components);
 
-export const extend = (entity: Entity, components: Component[]): Entity => {
+export const extend = (
+  entity: Entity,
+  components: Component<unknown>[]
+): Entity => {
   const cmp = new Map(entity.components);
 
   components.forEach((c) => cmp.set(c.type, c.data));
@@ -47,9 +53,16 @@ export const extend = (entity: Entity, components: Component[]): Entity => {
   return { ...entity, components: cmp };
 };
 
+export function newComponent<T>(
+  comp: Component<T>,
+  newData?: Partial<Component<T>["data"]>
+): Component<T> {
+  return { type: comp.type, data: { ...comp.data, ...newData } };
+}
+
 export const applyQuery = (
   entities: Entity[],
-  queries: Component[]
+  queries: Component<unknown>[]
 ): Entity[] => {
   const filtered: Entity[] = [];
 

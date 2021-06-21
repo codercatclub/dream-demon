@@ -1,4 +1,4 @@
-import { World, newEntity } from "../ecs/index";
+import { World, newEntity, newComponent } from "../ecs/index";
 import { TransformC, GeometryC, Object3DC, MaterialC } from "../ecs/components";
 import { RenderSystem } from "../systems/RenderSystem";
 import { BasicPrimitivesSystem } from "../systems/BasicPrimitivesSystem";
@@ -11,10 +11,7 @@ export default async () => {
   const world = new World();
 
   // Make custom material component that use TestFrag and TestVert shaders.
-  const MyMateriaC: typeof MaterialC = {
-    ...MaterialC,
-    data: { ...MaterialC.data, shader: "Test" },
-  };
+  const MyMateriaC = newComponent(MaterialC, { shader: "Test"});
 
   const box = newEntity([TransformC, GeometryC, Object3DC, MyMateriaC]);
 
