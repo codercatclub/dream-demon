@@ -42,6 +42,7 @@ export const newEntity = (
 ): Entity =>
   extend({ name, id: generateID(), components: new Map() }, components);
 
+/** Extend givent Entity componets with provided components */
 export const extend = (
   entity: Entity,
   components: Component<unknown>[]
@@ -53,10 +54,13 @@ export const extend = (
   return { ...entity, components: cmp };
 };
 
+/** Helper function for creating a new component with optional new data */
 export function newComponent<T>(
   comp: Component<T>,
   newData?: Partial<Component<T>["data"]>
 ): Component<T> {
+  // NOTE (Kirill): Asuming that component data has no nested objects.
+  // Am I doing deep copy right? Mb use JSON.parse(JSON.stringify(object))
   return { type: comp.type, data: { ...comp.data, ...newData } };
 }
 
