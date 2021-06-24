@@ -1,6 +1,6 @@
 import Stats from "stats.js";
-import { System } from "../ecs";
-import Event from '../event';
+import { System } from "../ecs/index";
+import Event from '../ecs/event';
 
 interface StatsSystem extends System {
   stats: Stats;
@@ -8,7 +8,6 @@ interface StatsSystem extends System {
 
 export const StatsSystem: StatsSystem = {
   type: "StatsSystem",
-  entities: [],
   stats: new Stats(),
   queries: [],
 

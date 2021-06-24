@@ -1,17 +1,17 @@
 import { Object3DSystem } from "../systems/Object3DSystem";
 import { RenderSystem } from "../systems/RenderSystem";
 import { CameraSystem } from "../systems/CameraSystem";
-import { Camera, StandardPrimitive } from "../achetypes";
+import { Camera, StandardPrimitive } from "../ecs/achetypes";
 import { BasicPrimitivesSystem } from "../systems/BasicPrimitivesSystem";
-import { World } from "../ecs";
+import { World } from "../ecs/index";
 import { Vector3 } from "three";
 import { IntervalSpawnSystem } from "../systems/IntervalSpawnSystem";
 
 /** Programaticaly and many entities to the scene */
-export default () => {
+export default async () => {
   const world = new World();
 
-  const cam = Camera(new Vector3(0, 2, 4));
+  const cam = Camera(new Vector3(0, 2, 5));
 
   world.addEntity(cam);
 
@@ -27,11 +27,11 @@ export default () => {
   }
 
   world
-    .registerSystem(CameraSystem)
-    .registerSystem(RenderSystem)
-    .registerSystem(Object3DSystem)
-    .registerSystem(BasicPrimitivesSystem)
-    .registerSystem(IntervalSpawnSystem);
+  .registerSystem(RenderSystem)
+  .registerSystem(Object3DSystem)
+  .registerSystem(BasicPrimitivesSystem)
+  .registerSystem(IntervalSpawnSystem)
+  .registerSystem(CameraSystem)
 
   return world;
 };

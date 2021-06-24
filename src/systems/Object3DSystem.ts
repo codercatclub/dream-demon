@@ -1,10 +1,12 @@
 import * as THREE from "three";
-import { Object3DC, TransformC } from "../components";
-import { applyQuery, Entity, System, World } from "../ecs";
+import { Object3DC, TransformC } from "../ecs/components";
+import { applyQuery, Entity, System, World } from "../ecs/index";
+import { getComponent } from "./utils";
 
 interface Object3DSystem extends System {
   world: World | null;
   objects: Map<number, THREE.Object3D>;
+  entities: Entity [];
   processEntity: (ent: Entity) => void;
 }
 
@@ -22,9 +24,7 @@ export const Object3DSystem: Object3DSystem = {
   },
 
   processEntity: function (ent: Entity) {
-    const { position: p, rotation: r, scale: s } = ent.components.get(
-      TransformC.type
-    ) as typeof TransformC.data;
+    const { position: p, rotation: r, scale: s } = getComponent(ent, TransformC);
     const group = new THREE.Group();
 
     group.name = ent.id.toString();
@@ -45,10 +45,8 @@ export const Object3DSystem: Object3DSystem = {
 
   tick: function () {
     this.entities.forEach((ent) => {
-      const { position: p, rotation: r, scale: s } = ent.components.get(
-        TransformC.type
-      ) as typeof TransformC.data;
-      const obj = ent.components.get(Object3DC.type) as typeof Object3DC.data;
+      const { position: p, rotation: r, scale: s } = getComponent(ent, TransformC);
+      const obj = getComponent(ent, Object3DC);
 
       const obj3D = this.objects.get(parseFloat(obj.id));
 

@@ -1,13 +1,13 @@
 import { Object3DSystem } from "../systems/Object3DSystem";
 import { RenderSystem } from "../systems/RenderSystem";
 import { CameraSystem } from "../systems/CameraSystem";
-import { Camera, StandardPrimitive } from "../achetypes";
+import { Camera, StandardPrimitive } from "../ecs/achetypes";
 import { BasicPrimitivesSystem } from "../systems/BasicPrimitivesSystem";
-import { World } from "../ecs";
+import { World } from "../ecs/index";
 import { Vector3 } from "three";
 
 /** This example shows how to remove entities at runtime */
-export default () => {
+export default async () => {
   const world = new World();
   
   const cam = Camera(new Vector3(0, 2, 4));
@@ -33,10 +33,10 @@ export default () => {
   }
 
   world
-    .registerSystem(CameraSystem)
-    .registerSystem(RenderSystem)
-    .registerSystem(Object3DSystem)
-    .registerSystem(BasicPrimitivesSystem);
+  .registerSystem(RenderSystem)
+  .registerSystem(Object3DSystem)
+  .registerSystem(BasicPrimitivesSystem)
+  .registerSystem(CameraSystem)
 
   // Remover entities after 3 second
   // NOTE: It is better to remove entities withing a dedicated system.

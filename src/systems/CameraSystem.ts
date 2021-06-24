@@ -1,21 +1,21 @@
-import { CamC, TransformC } from "../components";
-import { applyQuery } from "../ecs";
+import { CamC, TransformC } from "../ecs/components";
+import { applyQuery } from "../ecs/index";
 import * as THREE from "three";
-import { System } from "../ecs";
+import { System } from "../ecs/index";
+import { RenderSystem } from "./RenderSystem";
+import { getComponent } from "./utils";
+
 
 export const CameraSystem: System = {
   type: "CameraSystem",
-  entities: [],
   queries: [CamC, TransformC],
 
   init: function (world) {
     this.entities = applyQuery(world.entities, this.queries);
 
     this.entities.forEach((ent) => {
-      const camData = ent.components.get(CamC.type) as typeof CamC.data;
-      const { position } = ent.components.get(
-        TransformC.type
-      ) as typeof TransformC.data;
+      const camData = getComponent(ent, CamC);
+      const { position } = getComponent(ent, TransformC);
 
       const cam = new THREE.PerspectiveCamera(
         camData.fov,
@@ -30,7 +30,10 @@ export const CameraSystem: System = {
 
       ent.components.set(CamC.type, cam);
 
-      world.activeCamera = cam;
+      // TODO (Kirill): Overriding render system default camera is not idel. There should be a setCamera method or something more generic.
+      // perhaps render system should search for existing camera... 
+      const renderSystem = world.systems.filter((s) => s.type === "RenderSystem")[0] as RenderSystem;
+      renderSystem.camera = cam;
     });
   },
 };

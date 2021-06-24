@@ -1,6 +1,6 @@
-import { System, World } from "../ecs";
-import { TransformC, GLTFModelC, Object3DC } from "../components";
-import { applyQuery, Entity } from "../ecs";
+import { System, World } from "../ecs/index";
+import { TransformC, GLTFModelC, Object3DC } from "../ecs/components";
+import { applyQuery, Entity } from "../ecs/index";
 import {
   EquirectangularReflectionMapping,
   Mesh,
@@ -8,30 +8,50 @@ import {
   Object3D,
   Texture,
 } from "three";
+import { getObject3d, getComponent } from "./utils";
+
+
+const findChild = (obj: Object3D, name: string) => 
+  obj.children.find((c) => c.name === name)
+
+const getObjectByPath = (obj: Object3D, path: string): Object3D | undefined => {
+  const parts = path.split("/");
+
+  parts.shift();
+  
+  let result: Object3D | undefined;
+  
+  for (let i = 0; i < parts.length; i++) {
+    if (result) {
+      result = findChild(result, parts[i]);
+    } else {
+      result = findChild(obj, parts[i]);
+    }
+  }
+
+  return result;
+};
 
 const setEnvTexture = (asset: Object3D, world: World): void => {
   asset.traverse((obj) => {
     if (obj.type === "Mesh") {
       const o = obj as Mesh;
-      const texture = world.assets.get(
-        "assets/textures/env.jpg"
-      ) as Texture;
+      const texture = world.assets.get("assets/textures/env.jpg") as Texture;
 
       if (!texture) {
+        console.warn(
+          "Environmental texture is not loaded. PBR materials will not render correctly."
+        );
         return;
       }
 
       texture.mapping = EquirectangularReflectionMapping;
 
       (o.material as MeshStandardMaterial).envMap = texture;
-      // (o.material as MeshStandardMaterial).map = null;
-      // (o.material as MeshStandardMaterial).normalMap = null;
-      // (o.material as MeshStandardMaterial).roughness = 0;
-      (o.material as MeshStandardMaterial).metalness = 0;
       (o.material as MeshStandardMaterial).needsUpdate = true;
     }
   });
-}
+};
 
 interface AssetSystem extends System {
   world: World | null;
@@ -42,7 +62,6 @@ export const AssetSystem: AssetSystem = {
   type: "AssetSystem",
   world: null,
   queries: [TransformC, GLTFModelC, Object3DC],
-  entities: [],
 
   init: function (world) {
     this.world = world;
@@ -51,26 +70,35 @@ export const AssetSystem: AssetSystem = {
   },
 
   processEntity: function (ent: Entity) {
-    const { src } = ent.components.get(
-      GLTFModelC.type
-    ) as typeof GLTFModelC.data;
-    const { id } = ent.components.get(Object3DC.type) as typeof Object3DC.data;
+    const { src, part } = getComponent(ent, GLTFModelC);
 
     if (!this.world) {
       return;
     }
 
-    const parent = this.world.scene?.getObjectById(parseFloat(id));
+    const parent = getObject3d(ent, this.world);
 
     if (!parent) {
+      console.warn(
+        "Can not attach asset to the scene. Entity is missing Object3D component."
+      );
       return;
     }
 
-    const asset = this.world.assets.get(src) as Object3D;
+    let asset = this.world.assets.get(src) as Object3D;
 
     if (!asset) {
-      console.log(`[-] ${src} is not found in preloaded assets`);
+      console.warn(`${src} is not found in preloaded assets`);
       return;
+    }
+
+    if (part) {
+      const obj = getObjectByPath(asset, part);
+      if (obj) {
+        asset = obj;
+      } else {
+        console.warn(`Can not fine part ${part} in object ${src}`)
+      }
     }
 
     // We need to assign environmental texture to every asset

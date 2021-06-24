@@ -1,7 +1,8 @@
-import { Entity, System } from "../ecs";
-import { TransformC, MovingC } from "../components";
-import { applyQuery } from "../ecs";
+import { Entity, System } from "../ecs/index";
+import { TransformC, MovingC } from "../ecs/components";
+import { applyQuery } from "../ecs/index";
 import { Vector3 } from "three";
+import { getComponent } from "./utils";
 
 interface MoveSystem extends System {
   initValues: {
@@ -9,15 +10,12 @@ interface MoveSystem extends System {
     speed: number;
     amplitude: number;
   }[];
+  entities: Entity[];
 }
 
 const getInitValues = (ent: Entity) => {
-  const { position } = ent.components.get(
-    TransformC.type
-  ) as typeof TransformC.data;
-  const { speed, amplitude } = ent.components.get(
-    MovingC.type
-  ) as typeof MovingC.data;
+  const { position } = getComponent(ent, TransformC);
+  const { speed, amplitude } = getComponent(ent, MovingC);
 
   return {
     position: position.clone(),
@@ -45,9 +43,7 @@ export const MoveSystem: MoveSystem = {
 
   tick: function (time) {
     this.entities.forEach((ent, i) => {
-      let { position } = ent.components.get(
-        TransformC.type
-      ) as typeof TransformC.data;
+      let { position } = getComponent(ent, TransformC);
       const iv = this.initValues[i];
 
       position.y = iv.position.y + Math.cos(time + i * iv.speed) * iv.amplitude;

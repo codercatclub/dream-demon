@@ -1,12 +1,8 @@
-import { System } from "../ecs";
-import { TransformC, Object3DC, MaterialC } from "../components";
-import { applyQuery, Entity, World } from "../ecs";
-import { ShaderMaterial, Mesh, Object3D } from "three";
-
-const getObject3d = (ent: Entity, world: World): Object3D | undefined => {
-  const { id } = ent.components.get(Object3DC.type) as typeof Object3DC.data;
-  return world.scene?.getObjectById(parseFloat(id));
-};
+import { System } from "../ecs/index";
+import { TransformC, Object3DC, MaterialC } from "../ecs/components";
+import { applyQuery, Entity, World } from "../ecs/index";
+import { ShaderMaterial, Mesh } from "three";
+import { getObject3d, getComponent } from './utils';
 
 interface MaterialSystem extends System {
   world: World | null;
@@ -19,7 +15,6 @@ export const MaterialSystem: MaterialSystem = {
   world: null,
   material: null,
   queries: [TransformC, Object3DC, MaterialC],
-  entities: [],
 
   init: function (world) {
     this.world = world;
@@ -29,10 +24,7 @@ export const MaterialSystem: MaterialSystem = {
 
   processEntity: function(ent) {
     if (!this.world) return;
-    const { shader, color1, color2 } = ent.components.get(
-      MaterialC.type
-    ) as typeof MaterialC.data;
-  
+    const { shader, color1, color2 } = getComponent(ent, MaterialC);
     const parent = getObject3d(ent, this.world);
 
     const uniforms = {

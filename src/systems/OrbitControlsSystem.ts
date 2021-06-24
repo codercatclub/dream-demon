@@ -1,5 +1,5 @@
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { System } from "../ecs";
+import { System } from "../ecs/index";
 import { RenderSystem } from "./RenderSystem";
 
 interface OrbitControlSystem extends System {
@@ -9,7 +9,6 @@ interface OrbitControlSystem extends System {
 export const OrbitControlsSystem: OrbitControlSystem = {
   type: "OrbitControlsSystem",
   controls: null,
-  entities: [],
   queries: [],
 
   init: function (world) {
@@ -22,7 +21,6 @@ export const OrbitControlsSystem: OrbitControlSystem = {
         this.controls = new OrbitControls(camera, renderer.domElement);
         this.controls.update();
       }
-
     }
   },
 

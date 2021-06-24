@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { System } from "../ecs";
+import { System } from "../ecs/index";
 
 export interface RenderSystem extends System {
   camera: THREE.PerspectiveCamera | null;
@@ -21,7 +21,6 @@ export const RenderSystem: RenderSystem = {
   renderer: null,
   systems: [],
   clock: null,
-  entities: [],
   queries: [],
 
   init: function (world) {
@@ -31,7 +30,17 @@ export const RenderSystem: RenderSystem = {
     this.systems = world.systems.filter((s) => s.type !== "RenderSystem");
 
     this.scene = world.scene;
-    this.camera = world.activeCamera;
+
+    // TODO
+    // Set default camera. Can be overriden by render system
+    this.camera = new THREE.PerspectiveCamera(
+      70,
+      window.innerWidth / window.innerHeight,
+      0.01,
+      1000
+    );
+
+    this.camera.position.set(0, 0, 1);
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
 
@@ -42,7 +51,7 @@ export const RenderSystem: RenderSystem = {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setAnimationLoop(this.animation);
 
-    this.renderer.domElement.id = 'world';
+    this.renderer.domElement.id = "world";
 
     document.body.appendChild(this.renderer.domElement);
 
@@ -65,7 +74,7 @@ export const RenderSystem: RenderSystem = {
     this.onFrameEnd(elapsedTime, delta);
   },
 
-  onWindowResize: function () {    
+  onWindowResize: function () {
     if (this.camera && this.renderer) {
       this.camera.aspect = window.innerWidth / window.innerHeight;
       this.camera.updateProjectionMatrix();

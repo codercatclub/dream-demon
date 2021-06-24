@@ -52,6 +52,7 @@ export const GLTFModelC = {
   type: "GLTFModelC",
   data: {
     src: "assets/models/chair.glb",
+    part: ''
   },
 };
 
@@ -61,6 +62,15 @@ export const PointLightC = {
     color: 0xffffff,
     intensity: 1.0,
     distance: 100,
+  },
+};
+
+export const HemisphereLightC = {
+  type: "PointLightC",
+  data: {
+    skyColor: 0xffffbb,
+    groundColor: 0x080820,
+    intensity: 2.0,
   },
 };
 

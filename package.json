@@ -1,5 +1,5 @@
 {
-  "name": "three-template",
+  "name": "three-ecs",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -9,8 +9,6 @@
     "tsc": "tsc"
   },
   "dependencies": {
-    "bitecs": "^0.3.4",
-    "ecsy": "^0.4.2",
     "stats.js": "^0.17.0",
     "three": "^0.128.0"
   },
