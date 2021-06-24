@@ -23,7 +23,7 @@ import { AssetManager } from "./assetManager";
   const assetManager = new AssetManager();
 
   assetManager
-    .addAsset("assets/models/chair.glb", "chair")
+    .addAsset("assets/models/girlinchar.glb", "girlinchar")
     .addAsset("assets/models/branch.glb", "branch")
     .addAsset("assets/models/ground_patch.fbx", "ground_patch")
     .addAsset("assets/textures/env.jpg", "env_texture");
@@ -33,14 +33,19 @@ import { AssetManager } from "./assetManager";
 
   const world = new World(assetManager.assets);
 
-  const chair = Asset("assets/models/chair.glb");
+  const girlinchar = extend(Asset("assets/models/girlinchar.glb"), [
+    { ...MaterialC, data: { ...MaterialC.data, shader:"Vine"} },
+    {
+      ...TransformC,
+      data: { ...TransformC.data, scale: new Vector3(0.2, 0.2, 0.2), position: new Vector3(0, 0, 1) },
+    }
+  ]);
+
+
 
   [
     Camera(new Vector3(0, 0, 4)),
-    extend(Asset("assets/models/branch.glb"), [
-      { ...MaterialC, data: { ...MaterialC.data, shader: "Test" } },
-    ]),
-    chair,
+    girlinchar,
   ].forEach((ent) => {
     world.addEntity(ent);
   });
@@ -59,8 +64,6 @@ import { AssetManager } from "./assetManager";
   ]);
 
   world
-    .addEntity(Asset("assets/models/branch.glb", new Vector3(1, 0, 0)))
-    .addEntity(Asset("assets/models/branch.glb", new Vector3(0, 1, 0)))
     .addEntity(Asset("assets/models/ground_patch.fbx", new Vector3(0, 0, 0)))
     .addEntity(light1);
 

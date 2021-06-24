@@ -11,11 +11,13 @@ const getObject3d = (ent: Entity, world: World): Object3D | undefined => {
 interface MaterialSystem extends System {
   world: World | null;
   processEntity: (ent: Entity) => void;
+  material: THREE.ShaderMaterial | null;
 }
 
 export const MaterialSystem: MaterialSystem = {
   type: "MaterialSystem",
   world: null,
+  material: null,
   queries: [TransformC, Object3DC, MaterialC],
   entities: [],
 
@@ -36,6 +38,7 @@ export const MaterialSystem: MaterialSystem = {
     const uniforms = {
       colorB: { type: "vec3", value: color1 },
       colorA: { type: "vec3", value: color2 },
+      timeMSec: { type: "f", value: 0 },
     };
 
     const material = new ShaderMaterial({
@@ -49,10 +52,18 @@ export const MaterialSystem: MaterialSystem = {
         (obj as Mesh).material = material;
       }
     });
+    console.log(parent)
+    this.material = material;    
   },
 
   onEntityAdd: function (ent) {
     const entities = applyQuery([ent], this.queries);
     entities.forEach(this.processEntity.bind(this));
+  },
+
+  tick: function(time) {
+    if(this.material) {
+      this.material.uniforms["timeMSec"].value = time;
+    }
   }
 };
