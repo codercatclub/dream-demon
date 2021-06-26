@@ -19,7 +19,7 @@ export const PointLightSystem: System = {
       const { color, intensity, distance } = getComponent(ent, PointLightC);
       const parent = getObject3d(ent, world);
 
-      const light = new PointLight(color, intensity, distance);
+      const light = new PointLight(color, intensity, distance, 2);
 
       parent?.add(light);
     });

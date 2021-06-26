@@ -2,6 +2,7 @@ import { System, World } from "../ecs/index";
 import { TransformC, GLTFModelC, Object3DC } from "../ecs/components";
 import { applyQuery, Entity } from "../ecs/index";
 import {
+  Color,
   EquirectangularReflectionMapping,
   Mesh,
   MeshStandardMaterial,
@@ -48,6 +49,7 @@ const setEnvTexture = (asset: Object3D, world: World): void => {
       texture.mapping = EquirectangularReflectionMapping;
 
       (o.material as MeshStandardMaterial).envMap = texture;
+      (o.material as MeshStandardMaterial).envMapIntensity = 0.1;
       (o.material as MeshStandardMaterial).needsUpdate = true;
     }
   });

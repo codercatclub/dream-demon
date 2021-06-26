@@ -66,7 +66,7 @@ export const PointLightC = {
 };
 
 export const HemisphereLightC = {
-  type: "PointLightC",
+  type: "HemisphereLightC",
   data: {
     skyColor: 0xffffbb,
     groundColor: 0x080820,
@@ -80,6 +80,7 @@ export const MaterialC = {
     shader: "CCBasic",
     color1: new Color(0xacb6e5),
     color2: new Color(0x74ebd5),
+    part: '',
   },
 };
 
