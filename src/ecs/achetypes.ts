@@ -80,7 +80,7 @@ export const PointLight = (
 export const HemisphereLight = ({
   skyColor = 0xffffbb,
   groundColor = 0x080820,
-  intensity = 2,
+  intensity = 1,
   position = new Vector3(0, 0, 0),
 }) =>
   newEntity([
