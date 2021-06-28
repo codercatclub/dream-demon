@@ -31,15 +31,7 @@ export const CCMaterialSystem: CCMaterialSystem = {
 
     const material = new MeshStandardMaterial(materialOptions);
     material.defines = {};
-    material.onBeforeCompile = (shader) => {
-      // shader.uniforms = UniformsUtils.merge([
-      //   this.uniforms,
-      //   shader.uniforms,
-      // ]);
-      shader.vertexShader = require(`../shaders/CCBasicVert.glsl`);
-      shader.fragmentShader = require(`../shaders/CCBasicFrag.glsl`);
-    };
-    console.log(parent)
+
     parent?.traverse((obj) => {
       if (obj.type === "Mesh") {
         let mesh = (obj as Mesh);
@@ -58,6 +50,14 @@ export const CCMaterialSystem: CCMaterialSystem = {
           material.envMapIntensity = sMat.envMapIntensity;
         }
         mesh.material = material.clone();
+        mesh.material.onBeforeCompile = (shader) => {
+          // shader.uniforms = UniformsUtils.merge([
+          //   this.uniforms,
+          //   shader.uniforms,
+          // ]);
+          shader.vertexShader = require(`../shaders/CCBasicVert.glsl`);
+          shader.fragmentShader = require(`../shaders/CCBasicFrag.glsl`);
+        };
       }
     });
   },

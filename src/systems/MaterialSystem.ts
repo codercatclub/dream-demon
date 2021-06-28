@@ -10,6 +10,8 @@ interface MaterialSystem extends System {
   materials: THREE.ShaderMaterial[],
   growthT: number,
   isGrowing: boolean;
+  dissolveT: number;
+  isDissolving: boolean;
   updateUniforms: (time: number, timeDelta: number) => void;
 }
 
@@ -17,7 +19,9 @@ export const MaterialSystem: MaterialSystem = {
   type: "MaterialSystem",
   world: null,
   growthT: 0,
+  dissolveT: 0,
   isGrowing: false,
+  isDissolving: false,
   materials: [],
   queries: [TransformC, Object3DC, MaterialC],
 
@@ -36,7 +40,8 @@ export const MaterialSystem: MaterialSystem = {
       colorB: { type: "vec3", value: color1 },
       colorA: { type: "vec3", value: color2 },
       timeMSec: { type: "f", value: 0 },
-      growthT: { type: "f", value: 0.75 },
+      growthT: { type: "f", value: 0 },
+      dissolveT: { type: "f", value: 0 },
     };
 
     const material = new ShaderMaterial({
@@ -54,8 +59,9 @@ export const MaterialSystem: MaterialSystem = {
     //onkeypress, fade in 
     window.addEventListener("keydown", (event) => {
       if(event.key == "p") {
-        this.isGrowing = true;
+        this.isDissolving = true;
         this.growthT = 0;
+        this.dissolveT = 0;
       }
     })
 
@@ -69,12 +75,21 @@ export const MaterialSystem: MaterialSystem = {
   updateUniforms: function (time, timeDelta) {
     this.materials.forEach((mat) => {
       mat.uniforms["timeMSec"].value = time;
+      if(this.isDissolving) {
+        this.dissolveT += 0.1*timeDelta;
+        if(this.dissolveT > 1) {
+          this.isDissolving = false;
+          this.isGrowing = true;
+        }
+        mat.uniforms["dissolveT"].value = this.dissolveT;
+        mat.uniforms["growthT"].value = 0;
+      } 
       if(this.isGrowing) {
         this.growthT += 0.1*timeDelta;
         if(this.growthT > 1) {
           this.isGrowing = false;
         }
-        mat.uniforms["growthT"].value =0.75 + 30.0 * Math.pow(this.growthT,5.0);
+        mat.uniforms["growthT"].value =30.0 * Math.pow(this.growthT,5.0);
       }
     });
   },
