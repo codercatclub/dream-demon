@@ -9,8 +9,9 @@ import { PointLightSystem } from "./systems/PointLightSystem";
 import { Vector3 } from "three";
 import { CameraSystem } from "./systems/CameraSystem";
 import { HemisphereLightSystem } from "./systems/HemisphereLightSystem";
-import { MaterialC } from "./ecs/components";
+import { MaterialC, CCMaterialC } from "./ecs/components";
 import { MaterialSystem } from "./systems/MaterialSystem";
+import { CCMaterialSystem } from "./systems/CCMaterialSystem";
 
 /** Adds a cube. Nothig more to say :) */
 (async () => {
@@ -30,15 +31,30 @@ import { MaterialSystem } from "./systems/MaterialSystem";
 
   const cam = Camera(new Vector3(0, 2, 4));
 
-  const env = Asset({ src: "assets/models/env.glb" });
-  const chair = Asset({ src: "assets/models/chair.glb" });
 
-  const girl = Asset({
+  const env = extend(
+    Asset({
+      src: "assets/models/env.glb",
+    }),
+    [newComponent(CCMaterialC, {})]
+  );
+
+  const chair = extend(
+    Asset({
+      src: "assets/models/chair.glb",
+    }),
+    [newComponent(CCMaterialC, {})]
+  );
+
+  const girl = extend(Asset({
     src: "assets/models/girlinchair.glb",
     scale: new Vector3(0.18, 0.18, 0.18),
     position: new Vector3(0, 0, 0.9),
     part: "/Root/BODY",
-  });
+  }),
+  [newComponent(MaterialC, { shader: "Void" })]
+  );
+  
 
   const wires = extend(
     Asset({
@@ -47,7 +63,7 @@ import { MaterialSystem } from "./systems/MaterialSystem";
       position: new Vector3(0, 0, 0.9),
       part: "/Root/WIRES",
     }),
-    [newComponent(MaterialC, { shader: "Vine" })]
+    [newComponent(MaterialC, {shader: "Vine"})]
   );
 
   const light = PointLight(0xffffff, 10, new Vector3(2, 3, 3));
@@ -67,7 +83,8 @@ import { MaterialSystem } from "./systems/MaterialSystem";
     .registerSystem(CameraSystem)
     .registerSystem(OrbitControlsSystem)
     .registerSystem(PointLightSystem)
-    .registerSystem(MaterialSystem);
+    .registerSystem(MaterialSystem)
+    .registerSystem(CCMaterialSystem);
 
     world.init();
 })();

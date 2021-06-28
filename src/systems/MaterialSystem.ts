@@ -7,17 +7,18 @@ import { getObject3d, getComponent } from './utils';
 interface MaterialSystem extends System {
   world: World | null;
   processEntity: (ent: Entity) => void;
-  material: THREE.ShaderMaterial | null;
+  materials: THREE.ShaderMaterial[],
   growthT: number,
   isGrowing: boolean;
+  updateUniforms: (time: number, timeDelta: number) => void;
 }
 
 export const MaterialSystem: MaterialSystem = {
   type: "MaterialSystem",
   world: null,
-  material: null,
   growthT: 0,
   isGrowing: false,
+  materials: [],
   queries: [TransformC, Object3DC, MaterialC],
 
   init: function (world) {
@@ -44,15 +45,12 @@ export const MaterialSystem: MaterialSystem = {
       fragmentShader: require(`../shaders/${shader}Frag.glsl`),
     });
 
+    this.materials.push(material);
     parent?.traverse((obj) => {
       if (obj.type === "Mesh") {
         (obj as Mesh).material = material;
       }
     });
-    console.log(parent)
-    this.material = material;    
-
-
     //onkeypress, fade in 
     window.addEventListener("keydown", (event) => {
       if(event.key == "p") {
@@ -68,19 +66,20 @@ export const MaterialSystem: MaterialSystem = {
     entities.forEach(this.processEntity.bind(this));
   },
 
-  tick: function(time, timeDelta) {
-    if(!this.material) {
-      return;
-    }
-    this.material.uniforms["timeMSec"].value = time;
-    
-    if(this.isGrowing) {
-      this.growthT += 0.1*timeDelta;
-      if(this.growthT > 1) {
-        this.isGrowing = false;
+  updateUniforms: function (time, timeDelta) {
+    this.materials.forEach((mat) => {
+      mat.uniforms["timeMSec"].value = time;
+      if(this.isGrowing) {
+        this.growthT += 0.1*timeDelta;
+        if(this.growthT > 1) {
+          this.isGrowing = false;
+        }
+        mat.uniforms["growthT"].value =0.75 + 30.0 * Math.pow(this.growthT,5.0);
       }
-      this.material.uniforms["growthT"].value =0.75 + 30.0 * Math.pow(this.growthT,5.0);
-    }
+    });
+  },
 
+  tick: function(time, timeDelta) {
+    this.updateUniforms(time, timeDelta);
   }
 };
