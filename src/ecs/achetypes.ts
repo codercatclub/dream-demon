@@ -8,7 +8,7 @@ import {
   HemisphereLightC,
 } from "./components";
 import { newEntity, Entity, newComponent } from "./index";
-import { Vector3 } from "three";
+import { Vector3, Color } from "three";
 
 /** Helper functions to construct commonly used Entities */
 
@@ -66,13 +66,15 @@ export const StandardPrimitive = (
     newComponent(Object3DC),
   ]);
 
-export const PointLight = (
-  color = 0xffffff,
+export const PointLight = ({
+  color = new Color(0xffffff),
   intensity = 20,
-  position = new Vector3(0, 0, 0)
-) =>
+  position = new Vector3(0, 0, 0),
+  showHelper = false,
+  shadow = false,
+}) =>
   newEntity([
-    newComponent(PointLightC, { color, intensity }),
+    newComponent(PointLightC, { color, intensity, showHelper, shadow }),
     newComponent(Object3DC),
     newComponent(TransformC, { position }),
   ]);

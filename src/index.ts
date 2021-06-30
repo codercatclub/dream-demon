@@ -2,13 +2,12 @@ import { extend, World, newComponent } from "./ecs/index";
 import { RenderSystem } from "./systems/RenderSystem";
 import { Object3DSystem } from "./systems/Object3DSystem";
 import { AssetManager } from "./ecs/assetManager";
-import { Asset, Camera, HemisphereLight, PointLight } from "./ecs/achetypes";
+import { Asset, Camera, PointLight } from "./ecs/achetypes";
 import { AssetSystem } from "./systems/AssetSystem";
 import { OrbitControlsSystem } from "./systems/OrbitControlsSystem";
 import { PointLightSystem } from "./systems/PointLightSystem";
 import { Vector3 } from "three";
 import { CameraSystem } from "./systems/CameraSystem";
-import { HemisphereLightSystem } from "./systems/HemisphereLightSystem";
 import { MaterialC, CCMaterialC } from "./ecs/components";
 import { MaterialSystem } from "./systems/MaterialSystem";
 import { CCMaterialSystem } from "./systems/CCMaterialSystem";
@@ -17,8 +16,10 @@ import { CCMaterialSystem } from "./systems/CCMaterialSystem";
 (async () => {
   const assetManager = new AssetManager();
 
+  const ENV_GLTF = "assets/models/env_ktx.glb";
+
   assetManager
-    .addAsset("assets/models/env.glb", "env")
+    .addAsset(ENV_GLTF, "env")
     .addAsset("assets/models/chair.glb", "chair")
     .addAsset("assets/models/branch.glb", "branch")
     .addAsset("assets/models/girlinchair.glb", "girlinchair")
@@ -31,10 +32,9 @@ import { CCMaterialSystem } from "./systems/CCMaterialSystem";
 
   const cam = Camera(new Vector3(0, 2, 4));
 
-
   const env = extend(
     Asset({
-      src: "assets/models/env.glb",
+      src: ENV_GLTF,
     }),
     [newComponent(CCMaterialC, {})]
   );
@@ -46,15 +46,15 @@ import { CCMaterialSystem } from "./systems/CCMaterialSystem";
     [newComponent(CCMaterialC, {})]
   );
 
-  const girl = extend(Asset({
-    src: "assets/models/girlinchair.glb",
-    scale: new Vector3(0.18, 0.18, 0.18),
-    position: new Vector3(0, 0, 0.9),
-    part: "/Root/BODY",
-  }),
-  [newComponent(MaterialC, { shader: "Void" })]
+  const girl = extend(
+    Asset({
+      src: "assets/models/girlinchair.glb",
+      scale: new Vector3(0.18, 0.18, 0.18),
+      position: new Vector3(0, 0, 0.9),
+      part: "/Root/BODY",
+    }),
+    [newComponent(MaterialC, { shader: "Void" })]
   );
-  
 
   const wires = extend(
     Asset({
@@ -63,17 +63,17 @@ import { CCMaterialSystem } from "./systems/CCMaterialSystem";
       position: new Vector3(0, 0, 0.9),
       part: "/Root/WIRES",
     }),
-    [newComponent(MaterialC, {shader: "Vine"})]
+    [newComponent(MaterialC, { shader: "Vine" })]
   );
 
-  const light = PointLight(0xffffff, 10, new Vector3(2, 3, 3));
+  const light1 = PointLight({ intensity: 10, position: new Vector3(2, 3, 3) });
 
   world
     .addEntity(cam)
     .addEntity(env)
     .addEntity(chair)
     .addEntity(girl)
-    .addEntity(light)
+    .addEntity(light1)
     .addEntity(wires);
 
   world
@@ -86,5 +86,5 @@ import { CCMaterialSystem } from "./systems/CCMaterialSystem";
     .registerSystem(MaterialSystem)
     .registerSystem(CCMaterialSystem);
 
-    world.init();
+  world.init();
 })();

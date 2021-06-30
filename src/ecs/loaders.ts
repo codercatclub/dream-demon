@@ -1,7 +1,8 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
-import { Group, Texture, TextureLoader } from "three";
+import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader";
+import { Group, Texture, TextureLoader, WebGLRenderer } from "three";
 
 export type LoaderResult<T> = Promise<T>;
 export type Loader<T> = (src: string) => LoaderResult<T>;
@@ -12,6 +13,15 @@ const gltfLoader = new GLTFLoader();
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
 gltfLoader.setDRACOLoader(dracoLoader);
+
+const ktx2Loader = new KTX2Loader();
+ktx2Loader.setTranscoderPath('assets/libs/basis/');
+
+// HACK (Kirill): This is pretty dumb but I have to do it ot init KTX2 settings.
+const renderer = new WebGLRenderer();
+ktx2Loader.detectSupport( renderer );
+
+gltfLoader.setKTX2Loader(ktx2Loader)
 
 const textureLoader = new TextureLoader();
 

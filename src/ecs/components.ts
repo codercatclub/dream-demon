@@ -59,9 +59,11 @@ export const GLTFModelC = {
 export const PointLightC = {
   type: "PointLightC",
   data: {
-    color: 0xffffff,
+    color: new Color(0xffffff),
     intensity: 1.0,
     distance: 100,
+    showHelper: false,
+    shadow: false,
   },
 };
 

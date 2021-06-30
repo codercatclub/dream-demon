@@ -2,7 +2,6 @@ import { System, World } from "../ecs/index";
 import { TransformC, GLTFModelC, Object3DC } from "../ecs/components";
 import { applyQuery, Entity } from "../ecs/index";
 import {
-  Color,
   EquirectangularReflectionMapping,
   Mesh,
   MeshStandardMaterial,
@@ -11,17 +10,16 @@ import {
 } from "three";
 import { getObject3d, getComponent } from "./utils";
 
-
-const findChild = (obj: Object3D, name: string) => 
-  obj.children.find((c) => c.name === name)
+const findChild = (obj: Object3D, name: string) =>
+  obj.children.find((c) => c.name === name);
 
 const getObjectByPath = (obj: Object3D, path: string): Object3D | undefined => {
   const parts = path.split("/");
 
   parts.shift();
-  
+
   let result: Object3D | undefined;
-  
+
   for (let i = 0; i < parts.length; i++) {
     if (result) {
       result = findChild(result, parts[i]);
@@ -38,6 +36,10 @@ const setEnvTexture = (asset: Object3D, world: World): void => {
     if (obj.type === "Mesh") {
       const o = obj as Mesh;
       const texture = world.assets.get("assets/textures/env.jpg") as Texture;
+
+      // TODO (Kirill): Move it from here
+      obj.castShadow = true;
+      obj.receiveShadow = true;
 
       if (!texture) {
         console.warn(
@@ -99,7 +101,7 @@ export const AssetSystem: AssetSystem = {
       if (obj) {
         asset = obj;
       } else {
-        console.warn(`Can not fine part ${part} in object ${src}`)
+        console.warn(`Can not fine part ${part} in object ${src}`);
       }
     }
 

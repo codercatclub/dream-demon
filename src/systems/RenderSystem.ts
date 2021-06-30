@@ -1,7 +1,11 @@
 import * as THREE from "three";
 import { System } from "../ecs/index";
 
-export interface RenderSystem extends System {
+interface RenderSystemConfig {
+  enableShadows: boolean;
+}
+
+export interface RenderSystem extends System, RenderSystemConfig {
   camera: THREE.PerspectiveCamera | null;
   scene: THREE.Scene | null;
   renderer: THREE.WebGLRenderer | null;
@@ -12,6 +16,7 @@ export interface RenderSystem extends System {
   onFrameEnd(time: number, delta: number): void;
   tick(time: number, delta: number): void;
   onWindowResize(): void;
+  configure(props: RenderSystemConfig): RenderSystem;
 }
 
 export const RenderSystem: RenderSystem = {
@@ -22,6 +27,15 @@ export const RenderSystem: RenderSystem = {
   systems: [],
   clock: null,
   queries: [],
+  enableShadows: false,
+
+  configure: function ({ enableShadows }) {
+    if (enableShadows) {
+      this.enableShadows = enableShadows;
+    }
+
+    return this;
+  },
 
   init: function (world) {
     this.animation = this.animation.bind(this);
@@ -30,6 +44,10 @@ export const RenderSystem: RenderSystem = {
     this.systems = world.systems.filter((s) => s.type !== "RenderSystem");
 
     this.scene = world.scene;
+
+    if (this.scene) {
+      this.scene.fog = new THREE.FogExp2(0xc2d1d1, 0.08);
+    }
 
     // TODO
     // Set default camera. Can be overriden by render system
@@ -52,6 +70,11 @@ export const RenderSystem: RenderSystem = {
     this.renderer.setAnimationLoop(this.animation);
 
     this.renderer.domElement.id = "world";
+
+    if (this.enableShadows) {
+      this.renderer.shadowMap.enabled = true;
+      this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    }
 
     document.body.appendChild(this.renderer.domElement);
 
