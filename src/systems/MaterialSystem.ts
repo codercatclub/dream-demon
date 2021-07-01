@@ -1,13 +1,13 @@
 import { System } from "../ecs/index";
 import { TransformC, Object3DC, MaterialC } from "../ecs/components";
 import { applyQuery, Entity, World } from "../ecs/index";
-import { ShaderMaterial, Mesh } from "three";
+import { Mesh, UniformsUtils, MeshPhongMaterial, MeshStandardMaterial } from "three";
 import { getComponent } from './utils';
 
 interface MaterialSystem extends System {
   world: World | null;
   processEntity: (ent: Entity) => void;
-  materials: THREE.ShaderMaterial[],
+  materials: THREE.Shader[],
   growthT: number,
   isGrowing: boolean;
   dissolveT: number;
@@ -43,14 +43,22 @@ export const MaterialSystem: MaterialSystem = {
       growthT: { type: "f", value: 0 },
       dissolveT: { type: "f", value: 0 },
     };
+    let materialOptions = {
+    };
+    
+    //HACK
+    const material = shader == "Vine" ? new MeshStandardMaterial(materialOptions) : new MeshPhongMaterial(materialOptions);
 
-    const material = new ShaderMaterial({
-      uniforms: uniforms,
-      vertexShader: require(`../shaders/${shader}Vert.glsl`),
-      fragmentShader: require(`../shaders/${shader}Frag.glsl`),
-    });
+    material.onBeforeCompile = (mshader) => {
+      mshader.uniforms = UniformsUtils.merge([
+        uniforms,
+        mshader.uniforms,
+      ]);
+      mshader.vertexShader = require(`../shaders/${shader}Vert.glsl`);
+      mshader.fragmentShader =require(`../shaders/${shader}Frag.glsl`);
+      this.materials.push(mshader);
+    };
 
-    this.materials.push(material);
     parent?.traverse((obj) => {
       if (obj.type === "Mesh") {
         (obj as Mesh).material = material;
