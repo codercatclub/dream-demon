@@ -1,22 +1,35 @@
-import { Object3D, Texture, Group } from "three";
+import { Object3D, Texture, Group, AnimationClip } from "three";
+import { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
 import { AssetType, getLoader, LoaderResult, loaders } from "./loaders";
 
 const getFileExtension = (path: string) => path.split(".").pop() ?? "";
 const isSupported = (ext: string): boolean =>
   Object.keys(loaders).includes(ext);
 
+export interface LoadedAsset {
+  objects: Map<string, Object3D>;
+  animations: Map<string, AnimationClip[]>;
+  textures: Map<string, Texture>;
+}
+
 export interface Asset {
   type: AssetType;
   tag: string;
   src: string;
-  obj: Object3D | Texture | null;
 }
 
 export class AssetManager {
   private _assets: Asset[] = [];
+  private _textures: Map<string, Texture> = new Map();
+  private _objects: Map<string, Object3D> = new Map();
+  private _animations: Map<string, AnimationClip[]> = new Map();
 
-  public get assets() {
-    return this._assets;
+  public get loadedAssets(): LoadedAsset {
+    return {
+      objects: this._objects,
+      animations: this._animations,
+      textures: this._textures,
+    };
   }
 
   public addAsset(src: string, tag: string) {
@@ -27,7 +40,7 @@ export class AssetManager {
       return this;
     }
 
-    this._assets.push({ type: extension, src, tag, obj: null });
+    this._assets.push({ type: extension, src, tag });
 
     return this;
   }
@@ -39,7 +52,7 @@ export class AssetManager {
     const promises = this._assets.map((asset, idx) => {
       const loader = getLoader(asset.type);
 
-      this.onItemLoadStart(idx, this._assets);
+      this.onItemLoadStart(idx, this._assets[idx].src);
 
       return loader(asset.src);
     }, [] as LoaderResult<Group | Texture>[]);
@@ -48,7 +61,7 @@ export class AssetManager {
 
     for (const p of promises) {
       p.then(() => {
-        this.onItemLoadEnd(idx, this._assets);
+        this.onItemLoadEnd(idx, this._assets.length);
         idx++;
       });
     }
@@ -58,7 +71,34 @@ export class AssetManager {
     // Store models that successfully loaded
     results.forEach((result, i) => {
       if (result.status === "fulfilled") {
-        this._assets[i].obj = result.value;
+        const { type, src } = this._assets[i];
+
+        switch (type) {
+          case "glb":
+            const gltf = result.value as GLTF;
+
+            this._objects.set(src, gltf.scene);
+
+            if (gltf.animations.length > 0) {
+              const prevAnims = this._animations.get(src) || [];
+              this._animations.set(src, prevAnims.concat(gltf.animations));
+            }
+
+            break;
+
+          case "fbx":
+            const obj = result.value as Object3D;
+            this._objects.set(src, obj);
+            break;
+
+          case "jpg":
+            const tex = result.value as Texture;
+            this._textures.set(src, tex);
+            break;
+
+          default:
+            break;
+        }
       } else {
         const { responseURL, statusText } = result?.reason?.target;
         console.error(
@@ -75,16 +115,16 @@ export class AssetManager {
     window.dispatchEvent(event);
   }
 
-  public onItemLoadStart(idx: number, assets: Asset[]) {
+  public onItemLoadStart(idx: number, src: string) {
     const event = new CustomEvent("on-item-load-start", {
-      detail: { idx, assets },
+      detail: { idx, src },
     });
     window.dispatchEvent(event);
   }
 
-  public onItemLoadEnd(idx: number, assets: Asset[]) {
+  public onItemLoadEnd(idx: number, total: number) {
     const event = new CustomEvent("on-item-load-end", {
-      detail: { idx, assets },
+      detail: { idx, total },
     });
     window.dispatchEvent(event);
   }

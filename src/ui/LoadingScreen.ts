@@ -1,10 +1,16 @@
 import { html, css } from "./utils";
-import { Asset } from "../ecs/assetManager";
 
 interface ProgressEvent extends CustomEvent {
   detail: {
     idx: number;
-    assets: Asset[];
+    src: string;
+  };
+}
+
+interface OnItemLoadEndEvent extends CustomEvent {
+  detail: {
+    idx: number;
+    total: number;
   };
 }
 
@@ -75,17 +81,17 @@ export default class LoadingScreen extends HTMLElement {
     const loadLogEl = this.shadowRoot?.getElementById("load-log");
 
     window.addEventListener("on-item-load-start", ((e: ProgressEvent) => {
-      const { assets, idx } = e.detail;
+      const { src } = e.detail;
       if (loadLogEl) {
-        loadLogEl.innerHTML = `loading ${assets[idx].src}`;
+        loadLogEl.innerHTML = `loading ${src}`;
       }
     }) as EventListener);
 
-    window.addEventListener("on-item-load-end", ((e: ProgressEvent) => {
-      const { assets, idx } = e.detail;
-      const itemsLoaded = assets.length - (assets.length - (idx + 1));
+    window.addEventListener("on-item-load-end", ((e: OnItemLoadEndEvent) => {
+      const { total, idx } = e.detail;
+      const itemsLoaded = total - (total - (idx + 1));
 
-      const width = (itemsLoaded / assets.length) * 100;
+      const width = (itemsLoaded / total) * 100;
 
       if (barEl) {
         barEl.style.width = width + "%";

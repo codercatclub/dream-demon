@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Color } from "three";
+import { Color, PerspectiveCamera } from "three";
 import { System } from "../ecs/index";
 
 interface RenderSystemConfig {
@@ -19,6 +19,7 @@ export interface RenderSystem extends System, RenderSystemConfig {
   tick(time: number, delta: number): void;
   onWindowResize(): void;
   configure(props: Partial<RenderSystemConfig>): RenderSystem;
+  setCamera(cam: PerspectiveCamera): void;
 }
 
 export const RenderSystem: RenderSystem = {
@@ -39,6 +40,12 @@ export const RenderSystem: RenderSystem = {
     return this;
   },
 
+  setCamera: function (cam) {
+    // TODO (Kirill): Overriding render system default camera is not idel.
+    // perhaps render system should search for existing camera...
+    this.camera = cam;
+  },
+
   init: function (world) {
     this.animation = this.animation.bind(this);
     this.clock = new THREE.Clock();
@@ -55,7 +62,7 @@ export const RenderSystem: RenderSystem = {
     }
 
     // TODO
-    // Set default camera. Can be overriden by render system
+    // Set default camera.
     this.camera = new THREE.PerspectiveCamera(
       70,
       window.innerWidth / window.innerHeight,

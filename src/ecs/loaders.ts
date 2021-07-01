@@ -1,4 +1,4 @@
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { GLTFLoader, GLTF } from "three/examples/jsm/loaders/GLTFLoader";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader";
@@ -30,11 +30,11 @@ export const loadFBX: Loader<Group> = (src) =>
     fbxLoader.load(src, resolve, () => {}, reject);
   });
 
-export const loadGLTF: Loader<Group> = (src) =>
+export const loadGLTF: Loader<GLTF> = (src) =>
   new Promise((resolve, reject) => {
     gltfLoader.load(
       src,
-      (gltf) => resolve(gltf.scene),
+      (gltf) => resolve(gltf),
       () => {},
       reject
     );
@@ -59,6 +59,6 @@ export const loaders = {
 export type AssetType = keyof typeof loaders;
 
 /** Get coresponding loader for a type. Type is come from file extension */
-export function getLoader(type: AssetType): (Loader<Group | Texture>) {
+export function getLoader(type: AssetType): (Loader<Group | Texture | GLTF>) {
   return loaders[type];
 };

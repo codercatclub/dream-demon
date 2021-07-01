@@ -6,7 +6,6 @@ import {
   Mesh,
   MeshStandardMaterial,
   Object3D,
-  Texture,
 } from "three";
 import { getComponent } from "./utils";
 
@@ -35,7 +34,7 @@ const setEnvTexture = (asset: Object3D, world: World): void => {
   asset.traverse((obj) => {
     if (obj.type === "Mesh") {
       const o = obj as Mesh;
-      const texture = world.assets.get("assets/textures/env.jpg") as Texture;
+      const texture = world.assets.textures.get("assets/textures/env.jpg");
 
       // TODO (Kirill): Move it from here
       obj.castShadow = true;
@@ -88,7 +87,7 @@ export const AssetSystem: AssetSystem = {
       return;
     }
 
-    let asset = this.world.assets.get(src) as Object3D;
+    let asset = this.world.assets.objects.get(src);
 
     if (!asset) {
       console.warn(`${src} is not found in preloaded assets`);
