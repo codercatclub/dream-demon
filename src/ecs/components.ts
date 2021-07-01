@@ -89,7 +89,7 @@ export const MaterialC = {
 export const CCMaterialC = {
   type: "CCMaterialC",
   data: {
-    color: new Color(0xacb6e5),
+    color: new Color(0xffffff),
   },
 };
 

@@ -18,6 +18,9 @@ varying vec3 vViewPosition;
 #include <shadowmap_pars_vertex>
 #include <logdepthbuf_pars_vertex>
 #include <clipping_planes_pars_vertex>
+
+varying vec3 vWorldPos;
+
 void main() {
 	#include <uv_vertex>
 	#include <uv2_vertex>
@@ -45,4 +48,6 @@ void main() {
 	#include <worldpos_vertex>
 	#include <shadowmap_vertex>
 	#include <fog_vertex>
+
+	vWorldPos = (modelMatrix * vec4( position, 1.0 )).xyz;
 }

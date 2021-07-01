@@ -1,17 +1,19 @@
 import { System } from "../ecs/index";
 import { TransformC, Object3DC, CCMaterialC } from "../ecs/components";
 import { applyQuery, Entity, World } from "../ecs/index";
-import { Mesh, Color, MeshStandardMaterial } from "three";
+import { UniformsUtils, Mesh, Color, MeshStandardMaterial } from "three";
 import { getComponent } from "./utils";
 
 interface CCMaterialSystem extends System {
   world: World | null;
+  shaders: THREE.Shader[],
   processEntity: (ent: Entity) => void;
 }
 
 export const CCMaterialSystem: CCMaterialSystem = {
   type: "CCMaterialSystem",
   world: null,
+  shaders: [],
   queries: [TransformC, Object3DC, CCMaterialC],
 
   init: function (world) {
@@ -50,13 +52,18 @@ export const CCMaterialSystem: CCMaterialSystem = {
           material.envMapIntensity = sMat.envMapIntensity;
         }
         mesh.material = material.clone();
+        let uniforms  = {
+          timeMSec : {value : 0}
+        }
         mesh.material.onBeforeCompile = (shader) => {
-          // shader.uniforms = UniformsUtils.merge([
-          //   this.uniforms,
-          //   shader.uniforms,
-          // ]);
+          shader.uniforms = UniformsUtils.merge([
+            uniforms,
+            shader.uniforms,
+          ]);
           shader.vertexShader = require(`../shaders/CCBasicVert.glsl`);
           shader.fragmentShader = require(`../shaders/CCBasicFrag.glsl`);
+
+          this.shaders.push(shader);
         };
       }
     });
@@ -66,4 +73,10 @@ export const CCMaterialSystem: CCMaterialSystem = {
     const entities = applyQuery([ent], this.queries);
     entities.forEach(this.processEntity.bind(this));
   },
+
+  tick: function(time, timeDelta) {
+    this.shaders.forEach((shader) => {
+      shader.uniforms["timeMSec"].value = time;
+    });
+  }
 };
