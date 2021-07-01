@@ -41,6 +41,9 @@ export const CCMaterialSystem: CCMaterialSystem = {
         if (sMat.map) {
           material.map = sMat.map;
         }
+        if (sMat.metalness) {
+          material.metalness = sMat.metalness;
+        }
         if (sMat.normalMap) {
           material.normalMap = sMat.normalMap;
         }
