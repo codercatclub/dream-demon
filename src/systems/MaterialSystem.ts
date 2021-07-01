@@ -2,7 +2,7 @@ import { System } from "../ecs/index";
 import { TransformC, Object3DC, MaterialC } from "../ecs/components";
 import { applyQuery, Entity, World } from "../ecs/index";
 import { ShaderMaterial, Mesh } from "three";
-import { getObject3d, getComponent } from './utils';
+import { getComponent } from './utils';
 
 interface MaterialSystem extends System {
   world: World | null;
@@ -34,7 +34,7 @@ export const MaterialSystem: MaterialSystem = {
   processEntity: function(ent) {
     if (!this.world) return;
     const { shader, color1, color2 } = getComponent(ent, MaterialC);
-    const parent = getObject3d(ent, this.world);
+    const { object3d: parent } = getComponent(ent, Object3DC);
 
     const uniforms = {
       colorB: { type: "vec3", value: color1 },

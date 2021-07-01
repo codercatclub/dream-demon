@@ -8,10 +8,11 @@ import { OrbitControlsSystem } from "../systems/OrbitControlsSystem";
 import { PointLightSystem } from "../systems/PointLightSystem";
 import { Vector3, Color } from "three";
 import { CameraSystem } from "../systems/CameraSystem";
-import { MaterialC } from "../ecs/components";
+import { FlickerC, MaterialC } from "../ecs/components";
 import { MaterialSystem } from "../systems/MaterialSystem";
 import { StatsSystem } from "../systems/StatsSystem";
 import { HemisphereLightSystem } from "../systems/HemisphereLightSystem";
+import { FlickerSystem } from "../systems/FlickerSystem";
 
 /** Adds a cube. Nothig more to say :) */
 export default async () => {
@@ -53,21 +54,22 @@ export default async () => {
     [MaterialC]
   );
 
-  const light1 = PointLight({
-    intensity: 20,
-    position: new Vector3(2, 2, 2.8),
+  const light1 = extend(PointLight({
+    intensity: 1,
+    position: new Vector3(2, 0.6, 1),
     color: new Color(1, 0.6, 0.6),
-    showHelper: true,
+    showHelper: false,
     shadow: true,
-  });
+  }), [FlickerC]);
 
-  const light2 = PointLight({
-    intensity: 7,
-    position: new Vector3(-2, 2, 2.8),
-    color: new Color(0.7, 0.7, 1),
-    showHelper: true,
+  const light2 = extend(PointLight({
+    intensity: 1,
+    position: new Vector3(-2.2, 0.6, 1.5),
+
+    color: new Color(1, 0.6, 0.6),
+    showHelper: false,
     shadow: true,
-  });
+  }), [FlickerC]);
 
   const hLight = HemisphereLight({ intensity: 0.5 });
 
@@ -78,11 +80,16 @@ export default async () => {
     .addEntity(girl)
     .addEntity(light1)
     .addEntity(light2)
-    .addEntity(wires)
-    .addEntity(hLight);
+    .addEntity(wires);
+  // .addEntity(hLight);
 
   world
-    .registerSystem(RenderSystem.configure({ enableShadows: true }))
+    .registerSystem(
+      RenderSystem.configure({
+        enableShadows: true,
+        fog: { enabled: true, color: new Color(0xc2d1d1), density: 0.04 },
+      })
+    )
     .registerSystem(Object3DSystem)
     .registerSystem(AssetSystem)
     .registerSystem(CameraSystem)
@@ -90,7 +97,8 @@ export default async () => {
     .registerSystem(HemisphereLightSystem)
     .registerSystem(PointLightSystem)
     .registerSystem(MaterialSystem)
-    .registerSystem(StatsSystem);
+    .registerSystem(StatsSystem)
+    .registerSystem(FlickerSystem)
 
   return world;
 };

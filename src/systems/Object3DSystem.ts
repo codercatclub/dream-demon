@@ -36,7 +36,7 @@ export const Object3DSystem: Object3DSystem = {
 
     // Assign group id to component data
     // that we can retrive it later
-    ent.components.set(Object3DC.type, { id: group.id });
+    ent.components.set(Object3DC.type, { object3d: group });
 
     this.world?.scene?.add(group);
 
@@ -46,15 +46,13 @@ export const Object3DSystem: Object3DSystem = {
   tick: function () {
     this.entities.forEach((ent) => {
       const { position: p, rotation: r, scale: s } = getComponent(ent, TransformC);
-      const obj = getComponent(ent, Object3DC);
+      const { object3d } = getComponent(ent, Object3DC);
 
-      const obj3D = this.objects.get(parseFloat(obj.id));
-
-      if (obj3D) {
+      if (object3d) {
         // Update postion for each group from TransformC component
-        obj3D.position.copy(p);
-        obj3D.rotation.set(r.x, r.y, r.z);
-        obj3D.scale.copy(s);
+        object3d.position.copy(p);
+        object3d.rotation.set(r.x, r.y, r.z);
+        object3d.scale.copy(s);
       }
     });
   },

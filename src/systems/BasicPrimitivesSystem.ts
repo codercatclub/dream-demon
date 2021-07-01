@@ -2,7 +2,7 @@ import { Object3DC, GeometryC } from "../ecs/components";
 import { applyQuery, Entity, World} from "../ecs/index";
 import * as THREE from "three";
 import { System } from "../ecs/index";
-import { getObject3d, getComponent } from "./utils";
+import { getComponent } from "./utils";
 
 interface BasicPrimitivesSystem extends System {
   world: World | null;
@@ -25,6 +25,7 @@ export const BasicPrimitivesSystem: BasicPrimitivesSystem = {
 
   processEntity: function (ent) {
     const geo = getComponent(ent, GeometryC);
+    const { object3d } = getComponent(ent, Object3DC);
 
     let geometry = null;
 
@@ -42,9 +43,7 @@ export const BasicPrimitivesSystem: BasicPrimitivesSystem = {
         const material = new THREE.MeshNormalMaterial();
         const mesh = new THREE.Mesh(geometry, material);
 
-        const obj3D = getObject3d(ent, this.world);
-
-        obj3D?.add(mesh);
+        object3d?.add(mesh);
       }
     }
   },

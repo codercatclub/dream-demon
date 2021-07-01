@@ -1,7 +1,7 @@
 import { System } from "../ecs/index";
 import { HemisphereLightC, TransformC, Object3DC } from "../ecs/components";
 import { applyQuery } from "../ecs/index";
-import { getObject3d, getComponent } from "./utils";
+import { getComponent } from "./utils";
 import { HemisphereLight } from "three";
 
 export const HemisphereLightSystem: System = {
@@ -13,11 +13,11 @@ export const HemisphereLightSystem: System = {
 
     this.entities.forEach((ent) => {
       const { skyColor, groundColor, intensity } = getComponent(ent, HemisphereLightC);
-      const parent = getObject3d(ent, world);
+      const { object3d } = getComponent(ent, Object3DC);
 
       const light = new HemisphereLight(skyColor, groundColor, intensity);
 
-      parent?.add(light);
+      object3d?.add(light);
     });
   },
 };
