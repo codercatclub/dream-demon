@@ -2,9 +2,12 @@ uniform float timeMSec;
 
 varying vec3 vUv;
 varying vec3 vWorldPos;
+varying vec3 vNormal;
+
 varying float vReflectionFactor;
 @import ./PerlinNoise;
 
+#include <fog_pars_vertex>
 
 void main() {
   vUv = position;
@@ -23,12 +26,15 @@ void main() {
   worldNormal.z += t;
 
   worldNormal = normalize(worldNormal);
+  vNormal = worldNormal;
 
   //worldPosition.xyz += 0.01*t * worldNormal;
   //mFresnelPower += t;
 
   vReflectionFactor = mFresnelBias + mFresnelScale * pow( 1.0 + dot( normalize( I ), worldNormal ), mFresnelPower );
 
-  vec4 modelViewPosition = viewMatrix * worldPosition;
-  gl_Position = projectionMatrix * modelViewPosition;
+  vec4 mvPosition = viewMatrix * worldPosition;
+  gl_Position = projectionMatrix * mvPosition;
+
+  #include <fog_vertex>
 }

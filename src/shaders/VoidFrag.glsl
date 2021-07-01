@@ -4,6 +4,7 @@ varying vec3 vUv;
 
 varying float vReflectionFactor;
 varying vec3 vWorldPos;
+varying vec3 vNormal;
 uniform float timeMSec;
 
 uniform float dissolveT;
@@ -11,7 +12,7 @@ uniform float dissolveT;
 @import ./PerlinNoise;
 @import ./Spectral;
 
-
+#include <fog_pars_fragment>
 
 void main() {
   //dissolve in action based on y distance from ground
@@ -21,12 +22,14 @@ void main() {
   float modv = vWorldPos.y + pow(cnoise(3.0*vWorldPos),0.3);
 
   if(modv > 4.0 * dissolveT) {
-    discard;
+    //discard;
   }
   float col = 1.0 - smoothstep(0.0,0.3,abs(modv-4.0*dissolveT));
-
+  float dotl = dot(vNormal, vec3(-1.0,0.0,1.0));
 
   float r = 300. + 300. * vReflectionFactor + 200. *col;
-  vec3 sp = spectral_zucconi(r);
+  vec3 sp = dotl * spectral_zucconi(r);
   gl_FragColor = vec4(sp, 1);
+
+  #include <fog_fragment>
 }
