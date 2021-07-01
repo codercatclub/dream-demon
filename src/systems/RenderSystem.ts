@@ -1,8 +1,10 @@
 import * as THREE from "three";
+import { Color } from "three";
 import { System } from "../ecs/index";
 
 interface RenderSystemConfig {
   enableShadows: boolean;
+  fog: { enabled: boolean; color: Color; density: number };
 }
 
 export interface RenderSystem extends System, RenderSystemConfig {
@@ -16,7 +18,7 @@ export interface RenderSystem extends System, RenderSystemConfig {
   onFrameEnd(time: number, delta: number): void;
   tick(time: number, delta: number): void;
   onWindowResize(): void;
-  configure(props: RenderSystemConfig): RenderSystem;
+  configure(props: Partial<RenderSystemConfig>): RenderSystem;
 }
 
 export const RenderSystem: RenderSystem = {
@@ -28,11 +30,11 @@ export const RenderSystem: RenderSystem = {
   clock: null,
   queries: [],
   enableShadows: false,
+  fog: { enabled: false, color: new Color(1, 1, 1), density: 0.1 },
 
-  configure: function ({ enableShadows }) {
-    if (enableShadows) {
-      this.enableShadows = enableShadows;
-    }
+  configure: function ({ enableShadows, fog }) {
+    if (enableShadows) this.enableShadows = enableShadows;
+    if (fog) this.fog = fog;
 
     return this;
   },
@@ -45,8 +47,11 @@ export const RenderSystem: RenderSystem = {
 
     this.scene = world.scene;
 
-    if (this.scene) {
-      this.scene.fog = new THREE.FogExp2(0xc2d1d1, 0.08);
+    if (this.fog.enabled && this.scene) {
+      this.scene.fog = new THREE.FogExp2(
+        this.fog.color.getHex(),
+        this.fog.density
+      );
     }
 
     // TODO

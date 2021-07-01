@@ -8,7 +8,7 @@ import {
   Object3D,
   Texture,
 } from "three";
-import { getObject3d, getComponent } from "./utils";
+import { getComponent } from "./utils";
 
 const findChild = (obj: Object3D, name: string) =>
   obj.children.find((c) => c.name === name);
@@ -50,7 +50,7 @@ const setEnvTexture = (asset: Object3D, world: World): void => {
 
       texture.mapping = EquirectangularReflectionMapping;
 
-      (o.material as MeshStandardMaterial).envMap = texture;
+      // (o.material as MeshStandardMaterial).envMap = texture;
       (o.material as MeshStandardMaterial).envMapIntensity = 0.1;
       (o.material as MeshStandardMaterial).needsUpdate = true;
     }
@@ -75,12 +75,11 @@ export const AssetSystem: AssetSystem = {
 
   processEntity: function (ent: Entity) {
     const { src, part } = getComponent(ent, GLTFModelC);
+    const { object3d: parent } = getComponent(ent, Object3DC);
 
     if (!this.world) {
       return;
     }
-
-    const parent = getObject3d(ent, this.world);
 
     if (!parent) {
       console.warn(

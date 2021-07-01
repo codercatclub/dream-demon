@@ -1,8 +1,8 @@
 import { System } from "../ecs/index";
 import { TransformC, Object3DC, CCMaterialC } from "../ecs/components";
 import { applyQuery, Entity, World } from "../ecs/index";
-import { Mesh, MeshPhongMaterial, Color, MeshStandardMaterial } from "three";
-import { getObject3d, getComponent } from './utils';
+import { Mesh, Color, MeshStandardMaterial } from "three";
+import { getComponent } from "./utils";
 
 interface CCMaterialSystem extends System {
   world: World | null;
@@ -20,10 +20,10 @@ export const CCMaterialSystem: CCMaterialSystem = {
     this.entities.forEach(this.processEntity.bind(this));
   },
 
-  processEntity: function(ent) {
+  processEntity: function (ent) {
     if (!this.world) return;
-    const {color} = getComponent(ent, CCMaterialC);
-    const parent = getObject3d(ent, this.world);
+    const { color } = getComponent(ent, CCMaterialC);
+    const { object3d: parent } = getComponent(ent, Object3DC);
 
     let materialOptions = {
       color: new Color(color),
@@ -34,18 +34,18 @@ export const CCMaterialSystem: CCMaterialSystem = {
 
     parent?.traverse((obj) => {
       if (obj.type === "Mesh") {
-        let mesh = (obj as Mesh);
-        let sMat = (mesh.material as MeshStandardMaterial);
-        if(sMat.map) {
+        let mesh = obj as Mesh;
+        let sMat = mesh.material as MeshStandardMaterial;
+        if (sMat.map) {
           material.map = sMat.map;
         }
-        if(sMat.normalMap) {
+        if (sMat.normalMap) {
           material.normalMap = sMat.normalMap;
         }
-        if(sMat.roughnessMap) {
+        if (sMat.roughnessMap) {
           material.roughnessMap = sMat.roughnessMap;
         }
-        if(sMat.envMap) {
+        if (sMat.envMap) {
           material.envMap = sMat.envMap;
           material.envMapIntensity = sMat.envMapIntensity;
         }
@@ -65,5 +65,5 @@ export const CCMaterialSystem: CCMaterialSystem = {
   onEntityAdd: function (ent) {
     const entities = applyQuery([ent], this.queries);
     entities.forEach(this.processEntity.bind(this));
-  }
+  },
 };

@@ -1,4 +1,4 @@
-import { Vector3, Color } from "three";
+import { Vector3, Color, Group } from "three";
 
 export const TransformC = {
   type: "TransformC",
@@ -27,7 +27,7 @@ export const NameC = {
 export const Object3DC = {
   type: "Object3DC",
   data: {
-    id: "",
+    object3d: new Group(),
   },
 };
 
@@ -96,4 +96,11 @@ export const CCMaterialC = {
 export const IntervalSpawnerC = {
   type: "IntervalSpawnerC",
   data: null,
+};
+
+export const FlickerC = {
+  type: "FlickerC",
+  data: {
+    speed: 1,
+  },
 };
