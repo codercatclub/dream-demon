@@ -106,7 +106,7 @@ float pnoise3(vec3 P, vec3 rep)
   return 2.2 * n_xyz;
 }
 
-float random (vec2 _st) {
+float randzom (vec2 _st) {
     return fract(sin(dot(_st.xy,
                          vec2(12.9898,78.233)))*
         43758.5453123);
@@ -122,14 +122,14 @@ float jagged(float xx){
 }
 
 vec2 fade(vec2 t) {return t*t*t*(t*(t*6.0-15.0)+10.0);}
-float rand(vec2 n) {
+float randz(vec2 n) {
     return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
 }
 
 float noisefbm(vec2 n) {
     const vec2 d = vec2(0.0, 1.0);
     vec2 b = floor(n), f = smoothstep(vec2(0.0), vec2(1.0), fract(n));
-    return mix(mix(rand(b), rand(b + d.yx), f.x), mix(rand(b + d.xy), rand(b + d.yy), f.x), f.y);
+    return mix(mix(randz(b), randz(b + d.yx), f.x), mix(randz(b + d.xy), randz(b + d.yy), f.x), f.y);
 }
 
 float fbm(vec2 n) {
