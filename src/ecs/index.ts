@@ -1,6 +1,5 @@
 import * as THREE from "three";
-import { Object3D, Texture } from "three";
-import { Asset } from "./assetManager";
+import { LoadedAsset } from "./assetManager";
 
 export interface Component<T> {
   type: string;
@@ -91,29 +90,27 @@ export const applyQuery = (
   return filtered;
 };
 
-type AssetMap = Map<string, Object3D | Texture>;
-
 export class World implements WorldLike {
-  private _assets: AssetMap;
+  private _assets: LoadedAsset = {
+    animations: new Map(),
+    objects: new Map(),
+    textures: new Map(),
+  };
   entities: Entity[];
   systems: System[];
   scene: THREE.Scene | null;
 
-  constructor(assets?: Asset[]) {
-    this._assets = new Map();
-
-    assets?.forEach((a) => {
-      if (a.obj) {
-        this._assets.set(a.src, a.obj);
-      }
-    });
+  constructor(assets?: LoadedAsset) {
+    if (assets) {
+      this._assets = assets;
+    }
 
     this.entities = [];
     this.systems = [];
     this.scene = new THREE.Scene();
   }
 
-  public get assets(): AssetMap {
+  public get assets(): LoadedAsset {
     return this._assets;
   }
 
@@ -146,5 +143,9 @@ export class World implements WorldLike {
 
   destroy() {
     document.querySelector("#world")?.remove();
+  }
+
+  getSystem(type: string) {
+    this.systems.filter((s) => s.type === type)[0];
   }
 }

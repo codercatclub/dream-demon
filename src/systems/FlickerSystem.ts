@@ -7,16 +7,29 @@ import { getComponent } from "./utils";
 interface FlickerSystem extends System {
   entities: Entity[];
   nextFlickerTime: number;
+  lights: PointLight[];
 }
 
 export const FlickerSystem: FlickerSystem = {
   type: "FlickerSystem",
   nextFlickerTime: 0,
-  queries: [FlickerC, PointLightC],
+  queries: [FlickerC],
   entities: [],
+  lights: [],
 
   init: function (world) {
     this.entities = applyQuery(world.entities, this.queries);
+
+    this.entities.forEach((ent, i) => {
+      const { object3d } = getComponent(ent, Object3DC);
+
+      object3d.traverse((obj) => {
+        if (obj.type === "PointLight") {
+          const light = obj as PointLight;
+          this.lights.push(light);
+        }
+      });
+    });
   },
 
   onEntityAdd: function (ent) {
@@ -24,15 +37,8 @@ export const FlickerSystem: FlickerSystem = {
     this.entities = this.entities.concat(entities);
   },
 
-  tick: function (time, delta) {
-    this.entities.forEach((ent, i) => {
-      const { object3d } = getComponent(ent, Object3DC);
-
-      const light = object3d.getObjectByProperty(
-        "type",
-        "PointLight"
-      ) as PointLight | undefined;
-
+  tick: function (time) {
+    this.lights.forEach((light) => {
       let active = false;
 
       if (light) {
@@ -41,8 +47,7 @@ export const FlickerSystem: FlickerSystem = {
           this.nextFlickerTime = time + 0.4 * Math.random();
         }
 
-        light.intensity = active ? 2 : 1.3 + 0.4 * Math.random();
-        
+        light.intensity = active ? 0.2 : 0.2 + 0.05 * Math.random();
       }
     });
   },

@@ -104,3 +104,13 @@ export const FlickerC = {
     speed: 1,
   },
 };
+
+export const GLTFCameraC = {
+  type: "GLTFCameraC",
+  data: null,
+};
+
+export const GLTFLigthsC = {
+  type: "GLTFLigthsC",
+  data: null,
+};
