@@ -8,13 +8,14 @@ import { OrbitControlsSystem } from "./systems/OrbitControlsSystem";
 import { PointLightSystem } from "./systems/PointLightSystem";
 import { Vector3, Color } from "three";
 import { CameraSystem } from "./systems/CameraSystem";
-import { FlickerC, MaterialC, CCMaterialC, GLTFCameraC } from "./ecs/components";
+import { FlickerC, MaterialC, CCMaterialC, GLTFCameraC, GLTFLigthsC } from "./ecs/components";
 import { MaterialSystem } from "./systems/MaterialSystem";
 import { StatsSystem } from "./systems/StatsSystem";
 import { HemisphereLightSystem } from "./systems/HemisphereLightSystem";
 import { FlickerSystem } from "./systems/FlickerSystem";
 import { CCMaterialSystem } from "./systems/CCMaterialSystem";
 import { GLTFCameraSystem } from "./systems/GLTFCameraSystem";
+import { GLTFLightsSystem } from "./systems/GLTFLightsSystem";
 
 (async () => {
   const assetManager = new AssetManager();
@@ -25,6 +26,7 @@ import { GLTFCameraSystem } from "./systems/GLTFCameraSystem";
     .addAsset(ENV_GLTF, "env")
     .addAsset("assets/models/chair.glb", "chair")
     .addAsset("assets/models/branch.glb", "branch")
+    .addAsset("assets/models/lights.glb", "lights")
     .addAsset("assets/models/cameras.glb", "cameras")
     .addAsset("assets/models/girlinchair.glb", "girlinchair")
     .addAsset("assets/textures/env.jpg", "env_tex"); // Environmental texture for PBR material.
@@ -74,6 +76,10 @@ import { GLTFCameraSystem } from "./systems/GLTFCameraSystem";
     src: "assets/models/cameras.glb",
   }), [GLTFCameraC]);
 
+  const lights = extend(Asset({
+    src: "assets/models/lights.glb",
+  }), [GLTFLigthsC, FlickerC]);
+
   const light1 = extend(
     PointLight({
       intensity: 1,
@@ -104,17 +110,18 @@ import { GLTFCameraSystem } from "./systems/GLTFCameraSystem";
     .addEntity(env)
     .addEntity(chair)
     .addEntity(girl)
-    .addEntity(light1)
-    .addEntity(light2)
+    // .addEntity(light1)
+    // .addEntity(light2)
     .addEntity(wires)
     .addEntity(cameras)
+    .addEntity(lights)
   // .addEntity(hLight);
 
   world
     .registerSystem(
       RenderSystem.configure({
-        enableShadows: false,
-        fog: { enabled: true, color: new Color(0xc2d1d1), density: 0.04 },
+        enableShadows: true,
+        fog: { enabled: true, color: new Color(0xc2d1d1), density: 0.03 },
       })
     )
     .registerSystem(Object3DSystem)
@@ -127,7 +134,8 @@ import { GLTFCameraSystem } from "./systems/GLTFCameraSystem";
     .registerSystem(CCMaterialSystem)
     .registerSystem(StatsSystem)
     .registerSystem(FlickerSystem)
-    .registerSystem(GLTFCameraSystem);
+    .registerSystem(GLTFCameraSystem)
+    .registerSystem(GLTFLightsSystem);
 
   world.init();
 })();

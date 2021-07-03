@@ -44,6 +44,8 @@ export const GLTFCameraSystem: GLTFCameraSystem = {
         action1?.play();
       }
 
+      console.log(object3d)
+
       const renderSystem = world.systems.filter(
         (s) => s.type === "RenderSystem"
       )[0] as RenderSystem;
