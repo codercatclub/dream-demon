@@ -114,3 +114,9 @@ export const GLTFLigthsC = {
   type: "GLTFLigthsC",
   data: null,
 };
+
+export const AnimationC = {
+  type: "AnimationC",
+  data: null,
+};
+

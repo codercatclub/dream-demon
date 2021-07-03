@@ -8,7 +8,7 @@ import { OrbitControlsSystem } from "./systems/OrbitControlsSystem";
 import { PointLightSystem } from "./systems/PointLightSystem";
 import { Vector3, Color } from "three";
 import { CameraSystem } from "./systems/CameraSystem";
-import { FlickerC, MaterialC, CCMaterialC, GLTFCameraC, GLTFLigthsC } from "./ecs/components";
+import { FlickerC, MaterialC, CCMaterialC, GLTFCameraC, GLTFLigthsC, AnimationC } from "./ecs/components";
 import { MaterialSystem } from "./systems/MaterialSystem";
 import { StatsSystem } from "./systems/StatsSystem";
 import { HemisphereLightSystem } from "./systems/HemisphereLightSystem";
@@ -16,6 +16,7 @@ import { FlickerSystem } from "./systems/FlickerSystem";
 import { CCMaterialSystem } from "./systems/CCMaterialSystem";
 import { GLTFCameraSystem } from "./systems/GLTFCameraSystem";
 import { GLTFLightsSystem } from "./systems/GLTFLightsSystem";
+import { AnimationSystem } from "./systems/AnimationSystem";
 
 (async () => {
   const assetManager = new AssetManager();
@@ -24,6 +25,7 @@ import { GLTFLightsSystem } from "./systems/GLTFLightsSystem";
 
   assetManager
     .addAsset(ENV_GLTF, "env")
+    .addAsset("assets/models/char_01.glb", "char")
     .addAsset("assets/models/chair.glb", "chair")
     .addAsset("assets/models/branch.glb", "branch")
     .addAsset("assets/models/lights.glb", "lights")
@@ -37,6 +39,11 @@ import { GLTFLightsSystem } from "./systems/GLTFLightsSystem";
   const world = new World(assetManager.loadedAssets);
 
   const cam = Camera(new Vector3(0, 2, 4));
+
+  const char = 
+    extend(Asset({
+      src: "assets/models/char_01.glb",
+    }), [AnimationC]);
 
   const env = extend(
     Asset({
@@ -52,15 +59,15 @@ import { GLTFLightsSystem } from "./systems/GLTFLightsSystem";
     [newComponent(CCMaterialC, {})]
   );
 
-  const girl = extend(
-    Asset({
-      src: "assets/models/girlinchair.glb",
-      scale: new Vector3(0.18, 0.18, 0.18),
-      position: new Vector3(0, 0, 0.9),
-      part: "/Root/BODY",
-    }),
-    [newComponent(MaterialC, { shader: "Void" })]
-  );
+  // const girl = extend(
+  //   Asset({
+  //     src: "assets/models/girlinchair.glb",
+  //     scale: new Vector3(0.18, 0.18, 0.18),
+  //     position: new Vector3(0, 0, 0.9),
+  //     part: "/Root/BODY",
+  //   }),
+  //   [newComponent(MaterialC, { shader: "Void" })]
+  // );
 
   const wires = extend(
     Asset({
@@ -74,7 +81,7 @@ import { GLTFLightsSystem } from "./systems/GLTFLightsSystem";
 
   const cameras = extend(Asset({
     src: "assets/models/cameras.glb",
-  }), [GLTFCameraC]);
+  }), [GLTFCameraC, AnimationC]);
 
   const lights = extend(Asset({
     src: "assets/models/lights.glb",
@@ -107,20 +114,21 @@ import { GLTFLightsSystem } from "./systems/GLTFLightsSystem";
 
   world
     .addEntity(cam)
-    .addEntity(env)
+    // .addEntity(env)
     .addEntity(chair)
-    .addEntity(girl)
+    // .addEntity(girl)
     // .addEntity(light1)
     // .addEntity(light2)
-    .addEntity(wires)
+    // .addEntity(wires)
     .addEntity(cameras)
     .addEntity(lights)
+    .addEntity(char)
   // .addEntity(hLight);
 
   world
     .registerSystem(
       RenderSystem.configure({
-        enableShadows: true,
+        enableShadows: false,
         fog: { enabled: true, color: new Color(0xc2d1d1), density: 0.03 },
       })
     )
@@ -135,7 +143,10 @@ import { GLTFLightsSystem } from "./systems/GLTFLightsSystem";
     .registerSystem(StatsSystem)
     .registerSystem(FlickerSystem)
     .registerSystem(GLTFCameraSystem)
-    .registerSystem(GLTFLightsSystem);
+    .registerSystem(GLTFLightsSystem)
+    .registerSystem(AnimationSystem)
+
+  console.log('[D] world', world);
 
   world.init();
 })();

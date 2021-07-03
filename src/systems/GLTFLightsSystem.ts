@@ -22,8 +22,6 @@ export const GLTFLightsSystem: GLTFLightsSystem = {
     this.entities.forEach((ent) => {
       const { object3d } = getComponent(ent, Object3DC);
 
-      console.log('[D] Lights', object3d)
-
       object3d.traverse(obj => {
         if (obj.type === "PointLight") {
           const light = obj as PointLight;
