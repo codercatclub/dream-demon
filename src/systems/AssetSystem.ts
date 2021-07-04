@@ -107,7 +107,7 @@ export const AssetSystem: AssetSystem = {
     // for PBR shader to work correctly
     setEnvTexture(asset, this.world);
 
-    parent?.add(asset.clone());
+    parent?.add(asset);
   },
 
   onEntityAdd: function (ent) {

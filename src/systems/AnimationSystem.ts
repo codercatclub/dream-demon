@@ -10,13 +10,13 @@ import { getComponent } from "./utils";
 import { AnimationMixer } from "three";
 
 export interface AnimationSystem extends System {
-  mixer: AnimationMixer | null;
+  mixers: Map<string, AnimationMixer>;
 }
 
 export const AnimationSystem: AnimationSystem = {
   type: "AnimationSystem",
   queries: [TransformC, Object3DC, AnimationC],
-  mixer: null,
+  mixers: new Map(),
 
   init: function (world) {
     this.entities = applyQuery(world.entities, this.queries);
@@ -27,15 +27,17 @@ export const AnimationSystem: AnimationSystem = {
 
       const animClips = world.assets.animations.get(src);
 
-      this.mixer = new AnimationMixer(object3d);
+      const mixer = new AnimationMixer(object3d);
+
+      this.mixers.set(src, mixer);
 
       animClips?.forEach((clip) => {
-        this.mixer?.clipAction(clip).play();
+        mixer.clipAction(clip).play();
       });
     });
   },
 
   tick: function (_time, deltaTime) {
-    if (this.mixer) this.mixer.update(deltaTime);
+    this.mixers.forEach((m) => m.update(deltaTime));
   },
 };

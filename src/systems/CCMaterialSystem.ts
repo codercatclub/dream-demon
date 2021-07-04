@@ -35,33 +35,45 @@ export const CCMaterialSystem: CCMaterialSystem = {
     material.defines = {};
 
     parent?.traverse((obj) => {
+
+      // TODO (Kirill): Add support for skinned meshes. Needed for our character.
       if (obj.type === "Mesh") {
         let mesh = obj as Mesh;
+
         let sMat = mesh.material as MeshStandardMaterial;
+
+        // Transfer parameters
+        material.roughness = sMat.roughness;
+        material.metalness = sMat.metalness;
+        material.envMapIntensity = sMat.envMapIntensity;
+
+        // Transfer maps
         if (sMat.map) {
           material.map = sMat.map;
         }
+
         if (sMat.metalnessMap) {
           material.metalnessMap = sMat.metalnessMap;
         }
-        material.metalness = sMat.metalness;
         
         if (sMat.normalMap) {
           material.normalMap = sMat.normalMap;
         }
+        
         if (sMat.roughnessMap) {
           material.roughnessMap = sMat.roughnessMap;
         }
-        material.roughness = sMat.roughness;
-
+        
         if (sMat.envMap) {
           material.envMap = sMat.envMap;
-          material.envMapIntensity = sMat.envMapIntensity;
         }
+        
         mesh.material = material.clone();
-        let uniforms  = {
+        
+        const uniforms  = {
           timeMSec : {value : 0}
         }
+
         mesh.material.onBeforeCompile = (shader) => {
           shader.uniforms = UniformsUtils.merge([
             uniforms,
@@ -81,7 +93,7 @@ export const CCMaterialSystem: CCMaterialSystem = {
     entities.forEach(this.processEntity.bind(this));
   },
 
-  tick: function(time, timeDelta) {
+  tick: function(time) {
     this.shaders.forEach((shader) => {
       shader.uniforms["timeMSec"].value = time;
     });
