@@ -114,3 +114,13 @@ export const GLTFLigthsC = {
   type: "GLTFLigthsC",
   data: null,
 };
+
+export const AnimationC = {
+  type: "AnimationC",
+  data: null,
+};
+
+export const ConstraintLookC = {
+  type: "ConstraintLookC",
+  data: null,
+};

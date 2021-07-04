@@ -35,7 +35,7 @@ export const MaterialSystem: MaterialSystem = {
     if (!this.world) return;
     const { shader, color1, color2 } = getComponent(ent, MaterialC);
     const { object3d: parent } = getComponent(ent, Object3DC);
-
+    
     const uniforms = {
       colorB: { type: "vec3", value: color1 },
       colorA: { type: "vec3", value: color2 },

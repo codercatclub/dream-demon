@@ -88,6 +88,12 @@ export class AssetManager {
 
           case "fbx":
             const obj = result.value as Object3D;
+
+            if (obj.animations.length > 0) {
+              const prevAnims = this._animations.get(src) || [];
+              this._animations.set(src, prevAnims.concat(obj.animations));
+            }
+
             this._objects.set(src, obj);
             break;
 
