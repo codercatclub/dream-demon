@@ -1,7 +1,7 @@
 import { System } from "../ecs/index";
 import { TransformC, Object3DC, MaterialC } from "../ecs/components";
 import { applyQuery, Entity, World } from "../ecs/index";
-import { Mesh, UniformsUtils, MeshPhongMaterial, MeshStandardMaterial } from "three";
+import { SkinnedMesh, Mesh, UniformsUtils, MeshPhongMaterial, MeshStandardMaterial } from "three";
 import { getComponent } from './utils';
 
 interface MaterialSystem extends System {
@@ -48,7 +48,6 @@ export const MaterialSystem: MaterialSystem = {
     
     //HACK
     const material = shader == "Vine" ? new MeshStandardMaterial(materialOptions) : new MeshPhongMaterial(materialOptions);
-
     material.onBeforeCompile = (mshader) => {
       mshader.uniforms = UniformsUtils.merge([
         uniforms,
@@ -62,6 +61,10 @@ export const MaterialSystem: MaterialSystem = {
     parent?.traverse((obj) => {
       if (obj.type === "Mesh") {
         (obj as Mesh).material = material;
+      }
+      if (obj.type === "SkinnedMesh") {
+        (obj as SkinnedMesh).material = material;
+        material.skinning = true;
       }
     });
     //onkeypress, fade in 

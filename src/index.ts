@@ -53,7 +53,7 @@ import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
     Asset({
       src: "assets/models/char_01.glb",
     }),
-    [AnimationC, newComponent(CCMaterialC, {})]
+    [AnimationC, newComponent(MaterialC, { shader: "Void" })]
   );
 
   const env = extend(

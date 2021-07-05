@@ -7,13 +7,19 @@ varying vec3 vNormal;
 varying float vReflectionFactor;
 @import ./PerlinNoise;
 
+#include <skinning_pars_vertex>
 #include <fog_pars_vertex>
 
 void main() {
-  vUv = position;
+  #include <beginnormal_vertex>
+	#include <skinbase_vertex>
+	#include <skinnormal_vertex>
 
-  vec3 worldNormal = normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * normal );
-  vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+  #include <begin_vertex>
+  #include <skinning_vertex>
+
+  vec3 worldNormal = normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * normalize(objectNormal) );
+  vec4 worldPosition = modelMatrix * vec4(transformed, 1.0);
   vWorldPos = worldPosition.xyz;
   vec3 I = worldPosition.xyz - cameraPosition;
 
