@@ -12,6 +12,14 @@ uniform float dissolveT;
 @import ./PerlinNoise;
 @import ./Spectral;
 
+#include <common>
+struct PointLight {
+		vec3 position;
+		vec3 color;
+		float distance;
+		float decay;
+	};
+uniform PointLight pointLights[ NUM_POINT_LIGHTS ];
 #include <fog_pars_fragment>
 
 void main() {
@@ -22,13 +30,26 @@ void main() {
   float modv = vWorldPos.y + pow(cnoise(3.0*vWorldPos),0.3);
 
   if(modv > 4.0 * dissolveT) {
-    discard;
+    //discard;
   }
+
+  vec3 lightColor = vec3(0.0,0.0,0.0);
+  #if ( NUM_POINT_LIGHTS > 0 )
+	PointLight pointLight;
+	#pragma unroll_loop_start
+	for ( int i = 0; i < NUM_POINT_LIGHTS; i ++ ) {
+    pointLight = pointLights[i];
+    lightColor += (1.0 - min(length(pointLight.position- vWorldPos.xyz)/8.0, 1.0)) * pointLight.color;
+	}
+	#pragma unroll_loop_end
+  #endif
+
+  
   float col = 1.0 - smoothstep(0.0,0.3,abs(modv-4.0*dissolveT));
 
   float r = 300. + 300. * vReflectionFactor + 200. *col;
   vec3 sp =  saturate(spectral_zucconi(r));
-  gl_FragColor = vec4(sp, 1);
+  gl_FragColor = vec4(lightColor*sp, 1);
 
   #include <fog_fragment>
 }

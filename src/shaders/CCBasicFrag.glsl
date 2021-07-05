@@ -62,7 +62,6 @@ varying vec3 vViewPosition;
 uniform float timeMSec;
 uniform float mFresnelScale;
 varying vec3 vWorldPos;
-varying vec3 vWorldNormal;
 
 varying float vReflectionFactor;
 
@@ -73,11 +72,12 @@ void main() {
 
 	//add some global effect 
 	float t = 8.0 - 8.0 * fract(0.1*timeMSec) - 3.0;
-
+	//t = -3.0;
 	vec3 nPos = vWorldPos;
 	//nPos.z += 4.0*timeMSec;
 	float jaggedn = pow(jagged(10.0*vWorldPos.x + vWorldPos.z + timeMSec),2.0);
-	float vNoise = 3.0*cnoise(nPos) + sin(vWorldPos.x) + 0.05*jaggedn;
+	float cNoise = cnoise(nPos);
+	float vNoise = 3.0*cNoise + sin(vWorldPos.x) + 0.05*jaggedn;
 
 
 	#include <clipping_planes_fragment>
@@ -116,20 +116,17 @@ void main() {
 	outgoingLight += outgoingLight * closenessToFresnelRim;
 	float dotl = dot(vNormal, vec3(0.0,1.0,1.0));
 	
-	vec3 modNormal = vWorldNormal;
 	vec3 lightPos = vec3(0.5,0.5,0.5);
-	//modNormal = mix(modNormal, -lightPos,  (0.5 + 0.5 * sin(vWorldPos.z + timeMSec)));
-	//modNormal = normalize(modNormal);
 	vec3 VertexToEye = normalize(cameraPosition - vWorldPos);
-	vec3 LightReflect = normalize(reflect(lightPos, modNormal));
-	float SpecularFactor = pow(dot(VertexToEye, LightReflect),8.0);
+	vec3 LightReflect = normalize(reflect(lightPos, normal));
+	float SpecularFactor = pow(dot(VertexToEye, LightReflect),23.0);
 
-	vec3 specColor = spectral_zucconi(700.0 - 300.0 * SpecularFactor);
-	//outgoingLight *= (1.0 - vReflectionFactor*smoothstep(t-0.3,t,vWorldPos.z + vNoise));
-	outgoingLight *= (1.0 - dotl*smoothstep(t-0.3,t,vWorldPos.z + vNoise));
-	outgoingLight += (0.1+outgoingLight) * specColor*smoothstep(t-0.3,t,vWorldPos.z + vNoise);
+	float effectProg = dotl*smoothstep(t-0.3,t,vWorldPos.z + vNoise);
+	outgoingLight *= (1.0 - effectProg);
+	outgoingLight.b *= 1.0 + 0.9 * effectProg;
+	outgoingLight.r *= 1.0 - 0.3 * effectProg;
 
-
+	outgoingLight.rgb += vNoise * 0.02*SpecularFactor * effectProg * vec3(0.7,0.7,1.0);
 
 	gl_FragColor = vec4( outgoingLight, diffuseColor.a );
 	#include <tonemapping_fragment>

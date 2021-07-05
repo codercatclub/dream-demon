@@ -20,7 +20,6 @@ varying vec3 vViewPosition;
 #include <clipping_planes_pars_vertex>
 
 varying vec3 vWorldPos;
-varying vec3 vWorldNormal;
 varying float vReflectionFactor;
 
 
@@ -58,7 +57,5 @@ void main() {
   float mFresnelScale = 1.1;
   float mFresnelPower = 2.1;
   vec3 worldNormal = normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * transformedNormal );
-  vWorldNormal = normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * normal );
   vReflectionFactor = mFresnelScale * pow( 1.0 + dot( normalize( I ), worldNormal ), mFresnelPower );
-
 }
