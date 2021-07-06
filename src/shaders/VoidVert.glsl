@@ -2,6 +2,7 @@ uniform float timeMSec;
 
 varying vec3 vUv;
 varying vec3 vWorldPos;
+varying vec3 vViewPos;
 varying vec3 vNormal;
 
 varying float vReflectionFactor;
@@ -40,6 +41,8 @@ void main() {
   vReflectionFactor = mFresnelBias + mFresnelScale * pow( 1.0 + dot( normalize( I ), worldNormal ), mFresnelPower );
 
   vec4 mvPosition = viewMatrix * worldPosition;
+  vViewPos = mvPosition.xyz;
+
   gl_Position = projectionMatrix * mvPosition;
 
   #include <fog_vertex>
