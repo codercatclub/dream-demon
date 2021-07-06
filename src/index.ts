@@ -109,7 +109,7 @@ import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
     .addEntity(env)
     .addEntity(chair)
     // .addEntity(girl)
-    .addEntity(wires)
+    // .addEntity(wires)
     .addEntity(cameras)
     .addEntity(lights)
     .addEntity(char);
@@ -130,11 +130,11 @@ import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
     .registerSystem(MaterialSystem)
     .registerSystem(CCMaterialSystem)
     .registerSystem(StatsSystem)
-    .registerSystem(FlickerSystem)
-    .registerSystem(GLTFCameraSystem)
+    // .registerSystem(GLTFCameraSystem)
     .registerSystem(GLTFLightsSystem)
+    .registerSystem(FlickerSystem)
     .registerSystem(AnimationSystem)
-    .registerSystem(ConstraintLookSystem);
+    // .registerSystem(ConstraintLookSystem);
 
   world.init();
 })();

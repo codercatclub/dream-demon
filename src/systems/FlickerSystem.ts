@@ -26,6 +26,7 @@ export const FlickerSystem: FlickerSystem = {
       object3d.traverse((obj) => {
         if (obj.type === "PointLight") {
           const light = obj as PointLight;
+          light.userData["initIntensity"] = light.intensity;
           this.lights.push(light);
         }
       });
@@ -46,8 +47,7 @@ export const FlickerSystem: FlickerSystem = {
           active = Math.random() < 0.8;
           this.nextFlickerTime = time + 0.4 * Math.random();
         }
-
-        light.intensity = active ? 0.2 : 0.2 + 0.05 * Math.random();
+        light.intensity = active ? light.userData["initIntensity"] :light.userData["initIntensity"] - 0.4 * Math.random();
       }
     });
   },
