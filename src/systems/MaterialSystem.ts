@@ -3,7 +3,6 @@ import { TransformC, Object3DC, MaterialC } from "../ecs/components";
 import { applyQuery, Entity, World } from "../ecs/index";
 import { SkinnedMesh, Mesh, UniformsUtils, MeshPhongMaterial, MeshStandardMaterial } from "three";
 import { getComponent } from './utils';
-import { TimelineSystem, TimelineSytem } from "./TimelineSystem";
 
 interface MaterialSystem extends System {
   world: World | null;
@@ -61,10 +60,12 @@ export const MaterialSystem: MaterialSystem = {
 
     parent?.traverse((obj) => {
       if (obj.type === "Mesh") {
-        (obj as Mesh).material = material;
+        const o = (obj as Mesh);
+        o.material = material;
       }
       if (obj.type === "SkinnedMesh") {
-        (obj as SkinnedMesh).material = material;
+        const o = (obj as SkinnedMesh);
+        o.material = material;
         material.skinning = true;
       }
     });
