@@ -119,7 +119,7 @@ void main() {
 	vec3 lightPos = vec3(0.5,0.5,0.5);
 	vec3 VertexToEye = normalize(cameraPosition - vWorldPos);
 	vec3 LightReflect = normalize(reflect(lightPos, normal));
-	float SpecularFactor = pow(dot(VertexToEye, LightReflect),23.0);
+	float SpecularFactor = pow(abs(dot(VertexToEye, LightReflect)),23.0);
 
 	float effectProg = dotl*smoothstep(t-0.3,t,vWorldPos.z + vNoise);
 	outgoingLight *= (1.0 - effectProg);

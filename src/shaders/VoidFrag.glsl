@@ -48,7 +48,7 @@ void main() {
 
   vec3 noisePos;
   noisePos.y += sin(1.4*timeMSec + 12.2*noisePos.x) + cos(timeMSec + 3.0*noisePos.z);
-  float modv = vWorldPos.y + pow(cnoise(3.0*vWorldPos),0.3);
+  float modv = vWorldPos.y + pow(abs(cnoise(3.0*vWorldPos)),0.3);
 
   if(modv > 4.0 * dissolveT) {
     discard;
