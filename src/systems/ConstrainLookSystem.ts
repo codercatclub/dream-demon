@@ -51,9 +51,7 @@ export const ConstraintLookSystem: ConstraintLookSystem = {
       cam.aspect = window.innerWidth / window.innerHeight;
       cam.updateProjectionMatrix();
 
-      const renderSystem = world.systems.filter(
-        (s) => s.type === "RenderSystem"
-      )[0] as RenderSystem;
+      const renderSystem = world.getSystem<RenderSystem>(RenderSystem.type);
       renderSystem?.setCamera(cam);
 
       this.camera = cam;

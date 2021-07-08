@@ -145,7 +145,13 @@ export class World implements WorldLike {
     document.querySelector("#world")?.remove();
   }
 
-  getSystem(type: string) {
-    this.systems.filter((s) => s.type === type)[0];
+  getSystem<T>(type: string): T | undefined {
+    const systems = this.systems.filter((s) => s.type === type);
+    if (systems.length > 0) {
+      const s = systems[0] as unknown;
+      return s as T;
+    }
+
+    return;
   }
 }

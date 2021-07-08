@@ -5,7 +5,6 @@ import { System } from "../ecs/index";
 import { RenderSystem } from "./RenderSystem";
 import { getComponent } from "./utils";
 
-
 export const CameraSystem: System = {
   type: "CameraSystem",
   queries: [CamC, TransformC],
@@ -30,8 +29,8 @@ export const CameraSystem: System = {
 
       ent.components.set(CamC.type, cam);
 
-      const renderSystem = world.systems.filter((s) => s.type === "RenderSystem")[0] as RenderSystem;
-      renderSystem.camera = cam;
+      const renderSystem = world.getSystem<RenderSystem>(RenderSystem.type);
+      renderSystem?.setCamera(cam);
     });
   },
 };

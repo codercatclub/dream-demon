@@ -12,10 +12,10 @@ export const OrbitControlsSystem: OrbitControlSystem = {
   queries: [],
 
   init: function (world) {
-    const systems = world.systems.filter((s) => s.type === "RenderSystem") as RenderSystem[];
+    const renderSystem = world.getSystem<RenderSystem>(RenderSystem.type);
 
-    if (systems.length > 0) {
-      const { camera, renderer } = systems[0];
+    if (renderSystem) {
+      const { camera, renderer } = renderSystem;
 
       if (camera && renderer) {
         this.controls = new OrbitControls(camera, renderer.domElement);

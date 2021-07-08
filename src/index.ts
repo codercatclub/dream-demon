@@ -26,6 +26,7 @@ import { GLTFCameraSystem } from "./systems/GLTFCameraSystem";
 import { GLTFLightsSystem } from "./systems/GLTFLightsSystem";
 import { AnimationSystem } from "./systems/AnimationSystem";
 import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
+import { TimelineSystem } from "./systems/TimelineSystem";
 
 (async () => {
   const assetManager = new AssetManager();
@@ -134,6 +135,7 @@ import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
     .registerSystem(GLTFLightsSystem)
     .registerSystem(FlickerSystem)
     .registerSystem(AnimationSystem)
+    .registerSystem(TimelineSystem)
     // .registerSystem(ConstraintLookSystem);
 
   world.init();
