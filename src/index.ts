@@ -36,11 +36,12 @@ import { TimelineSystem } from "./systems/TimelineSystem";
   assetManager
     .addAsset(ENV_GLTF, "env")
     .addAsset("assets/models/char_01.glb", "char")
+    .addAsset("assets/models/girlinchair.glb", "char")
+    .addAsset("assets/models/wires.glb", "wires")
     .addAsset("assets/models/chair.glb", "chair")
     .addAsset("assets/models/branch.glb", "branch")
     .addAsset("assets/models/lights.glb", "lights")
     .addAsset("assets/models/cameras.glb", "cameras")
-    .addAsset("assets/models/girlinchair.glb", "girlinchair")
     .addAsset("assets/textures/env.jpg", "env_tex"); // Environmental texture for PBR material.
 
   // Wait untill all assets are loaded
@@ -71,19 +72,19 @@ import { TimelineSystem } from "./systems/TimelineSystem";
     [newComponent(CCMaterialC, {})]
   );
 
-  // const girl = extend(
-  //   Asset({
-  //     src: "assets/models/girlinchair.glb",
-  //     scale: new Vector3(0.18, 0.18, 0.18),
-  //     position: new Vector3(0, 0, 0.9),
-  //     part: "/Root/BODY",
-  //   }),
-  //   [newComponent(MaterialC, { shader: "Void" })]
-  // );
+  const girl = extend(
+    Asset({
+      src: "assets/models/girlinchair.glb",
+      scale: new Vector3(0.18, 0.18, 0.18),
+      position: new Vector3(0, 0, 0.9),
+      part: "/Root/BODY",
+    }),
+    [newComponent(MaterialC, { shader: "Void" })]
+  );
 
   const wires = extend(
     Asset({
-      src: "assets/models/girlinchair.glb",
+      src: "assets/models/wires.glb",
       scale: new Vector3(0.18, 0.18, 0.18),
       position: new Vector3(0, 0, 0.9),
       part: "/Root/WIRES",
@@ -109,11 +110,10 @@ import { TimelineSystem } from "./systems/TimelineSystem";
     .addEntity(cam)
     .addEntity(env)
     .addEntity(chair)
-    // .addEntity(girl)
-    // .addEntity(wires)
+    .addEntity(wires)
     .addEntity(cameras)
     .addEntity(lights)
-    .addEntity(char);
+    .addEntity(girl);
 
   world
     .registerSystem(
@@ -130,7 +130,7 @@ import { TimelineSystem } from "./systems/TimelineSystem";
     .registerSystem(PointLightSystem)
     .registerSystem(MaterialSystem)
     .registerSystem(CCMaterialSystem)
-    .registerSystem(StatsSystem)
+    // .registerSystem(StatsSystem)
     // .registerSystem(GLTFCameraSystem)
     .registerSystem(GLTFLightsSystem)
     .registerSystem(FlickerSystem)

@@ -53,7 +53,7 @@ void main() {
 
 	vWorldPos = (modelMatrix * vec4( position, 1.0 )).xyz;
 
-	vec3 I = vWorldPos.xyz - cameraPosition;
+  vec3 I = vWorldPos.xyz - cameraPosition;
   float mFresnelScale = 1.1;
   float mFresnelPower = 2.1;
   vec3 worldNormal = normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * transformedNormal );
