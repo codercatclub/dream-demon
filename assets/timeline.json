@@ -1,0 +1,14 @@
+{
+    "frame_end": 550,
+    "frame_start": 1,
+    "markers": [
+        {
+            "frame": 396,
+            "name": "wire_start"
+        },
+        {
+            "frame": 80,
+            "name": "girl_fadein"
+        }
+    ]
+}

@@ -41,6 +41,7 @@ import { TimelineSystem } from "./systems/TimelineSystem";
     .addAsset("assets/models/lights.glb", "lights")
     .addAsset("assets/models/cameras.glb", "cameras")
     .addAsset("assets/models/girlinchair.glb", "girlinchair")
+    .addAsset("assets/timeline.json", "timeline_data")
     .addAsset("assets/textures/env.jpg", "env_tex"); // Environmental texture for PBR material.
 
   // Wait untill all assets are loaded
@@ -54,7 +55,7 @@ import { TimelineSystem } from "./systems/TimelineSystem";
     Asset({
       src: "assets/models/char_01.glb",
     }),
-    [AnimationC, newComponent(MaterialC, { shader: "Void" })]
+    [AnimationC]
   );
 
   const env = extend(

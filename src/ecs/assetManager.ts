@@ -10,6 +10,7 @@ export interface LoadedAsset {
   objects: Map<string, Object3D>;
   animations: Map<string, AnimationClip[]>;
   textures: Map<string, Texture>;
+  sceneData: Map<string, unknown>;
 }
 
 export interface Asset {
@@ -23,12 +24,14 @@ export class AssetManager {
   private _textures: Map<string, Texture> = new Map();
   private _objects: Map<string, Object3D> = new Map();
   private _animations: Map<string, AnimationClip[]> = new Map();
+  private _sceneData: Map<string, unknown> = new Map();
 
   public get loadedAssets(): LoadedAsset {
     return {
       objects: this._objects,
       animations: this._animations,
       textures: this._textures,
+      sceneData: this._sceneData
     };
   }
 
@@ -100,6 +103,10 @@ export class AssetManager {
           case "jpg":
             const tex = result.value as Texture;
             this._textures.set(src, tex);
+            break;
+
+          case "json":
+            this._sceneData.set(src, result.value);
             break;
 
           default:

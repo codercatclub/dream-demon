@@ -95,6 +95,7 @@ export class World implements WorldLike {
     animations: new Map(),
     objects: new Map(),
     textures: new Map(),
+    sceneData: new Map()
   };
   entities: Entity[];
   systems: System[];

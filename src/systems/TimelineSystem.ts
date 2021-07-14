@@ -1,5 +1,16 @@
 import { System } from "../ecs/index";
 
+interface TimelineMarker {
+  name: string;
+  frame: number;
+}
+
+interface TimelineData {
+  frameStart: number;
+  frameEnd: number;
+  markers: TimelineMarker[];
+}
+
 export interface TimelineSystem extends System {
   frame: number;
   frameStart: number;
@@ -15,22 +26,32 @@ export const TimelineSystem: TimelineSystem = {
   queries: [],
   frame: 0,
   frameStart: 0,
-  frameEnd: 350,
+  frameEnd: 250,
   isPlaying: false,
 
-  init: function () {
+  init: function (world) {
     this.frame = this.frameStart;
+
+    const sceneData = world.assets.sceneData.get("assets/timeline.json") as
+      | TimelineData
+      | undefined;
+
+    if (sceneData) {
+      const { markers, frameStart, frameEnd } = sceneData;
+      this.frameStart = frameStart;
+      this.frameEnd = frameEnd;
+    }
   },
 
   setFrame: function (frame) {
     this.frame = frame;
   },
 
-  play: function() {
+  play: function () {
     this.isPlaying = true;
   },
 
-  pause: function() {
+  pause: function () {
     this.isPlaying = false;
   },
 
