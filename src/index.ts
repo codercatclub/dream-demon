@@ -12,9 +12,12 @@ import {
   FlickerC,
   MaterialC,
   CCMaterialC,
+  VineMaterialC,
+  VoidMaterialC,
   GLTFCameraC,
   GLTFLigthsC,
   AnimationC,
+  ScrollAnimationC,
   ConstraintLookC,
 } from "./ecs/components";
 import { MaterialSystem } from "./systems/MaterialSystem";
@@ -22,11 +25,13 @@ import { StatsSystem } from "./systems/StatsSystem";
 import { HemisphereLightSystem } from "./systems/HemisphereLightSystem";
 import { FlickerSystem } from "./systems/FlickerSystem";
 import { CCMaterialSystem } from "./systems/CCMaterialSystem";
+import { VineMaterialSystem } from "./systems/VineMaterialSystem";
+import { VoidMaterialSystem } from "./systems/VoidMaterialSystem";
 import { GLTFCameraSystem } from "./systems/GLTFCameraSystem";
 import { GLTFLightsSystem } from "./systems/GLTFLightsSystem";
 import { AnimationSystem } from "./systems/AnimationSystem";
+import { ScrollAnimationSystem } from "./systems/ScrollAnimationSystem";
 import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
-import { TimelineSystem } from "./systems/TimelineSystem";
 
 (async () => {
   const assetManager = new AssetManager();
@@ -55,7 +60,7 @@ import { TimelineSystem } from "./systems/TimelineSystem";
     Asset({
       src: "assets/models/char_01.glb",
     }),
-    [AnimationC, newComponent(MaterialC, { shader: "Void" })]
+    [AnimationC, newComponent(VoidMaterialC, {})]
   );
 
   const env = extend(
@@ -79,7 +84,7 @@ import { TimelineSystem } from "./systems/TimelineSystem";
       position: new Vector3(0, 0, 0.9),
       part: "/Root/BODY",
     }),
-    [newComponent(MaterialC, { shader: "Void" })]
+    [newComponent(VoidMaterialC, {})]
   );
 
   const wires = extend(
@@ -89,14 +94,14 @@ import { TimelineSystem } from "./systems/TimelineSystem";
       position: new Vector3(0, 0, 0.9),
       part: "/Root/WIRES",
     }),
-    [newComponent(MaterialC, { shader: "Vine" })]
+    [newComponent(VineMaterialC, {})]
   );
 
   const cameras = extend(
     Asset({
       src: "assets/models/cameras.glb",
     }),
-    [GLTFCameraC, ConstraintLookC, AnimationC]
+    [GLTFCameraC, ConstraintLookC, ScrollAnimationC]
   );
 
   const lights = extend(
@@ -125,18 +130,20 @@ import { TimelineSystem } from "./systems/TimelineSystem";
     .registerSystem(Object3DSystem)
     .registerSystem(AssetSystem)
     .registerSystem(CameraSystem)
-    .registerSystem(OrbitControlsSystem)
+    // .registerSystem(OrbitControlsSystem)
     .registerSystem(HemisphereLightSystem)
     .registerSystem(PointLightSystem)
     .registerSystem(MaterialSystem)
     .registerSystem(CCMaterialSystem)
+    .registerSystem(VineMaterialSystem)
+    .registerSystem(VoidMaterialSystem)
     // .registerSystem(StatsSystem)
-    // .registerSystem(GLTFCameraSystem)
+    .registerSystem(GLTFCameraSystem)
     .registerSystem(GLTFLightsSystem)
     .registerSystem(FlickerSystem)
     .registerSystem(AnimationSystem)
-    .registerSystem(TimelineSystem)
-    // .registerSystem(ConstraintLookSystem);
+    .registerSystem(ScrollAnimationSystem)
+    .registerSystem(ConstraintLookSystem);
 
   world.init();
 })();

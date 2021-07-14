@@ -3,6 +3,7 @@ import { TransformC, Object3DC, CCMaterialC } from "../ecs/components";
 import { applyQuery, Entity, World } from "../ecs/index";
 import { UniformsUtils, Mesh, Color, MeshStandardMaterial } from "three";
 import { getComponent } from "./utils";
+import { ScrollAnimationSystem } from "./ScrollAnimationSystem";
 
 interface CCMaterialSystem extends System {
   world: World | null;
@@ -71,7 +72,8 @@ export const CCMaterialSystem: CCMaterialSystem = {
         mesh.material = material.clone();
         
         const uniforms  = {
-          timeMSec : {value : 0}
+          timeMSec : {value : 0},
+          darknessProg : {value : 0}
         }
 
         mesh.material.onBeforeCompile = (shader) => {
@@ -94,8 +96,17 @@ export const CCMaterialSystem: CCMaterialSystem = {
   },
 
   tick: function(time) {
+    const scrollAnimSystem = this.world?.getSystem<ScrollAnimationSystem>(ScrollAnimationSystem.type);
+    let scrollTime = scrollAnimSystem?.scrollTime;
+    if(!scrollTime) {
+      scrollTime = 0;
+    }
+    let effectDuration = 6;
+    let darknessTime = 6;
+    const darknessProg = Math.min(1, Math.max(0, scrollTime - darknessTime) / effectDuration);
     this.shaders.forEach((shader) => {
       shader.uniforms["timeMSec"].value = time;
+      shader.uniforms["darknessProg"].value = darknessProg;
     });
   }
 };

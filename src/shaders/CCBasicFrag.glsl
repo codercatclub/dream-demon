@@ -61,6 +61,7 @@ varying vec3 vViewPosition;
 
 uniform float timeMSec;
 uniform float mFresnelScale;
+uniform float darknessProg;
 varying vec3 vWorldPos;
 
 varying float vReflectionFactor;
@@ -71,11 +72,10 @@ varying float vReflectionFactor;
 void main() {
 
 	//add some global effect 
-	float t = 8.0 - 8.0 * fract(0.1*timeMSec) - 3.0;
-	//t = -3.0;
+	float t = 8.0 - 8.0 * darknessProg - 3.0;
 	vec3 nPos = vWorldPos;
 	//nPos.z += 4.0*timeMSec;
-	float jaggedn = pow(jagged(10.0*vWorldPos.x + vWorldPos.z + timeMSec),2.0);
+	float jaggedn = pow(jagged(10.0*vWorldPos.x + vWorldPos.z + darknessProg),2.0);
 	float cNoise = cnoise(nPos);
 	float vNoise = 3.0*cNoise + sin(vWorldPos.x) + 0.05*jaggedn;
 

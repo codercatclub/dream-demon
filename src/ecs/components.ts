@@ -92,7 +92,16 @@ export const CCMaterialC = {
     color: new Color(0xffffff),
   },
 };
-
+export const VineMaterialC = {
+  type: "VineMaterialC",
+  data: {
+  },
+};
+export const VoidMaterialC = {
+  type: "VoidMaterialC",
+  data: {
+  },
+};
 export const IntervalSpawnerC = {
   type: "IntervalSpawnerC",
   data: null,
@@ -117,6 +126,11 @@ export const GLTFLigthsC = {
 
 export const AnimationC = {
   type: "AnimationC",
+  data: null,
+};
+
+export const ScrollAnimationC = {
+  type: "ScrollAnimationC",
   data: null,
 };
 
