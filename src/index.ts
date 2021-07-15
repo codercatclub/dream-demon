@@ -146,7 +146,7 @@ import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
     Asset({
       src: "assets/models/wires.glb",
     }),
-    [newComponent(CCMaterialC, {})]
+    [/* newComponent(CCMaterialC, {}) */]
   );
 
   const girl = extend(
