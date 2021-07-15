@@ -35,18 +35,26 @@ import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
 (async () => {
   const assetManager = new AssetManager();
 
-  const ENV_GLTF = "assets/models/env_ktx.glb";
+  const ENV_GLTF = "assets/models/env.glb";
 
   assetManager
-    .addAsset(ENV_GLTF, "env")
     .addAsset("assets/models/char_01.glb", "char")
-    .addAsset("assets/models/girlinchair.glb", "char")
+    .addAsset("assets/models/frame.glb", "frame")
+    .addAsset("assets/models/walls.glb", "walls")
+    .addAsset("assets/models/rocks.glb", "rocks")
+    .addAsset("assets/models/props.glb", "props")
     .addAsset("assets/models/wires.glb", "wires")
+    .addAsset("assets/models/candles.glb", "candles")
+    .addAsset("assets/models/roof.glb", "roof")
+    .addAsset("assets/models/ground.glb", "ground")
+    .addAsset("assets/models/branches.glb", "branches")
+    .addAsset("assets/models/girlinchair.glb", "girlinchair")
+    // .addAsset("assets/models/wires.glb", "body_wires")
     .addAsset("assets/models/chair.glb", "chair")
+    .addAsset("assets/models/wall_decor.glb", "wall_decor")
     .addAsset("assets/models/branch.glb", "branch")
     .addAsset("assets/models/lights.glb", "lights")
     .addAsset("assets/models/cameras.glb", "cameras")
-    .addAsset("assets/models/girlinchair.glb", "girlinchair")
     .addAsset("assets/timeline.json", "timeline_data")
     .addAsset("assets/textures/env.jpg", "env_tex"); // Environmental texture for PBR material.
 
@@ -61,12 +69,33 @@ import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
     Asset({
       src: "assets/models/char_01.glb",
     }),
-    [AnimationC, newComponent(VoidMaterialC, {})]
+    [AnimationC]
   );
 
-  const env = extend(
+  const frame = extend(
     Asset({
-      src: ENV_GLTF,
+      src: "assets/models/frame.glb",
+    }),
+    [newComponent(CCMaterialC, {})]
+  );
+
+  const walls = extend(
+    Asset({
+      src: "assets/models/walls.glb",
+    }),
+    [newComponent(CCMaterialC, {})]
+  );
+
+  const roof = extend(
+    Asset({
+      src: "assets/models/roof.glb",
+    }),
+    [newComponent(CCMaterialC, {})]
+  );
+
+  const ground = extend(
+    Asset({
+      src: "assets/models/ground.glb",
     }),
     [newComponent(CCMaterialC, {})]
   );
@@ -74,6 +103,48 @@ import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
   const chair = extend(
     Asset({
       src: "assets/models/chair.glb",
+    }),
+    [newComponent(CCMaterialC, {})]
+  );
+
+  const wall_decor = extend(
+    Asset({
+      src: "assets/models/wall_decor.glb",
+    }),
+    [newComponent(CCMaterialC, {})]
+  );
+
+  const branches = extend(
+    Asset({
+      src: "assets/models/branches.glb",
+    }),
+    [newComponent(CCMaterialC, {})]
+  );
+
+  const rocks = extend(
+    Asset({
+      src: "assets/models/rocks.glb",
+    }),
+    [newComponent(CCMaterialC, {})]
+  );
+
+  const candles = extend(
+    Asset({
+      src: "assets/models/candles.glb",
+    }),
+    [newComponent(CCMaterialC, {})]
+  );
+
+  const props = extend(
+    Asset({
+      src: "assets/models/props.glb",
+    }),
+    [newComponent(CCMaterialC, {})]
+  );
+
+  const wires = extend(
+    Asset({
+      src: "assets/models/wires.glb",
     }),
     [newComponent(CCMaterialC, {})]
   );
@@ -88,7 +159,7 @@ import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
     [newComponent(VoidMaterialC, {})]
   );
 
-  const wires = extend(
+  const body_wires = extend(
     Asset({
       src: "assets/models/wires.glb",
       scale: new Vector3(0.18, 0.18, 0.18),
@@ -114,18 +185,27 @@ import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
 
   world
     .addEntity(cam)
-    .addEntity(env)
+    .addEntity(frame)
+    .addEntity(walls)
+    .addEntity(roof)
+    .addEntity(ground)
     .addEntity(chair)
+    .addEntity(wall_decor)
+    .addEntity(wires)
+    .addEntity(candles)
+    .addEntity(branches)
+    .addEntity(rocks)
+    .addEntity(props)
     .addEntity(wires)
     .addEntity(cameras)
     .addEntity(lights)
-    .addEntity(girl);
+    .addEntity(char);
 
   world
     .registerSystem(
       RenderSystem.configure({
         enableShadows: false,
-        fog: { enabled: true, color: new Color(0xc2d1d1), density: 0.03 },
+        fog: { enabled: true, color: new Color(0xc2d1d1), density: 0.02 },
       })
     )
     .registerSystem(Object3DSystem)

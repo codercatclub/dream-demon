@@ -25,7 +25,7 @@ export const GLTFLightsSystem: GLTFLightsSystem = {
       object3d.traverse(obj => {
         if (obj.type === "PointLight") {
           const light = obj as PointLight;
-          light.intensity /= 4*Math.PI;
+          light.intensity /= 5*Math.PI;
 
           light.decay = 2;
 
