@@ -72,7 +72,7 @@ varying float vReflectionFactor;
 void main() {
 
 	//add some global effect 
-	float startPos = 9.0;
+	float startPos = 9.8;
 	float t = startPos - (startPos + 3.0) * darknessProg;
 	vec3 nPos = vWorldPos;
 

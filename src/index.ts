@@ -69,7 +69,7 @@ import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
     Asset({
       src: "assets/models/char_01.glb",
     }),
-    [AnimationC]
+    [AnimationC, newComponent(VoidMaterialC, {})]
   );
 
   const frame = extend(
