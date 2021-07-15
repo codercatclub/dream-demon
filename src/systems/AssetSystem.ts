@@ -49,9 +49,9 @@ const setEnvTexture = (asset: Object3D, world: World): void => {
 
       texture.mapping = EquirectangularReflectionMapping;
 
-      (o.material as MeshStandardMaterial).envMap = texture;
-      (o.material as MeshStandardMaterial).envMapIntensity = 0.1;
-      (o.material as MeshStandardMaterial).needsUpdate = true;
+      // (o.material as MeshStandardMaterial).envMap = texture;
+      // (o.material as MeshStandardMaterial).envMapIntensity = 0.1;
+      // (o.material as MeshStandardMaterial).needsUpdate = true;
     }
   });
 };
