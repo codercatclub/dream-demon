@@ -21,8 +21,8 @@ void main() {
 	vec3 lightPos = vec3(0.5,0.5,0.5);
 	vec3 VertexToEye = normalize(cameraPosition - vWorldPos);
 	vec3 LightReflect = normalize(reflect(lightPos, vNormal));
-	float SpecularFactor = 0.01 + pow(dot(VertexToEye, LightReflect),18.0);
+	float SpecularFactor = 0.5 + pow(dot(VertexToEye, LightReflect),8.0);
 
 
-  gl_FragColor = vec4(SpecularFactor, 0.0, 0.0, 1);
+  gl_FragColor = 0.8*vec4(0.7, 0.7, 1.0, 1) + SpecularFactor*vec4(shoot,1.0,1.0,1.0);
 }

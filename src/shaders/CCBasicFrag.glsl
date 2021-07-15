@@ -111,23 +111,26 @@ void main() {
 	#ifdef TRANSMISSION
 		diffuseColor.a *= mix( saturate( 1. - totalTransmission + linearToRelativeLuminance( reflectedLight.directSpecular + reflectedLight.indirectSpecular ) ), 1.0, metalness );
 	#endif
-
-	outgoingLight += outgoingLight * vReflectionFactor * (1.0 - min(abs(vWorldPos.z + vNoise - t)/0.3, 1.0));
+	float closenessToT = 1.0 - min(abs(vWorldPos.z + vNoise - t)/0.3, 1.0);
+	outgoingLight += 2.0 * outgoingLight * vReflectionFactor * closenessToT;
 	//float closenessToFresnelRim = (1.0 - min(abs(vReflectionFactor - mFresnelScale-0.6)/0.05, 1.0));
 	//outgoingLight += outgoingLight * closenessToFresnelRim;
 	float dotl = dot(vNormal, vec3(0.0,1.0,1.0));
 	
 	vec3 lightPos = vec3(0.5,0.5,0.5);
 	vec3 VertexToEye = normalize(cameraPosition - vWorldPos);
-	vec3 LightReflect = normalize(reflect(lightPos, normal));
-	float SpecularFactor = pow(abs(dot(VertexToEye, LightReflect)),23.0);
+	vec3 modNormal = normal;
+	modNormal.x = vNoise + sin(0.5*timeMSec);
+	modNormal.y = 0.2 * modNormal.y + vNoise - sin(vWorldPos.x + 0.75*timeMSec);
+	modNormal.z = vNoise - cos(vWorldPos.z + 0.65*timeMSec);
+	vec3 LightReflect = normalize(reflect(lightPos, normalize(modNormal)));
+	float SpecularFactor = pow(abs(dot(VertexToEye, LightReflect)),25.0);
 
-	float effectProg = dotl*smoothstep(t-0.3,t,vWorldPos.z + vNoise);
+	float showLightCol = mix(1.0, dotl, closenessToT);
+	float effectProg = showLightCol*smoothstep(t-0.3,t,vWorldPos.z + vNoise);
 	outgoingLight *= (1.0 - effectProg);
-	outgoingLight.b *= 1.0 + 0.9 * effectProg;
-	outgoingLight.r *= 1.0 - 0.3 * effectProg;
 
-	outgoingLight.rgb += vNoise * 0.02*SpecularFactor * effectProg * vec3(0.7,0.7,1.0);
+	outgoingLight.rgb += vNoise * 0.2*SpecularFactor * effectProg * smoothstep(0.7, 1.0, darknessProg) * vec3(0.7,0.7,1.0);
 
 	gl_FragColor = vec4( outgoingLight, diffuseColor.a );
 	#include <tonemapping_fragment>
