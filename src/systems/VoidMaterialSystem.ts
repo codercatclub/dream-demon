@@ -76,7 +76,7 @@ export const VoidMaterialSystem: VoidMaterialSystem = {
       scrollTime = 0;
     }
     let effectDuration = 3;
-    let growthStartTime = 8;
+    let growthStartTime = 7;
     const growthT = Math.min(1, Math.max(0, scrollTime - growthStartTime) / effectDuration);
     this.materials.forEach((mat) => {
       mat.uniforms["timeMSec"].value = time;
