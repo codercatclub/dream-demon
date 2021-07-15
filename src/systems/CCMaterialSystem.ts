@@ -102,8 +102,8 @@ export const CCMaterialSystem: CCMaterialSystem = {
       scrollTime = 0;
     }
     let effectDuration = 6;
-    let darknessTime = 6;
-    const darknessProg = Math.min(1, Math.max(0, scrollTime - darknessTime) / effectDuration);
+    let darknessStartTime = 4;
+    const darknessProg = Math.min(1, Math.max(0, scrollTime - darknessStartTime) / effectDuration);
     this.shaders.forEach((shader) => {
       shader.uniforms["timeMSec"].value = time;
       shader.uniforms["darknessProg"].value = darknessProg;

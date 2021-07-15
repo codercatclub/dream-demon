@@ -70,7 +70,7 @@ export const VineMaterialSystem: VineMaterialSystem = {
     if(!scrollTime) {
       scrollTime = 0;
     }
-    let effectDuration = 6;
+    let effectDuration = 5;
     let growthStartTime = 12;
     const growthT = Math.min(1, Math.max(0, scrollTime - growthStartTime) / effectDuration);
 
