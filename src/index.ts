@@ -44,12 +44,12 @@ import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
     .addAsset("assets/models/rocks.glb", "rocks")
     .addAsset("assets/models/props.glb", "props")
     .addAsset("assets/models/wires.glb", "wires")
+    .addAsset("assets/models/bodywires.glb", "bodywires")
     .addAsset("assets/models/candles.glb", "candles")
     .addAsset("assets/models/roof.glb", "roof")
     .addAsset("assets/models/ground.glb", "ground")
     .addAsset("assets/models/branches.glb", "branches")
     .addAsset("assets/models/girlinchair.glb", "girlinchair")
-    // .addAsset("assets/models/wires.glb", "body_wires")
     .addAsset("assets/models/chair.glb", "chair")
     .addAsset("assets/models/wall_decor.glb", "wall_decor")
     .addAsset("assets/models/branch.glb", "branch")
@@ -161,7 +161,7 @@ import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
 
   const body_wires = extend(
     Asset({
-      src: "assets/models/wires.glb",
+      src: "assets/models/bodywires.glb",
       scale: new Vector3(0.18, 0.18, 0.18),
       position: new Vector3(0, 0, 0.9),
       part: "/Root/WIRES",
@@ -196,7 +196,7 @@ import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
     .addEntity(branches)
     .addEntity(rocks)
     .addEntity(props)
-    .addEntity(wires)
+    .addEntity(body_wires)
     .addEntity(cameras)
     .addEntity(lights)
     .addEntity(char);
