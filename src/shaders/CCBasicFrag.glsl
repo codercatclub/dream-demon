@@ -112,9 +112,7 @@ void main() {
 		diffuseColor.a *= mix( saturate( 1. - totalTransmission + linearToRelativeLuminance( reflectedLight.directSpecular + reflectedLight.indirectSpecular ) ), 1.0, metalness );
 	#endif
 	float closenessToT = 1.0 - min(abs(vWorldPos.z + vNoise - t)/0.3, 1.0);
-	outgoingLight += 2.0 * outgoingLight * vReflectionFactor * closenessToT;
-	//float closenessToFresnelRim = (1.0 - min(abs(vReflectionFactor - mFresnelScale-0.6)/0.05, 1.0));
-	//outgoingLight += outgoingLight * closenessToFresnelRim;
+	outgoingLight += 4.0 * outgoingLight * closenessToT;
 	float dotl = dot(vNormal, vec3(0.0,1.0,1.0));
 	
 	vec3 lightPos = vec3(0.5,0.5,0.5);
