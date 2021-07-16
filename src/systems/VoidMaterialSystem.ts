@@ -55,6 +55,7 @@ export const VoidMaterialSystem: VoidMaterialSystem = {
       if (obj.type === "SkinnedMesh") {
         const o = (obj as SkinnedMesh);
         o.material = material;
+        material.skinning = true;
       }
       if (obj.type === "Mesh") {
         const o = (obj as Mesh);
@@ -75,8 +76,8 @@ export const VoidMaterialSystem: VoidMaterialSystem = {
     if(!scrollTime) {
       scrollTime = 0;
     }
-    let effectDuration = 3;
-    let growthStartTime = 7;
+    let effectDuration = 4;
+    let growthStartTime = 10.56;
     const growthT = Math.min(1, Math.max(0, scrollTime - growthStartTime) / effectDuration);
     this.materials.forEach((mat) => {
       mat.uniforms["timeMSec"].value = time;

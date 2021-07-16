@@ -66,7 +66,7 @@ void main() {
     lightDir  = pointLight.position - vViewPos;
     lightDistance = length( lightDir );
     dotNL = saturate( dot( vNormal, normalize(lightDir) ) );
-		lightColor += dotNL * pointLight.color * punctualLightIntensityToIrradianceFactor( lightDistance, pointLight.distance, pointLight.decay );
+		lightColor += dotNL * vec3(0.7,0.7,1.0) * punctualLightIntensityToIrradianceFactor( lightDistance, pointLight.distance, pointLight.decay );
 	}
 	#pragma unroll_loop_end
   #endif
@@ -76,7 +76,7 @@ void main() {
 
   float r = 300. + 300. * vReflectionFactor + 200. *col;
   vec3 sp =  saturate(spectral_zucconi(r));
-  gl_FragColor = vec4(2.0*sp * lightColor, 1);
+  gl_FragColor = 0.3*vec4(lightColor* smoothstep(0.8,0.98,growthT),1.0) + vec4(2.0*sp * lightColor, 1);
 
   #include <fog_fragment>
 }

@@ -44,6 +44,7 @@ import { LinkTransformSystem } from "./systems/LinkTransformSystem";
     .addAsset("assets/models/rocks.glb", "rocks")
     .addAsset("assets/models/props.glb", "props")
     .addAsset("assets/models/wires.glb", "wires")
+    .addAsset("assets/models/bodywires.glb", "bodywires")
     .addAsset("assets/models/candles.glb", "candles")
     .addAsset("assets/models/roof.glb", "roof")
     .addAsset("assets/models/ground.glb", "ground")
@@ -67,7 +68,10 @@ import { LinkTransformSystem } from "./systems/LinkTransformSystem";
     Asset({
       src: "assets/models/char.glb",
     }),
-    [newComponent(AnimationC, { clipName: "Idle" })]
+    [
+      newComponent(AnimationC, { clipName: "Idle" }),
+      newComponent(VoidMaterialC, {}),
+    ]
   );
 
   const frame = extend(
@@ -144,14 +148,19 @@ import { LinkTransformSystem } from "./systems/LinkTransformSystem";
     Asset({
       src: "assets/models/wires.glb",
     }),
-    [/* newComponent(CCMaterialC, {}) */]
+    [
+      /* newComponent(CCMaterialC, {}) */
+    ]
   );
 
   const body_wires = extend(
     Asset({
       src: "assets/models/body_wires.glb",
     }),
-    [newComponent(LinkTransformC, { targetName: "Thorax" }) /* newComponent(VineMaterialC, {}) */]
+    [
+      newComponent(LinkTransformC, { targetName: "Thorax" }),
+      newComponent(VineMaterialC, {}),
+    ]
   );
 
   const cameras = extend(
@@ -181,11 +190,11 @@ import { LinkTransformSystem } from "./systems/LinkTransformSystem";
     .addEntity(branches)
     .addEntity(rocks)
     .addEntity(props)
-    .addEntity(wires)
+    .addEntity(body_wires)
     .addEntity(cameras)
     .addEntity(lights)
     .addEntity(char)
-    .addEntity(body_wires)
+    .addEntity(body_wires);
 
   world
     .registerSystem(
