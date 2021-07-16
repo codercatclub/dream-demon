@@ -1,6 +1,6 @@
 uniform float timeMSec;
 
-varying vec3 vUv;
+varying vec2 vUv;
 varying vec3 vWorldPos;
 varying vec3 vViewPos;
 varying vec3 vNormal;
@@ -44,6 +44,8 @@ void main() {
   vViewPos = mvPosition.xyz;
 
   gl_Position = projectionMatrix * mvPosition;
+
+  vUv = uv;
 
   #include <fog_vertex>
 }

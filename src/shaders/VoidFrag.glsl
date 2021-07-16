@@ -1,6 +1,5 @@
-uniform vec3 colorA;
-uniform vec3 colorB;
-varying vec3 vUv;
+varying vec2 vUv;
+uniform sampler2D map;
 
 varying float vReflectionFactor;
 varying vec3 vViewPos;
@@ -54,6 +53,7 @@ void main() {
     discard;
   }
 
+
   vec3 lightColor = vec3(0.0,0.0,0.0);
   #if ( NUM_POINT_LIGHTS > 0 )
 	PointLight pointLight;
@@ -74,9 +74,12 @@ void main() {
   
   float col = 1.0 - smoothstep(0.0,0.3,abs(modv-4.0*growthT));
 
-  float r = 300. + 300. * vReflectionFactor + 200. *col;
+  float r = 300. + 300. * vReflectionFactor + 200. * col;
   vec3 sp =  saturate(spectral_zucconi(r));
-  gl_FragColor = 0.3*vec4(lightColor* smoothstep(0.8,0.98,growthT),1.0) + vec4(2.0*sp * lightColor, 1);
+
+  float alphacut = texture2D(map, vUv).a;
+
+  gl_FragColor = 0.3*vec4(lightColor* smoothstep(0.8,0.98,growthT),1.0) + vec4(2.0*sp * lightColor, alphacut);
 
   #include <fog_fragment>
 }

@@ -1,7 +1,7 @@
 import { System } from "../ecs/index";
 import { TransformC, Object3DC, VoidMaterialC } from "../ecs/components";
 import { applyQuery, Entity, World } from "../ecs/index";
-import { Mesh, SkinnedMesh, UniformsUtils, MeshStandardMaterial } from "three";
+import { Mesh, SkinnedMesh, UniformsUtils, MeshStandardMaterial, MaterialLoader } from "three";
 import { getComponent } from './utils';
 import { ScrollAnimationSystem } from "./ScrollAnimationSystem";
 
@@ -37,6 +37,7 @@ export const VoidMaterialSystem: VoidMaterialSystem = {
       growthT: { type: "f", value: 0 },
     };
     let materialOptions = {
+      transparent: true,
     };
     
     //HACK
@@ -54,6 +55,8 @@ export const VoidMaterialSystem: VoidMaterialSystem = {
     parent?.traverse((obj) => {
       if (obj.type === "SkinnedMesh") {
         const o = (obj as SkinnedMesh);
+        let sMat = o.material as MeshStandardMaterial;
+        material.map = sMat.map;
         o.material = material;
         material.skinning = true;
       }
@@ -70,7 +73,6 @@ export const VoidMaterialSystem: VoidMaterialSystem = {
   },
 
   updateUniforms: function (time) {
-
     const scrollAnimSystem = this.world?.getSystem<ScrollAnimationSystem>(ScrollAnimationSystem.type);
     let scrollTime = scrollAnimSystem?.scrollTime;
     if(!scrollTime) {

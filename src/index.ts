@@ -1,6 +1,7 @@
 import { extend, World, newComponent } from "./ecs/index";
 import { RenderSystem } from "./systems/RenderSystem";
 import { Object3DSystem } from "./systems/Object3DSystem";
+import { OrbitControlsSystem } from "./systems/OrbitControlsSystem";
 import { AssetManager } from "./ecs/assetManager";
 import { Asset, Camera } from "./ecs/achetypes";
 import { AssetSystem } from "./systems/AssetSystem";
@@ -155,7 +156,7 @@ import { LinkTransformSystem } from "./systems/LinkTransformSystem";
 
   const body_wires = extend(
     Asset({
-      src: "assets/models/body_wires.glb",
+      src: "assets/models/bodywires.glb",
     }),
     [
       newComponent(LinkTransformC, { targetName: "Thorax" }),
@@ -190,7 +191,6 @@ import { LinkTransformSystem } from "./systems/LinkTransformSystem";
     .addEntity(branches)
     .addEntity(rocks)
     .addEntity(props)
-    .addEntity(body_wires)
     .addEntity(cameras)
     .addEntity(lights)
     .addEntity(char)
