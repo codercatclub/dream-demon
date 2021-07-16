@@ -38,7 +38,7 @@ import { LinkTransformSystem } from "./systems/LinkTransformSystem";
   const assetManager = new AssetManager();
 
   assetManager
-    .addAsset("assets/models/char_01.glb", "char")
+    .addAsset("assets/models/char.glb", "char")
     .addAsset("assets/models/frame.glb", "frame")
     .addAsset("assets/models/walls.glb", "walls")
     .addAsset("assets/models/rocks.glb", "rocks")
@@ -65,9 +65,9 @@ import { LinkTransformSystem } from "./systems/LinkTransformSystem";
 
   const char = extend(
     Asset({
-      src: "assets/models/char_01.glb",
+      src: "assets/models/char.glb",
     }),
-    [AnimationC]
+    [newComponent(AnimationC, { clipName: "Idle" })]
   );
 
   const frame = extend(

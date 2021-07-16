@@ -129,7 +129,9 @@ export const GLTFLigthsC = {
 
 export const AnimationC = {
   type: "AnimationC",
-  data: null,
+  data: {
+    clipName: "",
+  },
 };
 
 export const ScrollAnimationC = {

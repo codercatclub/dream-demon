@@ -24,6 +24,7 @@ export const AnimationSystem: AnimationSystem = {
     this.entities.forEach((ent) => {
       const { src } = getComponent(ent, GLTFModelC);
       const { object3d } = getComponent(ent, Object3DC);
+      const { clipName } = getComponent(ent, AnimationC);
 
       const animClips = world.assets.animations.get(src);
 
@@ -31,9 +32,11 @@ export const AnimationSystem: AnimationSystem = {
 
       this.mixers.set(src, mixer);
 
-      animClips?.forEach((clip) => {
-        mixer.clipAction(clip).play();
-      });
+      animClips
+        ?.filter((c) => c.name === clipName)
+        .forEach((clip) => {
+          mixer.clipAction(clip).play();
+        });
     });
   },
 
