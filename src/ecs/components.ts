@@ -141,3 +141,13 @@ export const ConstraintLookC = {
   type: "ConstraintLookC",
   data: null,
 };
+
+export const LinkTransformC = {
+  type: "LinkTransformC",
+  data: {
+    // TODO (Kirill): It is probably better to target component by full path in the scene or relative to specific asset.
+    targetName: "",
+    linkPos: true,
+    linkRot: true,
+  },
+};

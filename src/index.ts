@@ -18,6 +18,7 @@ import {
   AnimationC,
   ScrollAnimationC,
   ConstraintLookC,
+  LinkTransformC,
 } from "./ecs/components";
 import { MaterialSystem } from "./systems/MaterialSystem";
 import { StatsSystem } from "./systems/StatsSystem";
@@ -31,11 +32,10 @@ import { GLTFLightsSystem } from "./systems/GLTFLightsSystem";
 import { AnimationSystem } from "./systems/AnimationSystem";
 import { ScrollAnimationSystem } from "./systems/ScrollAnimationSystem";
 import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
+import { LinkTransformSystem } from "./systems/LinkTransformSystem";
 
 (async () => {
   const assetManager = new AssetManager();
-
-  const ENV_GLTF = "assets/models/env.glb";
 
   assetManager
     .addAsset("assets/models/char_01.glb", "char")
@@ -48,11 +48,9 @@ import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
     .addAsset("assets/models/roof.glb", "roof")
     .addAsset("assets/models/ground.glb", "ground")
     .addAsset("assets/models/branches.glb", "branches")
-    .addAsset("assets/models/girlinchair.glb", "girlinchair")
-    // .addAsset("assets/models/wires.glb", "body_wires")
+    .addAsset("assets/models/body_wires.glb", "body_wires")
     .addAsset("assets/models/chair.glb", "chair")
     .addAsset("assets/models/wall_decor.glb", "wall_decor")
-    .addAsset("assets/models/branch.glb", "branch")
     .addAsset("assets/models/lights.glb", "lights")
     .addAsset("assets/models/cameras.glb", "cameras")
     .addAsset("assets/timeline.json", "timeline_data")
@@ -149,24 +147,11 @@ import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
     [/* newComponent(CCMaterialC, {}) */]
   );
 
-  const girl = extend(
-    Asset({
-      src: "assets/models/girlinchair.glb",
-      scale: new Vector3(0.18, 0.18, 0.18),
-      position: new Vector3(0, 0, 0.9),
-      part: "/Root/BODY",
-    }),
-    [newComponent(VoidMaterialC, {})]
-  );
-
   const body_wires = extend(
     Asset({
-      src: "assets/models/wires.glb",
-      scale: new Vector3(0.18, 0.18, 0.18),
-      position: new Vector3(0, 0, 0.9),
-      part: "/Root/WIRES",
+      src: "assets/models/body_wires.glb",
     }),
-    [newComponent(VineMaterialC, {})]
+    [newComponent(LinkTransformC, { targetName: "Thorax" }) /* newComponent(VineMaterialC, {}) */]
   );
 
   const cameras = extend(
@@ -199,7 +184,8 @@ import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
     .addEntity(wires)
     .addEntity(cameras)
     .addEntity(lights)
-    .addEntity(char);
+    .addEntity(char)
+    .addEntity(body_wires)
 
   world
     .registerSystem(
@@ -224,7 +210,8 @@ import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
     .registerSystem(FlickerSystem)
     .registerSystem(AnimationSystem)
     .registerSystem(ScrollAnimationSystem)
-    .registerSystem(ConstraintLookSystem);
+    .registerSystem(ConstraintLookSystem)
+    .registerSystem(LinkTransformSystem);
 
   world.init();
 })();
