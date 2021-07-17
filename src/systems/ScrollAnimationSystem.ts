@@ -44,13 +44,13 @@ export const ScrollAnimationSystem: ScrollAnimationSystem = {
     //get current time by scroll amount 
     document.addEventListener("wheel", (event) => {
       event.preventDefault();
-      this.scrollTime += 0.005 * event.deltaY;
-      this.lastDelta = 0.005 * event.deltaY;
+      this.lastDelta = 0.5*event.deltaY;
     });
   },
 
   tick: function (_time, deltaTime) {
-    this.mixers.forEach((m) => m.update(this.lastDelta));
+    this.scrollTime += deltaTime * this.lastDelta;
+    this.mixers.forEach((m) => m.update(deltaTime * this.lastDelta));
     this.lastDelta = 0;
   },
 };

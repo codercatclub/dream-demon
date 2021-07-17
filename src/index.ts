@@ -16,7 +16,7 @@ import {
   VoidMaterialC,
   GLTFCameraC,
   GLTFLigthsC,
-  AnimationC,
+  CharAnimationC,
   ScrollAnimationC,
   ConstraintLookC,
   LinkTransformC,
@@ -30,7 +30,7 @@ import { VineMaterialSystem } from "./systems/VineMaterialSystem";
 import { VoidMaterialSystem } from "./systems/VoidMaterialSystem";
 import { GLTFCameraSystem } from "./systems/GLTFCameraSystem";
 import { GLTFLightsSystem } from "./systems/GLTFLightsSystem";
-import { AnimationSystem } from "./systems/AnimationSystem";
+import { CharAnimationSystem } from "./systems/CharAnimationSystem";
 import { ScrollAnimationSystem } from "./systems/ScrollAnimationSystem";
 import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
 import { LinkTransformSystem } from "./systems/LinkTransformSystem";
@@ -70,7 +70,7 @@ import { LinkTransformSystem } from "./systems/LinkTransformSystem";
       src: "assets/models/char.glb",
     }),
     [
-      newComponent(AnimationC, { clipName: "Idle" }),
+      newComponent(CharAnimationC),
       newComponent(VoidMaterialC, {}),
     ]
   );
@@ -159,7 +159,7 @@ import { LinkTransformSystem } from "./systems/LinkTransformSystem";
       src: "assets/models/bodywires.glb",
     }),
     [
-      newComponent(LinkTransformC, { targetName: "Thorax" }),
+      newComponent(LinkTransformC, { targetName: "Spine 4" }),
       newComponent(VineMaterialC, {}),
     ]
   );
@@ -217,7 +217,7 @@ import { LinkTransformSystem } from "./systems/LinkTransformSystem";
     .registerSystem(GLTFCameraSystem)
     .registerSystem(GLTFLightsSystem)
     .registerSystem(FlickerSystem)
-    .registerSystem(AnimationSystem)
+    .registerSystem(CharAnimationSystem)
     .registerSystem(ScrollAnimationSystem)
     .registerSystem(ConstraintLookSystem)
     .registerSystem(LinkTransformSystem);

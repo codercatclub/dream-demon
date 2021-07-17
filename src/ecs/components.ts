@@ -134,6 +134,11 @@ export const AnimationC = {
   },
 };
 
+export const CharAnimationC = {
+  type: "CharAnimationC",
+  data: null,
+};
+
 export const ScrollAnimationC = {
   type: "ScrollAnimationC",
   data: null,
