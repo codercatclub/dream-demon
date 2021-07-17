@@ -217,8 +217,8 @@ import { LinkTransformSystem } from "./systems/LinkTransformSystem";
     .registerSystem(GLTFCameraSystem)
     .registerSystem(GLTFLightsSystem)
     .registerSystem(FlickerSystem)
-    .registerSystem(CharAnimationSystem)
     .registerSystem(ScrollAnimationSystem)
+    .registerSystem(CharAnimationSystem)
     .registerSystem(ConstraintLookSystem)
     .registerSystem(LinkTransformSystem);
 

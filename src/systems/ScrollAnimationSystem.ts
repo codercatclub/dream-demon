@@ -13,6 +13,7 @@ export interface ScrollAnimationSystem extends System {
   mixers: Map<string, AnimationMixer>;
   scrollTime: number;
   lastDelta: number;
+  lastRealDelta: number;
 }
 
 export const ScrollAnimationSystem: ScrollAnimationSystem = {
@@ -21,6 +22,7 @@ export const ScrollAnimationSystem: ScrollAnimationSystem = {
   mixers: new Map(),
   scrollTime: 0,
   lastDelta: 0,
+  lastRealDelta: 0,
 
   init: function (world) {
     this.entities = applyQuery(world.entities, this.queries);
@@ -49,8 +51,19 @@ export const ScrollAnimationSystem: ScrollAnimationSystem = {
   },
 
   tick: function (_time, deltaTime) {
-    this.scrollTime += deltaTime * this.lastDelta;
-    this.mixers.forEach((m) => m.update(deltaTime * this.lastDelta));
+    let updateAmt = deltaTime * this.lastDelta;
+    let newScrollTime = this.scrollTime + updateAmt;
+    if(newScrollTime > 19.99) {
+      updateAmt = Math.max(0, 19.99 - this.scrollTime);
+    }
+
+    if(newScrollTime < 0.0) {
+      updateAmt = -this.scrollTime;
+    }
+    this.lastRealDelta = updateAmt;
+    this.scrollTime += updateAmt;
+    this.mixers.forEach((m) => m.update(updateAmt));
+
     this.lastDelta = 0;
   },
 };

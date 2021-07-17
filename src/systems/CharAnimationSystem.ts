@@ -74,7 +74,7 @@ export const CharAnimationSystem: CharAnimationSystem = {
       if(animT > 0.999) {
         //no mixer update
       } else if (fadeT > 0) {
-        this.mixer?.update(deltaTime * scrollAnimSystem.lastDelta);
+        this.mixer?.update(scrollAnimSystem.lastRealDelta);
       } else {
         this.mixer?.update(deltaTime);
       }
