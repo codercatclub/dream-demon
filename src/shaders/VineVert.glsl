@@ -1,29 +1,28 @@
 uniform float timeMSec;
 
 attribute float _dist;
-//attribute uint _idx;
+attribute float _idx;
 
 varying vec3 vNormal;
 varying float vDist;
 varying vec3 vWorldPos;
+varying float c;
 
 @import ./PerlinNoise;
 varying float vReflectionFactor;
 
 void main(){
-  //float t = float(_idx);
-  //float c  = t/500.0;
-float c = 0.0;
+  c = 0.002*_idx;
 
   vNormal = normal;
   vec4 worldPos = modelMatrix * vec4(position, 1.0);
 
-  float curvep = 14.0 * pow(0.01*_dist,2.0);
+  float curvep = 10.0 * pow(0.01*_dist,2.0);
   vDist = _dist;
   worldPos.x += curvep * 0.2 * cos(c + timeMSec + 10.0 * worldPos.y);
   worldPos.z += curvep * 0.2 * sin(c + timeMSec + 10.0 * worldPos.x);
 
-  float j = 0.2*curvep * (jagged(2.0*worldPos.x + timeMSec)-0.5);
+  float j = 0.2*curvep * (jagged(2.0*worldPos.x + timeMSec + 0.3*c)-0.5);
   worldPos.x += 50.0*pow(j,3.0);
 
   vWorldPos = worldPos.xyz;

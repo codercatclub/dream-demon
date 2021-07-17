@@ -56,8 +56,8 @@ export const VineMaterialSystem: VineMaterialSystem = {
         const o = (obj as Mesh);
         o.material = material;
         o.scale.set(0.16,0.16,0.16);
-        o.position.set(0,-1.8,0.08);
-        o.rotation.set(0,160,0);
+        o.rotation.set(0,Math.PI-0.25,0);
+        o.position.set(0,-1.78,0.08);
       }
     });
   },

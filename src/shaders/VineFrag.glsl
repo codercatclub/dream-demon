@@ -7,7 +7,7 @@ uniform float growthT;
 
 @import ./Spectral;
 varying float vReflectionFactor;
-
+varying float c;
 void main() {
   if(vDist > growthT) {
     discard;
