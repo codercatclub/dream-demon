@@ -23,6 +23,9 @@ void main() {
 	vec3 VertexToEye = normalize(cameraPosition - vWorldPos);
 	vec3 LightReflect = normalize(reflect(lightPos, vNormal));
 	float SpecularFactor = pow(dot(VertexToEye, LightReflect),12.0);
-
-  gl_FragColor = (0.3 + min(0.7,SpecularFactor + vReflectionFactor))*vec4(0.7,0.7,1.0,1.0);
+  float r = 240.0 + 450. * (1.0 - saturate(vReflectionFactor+SpecularFactor + 0.01*vDist));
+  vec3 sp =  spectral_zucconi(r);
+  sp.b += 0.05;
+  
+  gl_FragColor = vec4(sp*vec3(0.7,0.7,1.0),1.0);
 }

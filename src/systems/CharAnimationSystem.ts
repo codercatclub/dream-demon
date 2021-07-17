@@ -55,7 +55,7 @@ export const CharAnimationSystem: CharAnimationSystem = {
   tick: function (_time, deltaTime) {
     let fadeDur = 0.75;
     let animDur = 1.6;
-    let eruptStartTime = 17.2;
+    let eruptStartTime = 17.05;
 
     const scrollAnimSystem = this.world?.getSystem<ScrollAnimationSystem>(ScrollAnimationSystem.type);
     if(scrollAnimSystem) {
