@@ -159,7 +159,7 @@ import { LinkTransformSystem } from "./systems/LinkTransformSystem";
       src: "assets/models/bodywires.glb",
     }),
     [
-      newComponent(LinkTransformC, { targetName: "Spine 4" }),
+      newComponent(LinkTransformC, { targetName: "Thorax" }),
       newComponent(VineMaterialC, {}),
     ]
   );
