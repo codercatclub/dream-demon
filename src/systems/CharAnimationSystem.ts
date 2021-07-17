@@ -17,6 +17,7 @@ export interface CharAnimationSystem extends System {
   idleClip: AnimationClip | undefined;
   eruptionClip: AnimationClip | undefined;
   reset: boolean;
+  lastAnimT: number;
 }
 
 export const CharAnimationSystem: CharAnimationSystem = {
@@ -28,6 +29,7 @@ export const CharAnimationSystem: CharAnimationSystem = {
   queries: [TransformC, Object3DC, CharAnimationC],
   mixer: null,
   reset: false,
+  lastAnimT: 0,
 
   init: function (world) {
     this.world = world;
@@ -52,8 +54,8 @@ export const CharAnimationSystem: CharAnimationSystem = {
 
   tick: function (_time, deltaTime) {
     let fadeDur = 0.75;
-    let animDur = 1.55;
-    let eruptStartTime = 17;
+    let animDur = 1.6;
+    let eruptStartTime = 17.2;
 
     const scrollAnimSystem = this.world?.getSystem<ScrollAnimationSystem>(ScrollAnimationSystem.type);
     if(scrollAnimSystem) {
@@ -71,13 +73,19 @@ export const CharAnimationSystem: CharAnimationSystem = {
         }
       }
 
+      let animTDif = animT - this.lastAnimT;
+
       if(animT > 0.999) {
         //no mixer update
+        this.mixer?.update(animDur*(1.0 - this.lastAnimT));
       } else if (fadeT > 0) {
-        this.mixer?.update(scrollAnimSystem.lastRealDelta);
+        this.mixer?.update(animDur*animTDif);
       } else {
         this.mixer?.update(deltaTime);
       }
+
+      this.lastAnimT = animT;
+
     }
   },
 };
