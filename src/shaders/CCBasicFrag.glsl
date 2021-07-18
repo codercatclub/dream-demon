@@ -62,6 +62,7 @@ varying vec3 vViewPosition;
 uniform float timeMSec;
 uniform float mFresnelScale;
 uniform float darknessProg;
+uniform vec2 resolution;
 varying vec3 vWorldPos;
 
 varying float vReflectionFactor;
@@ -136,4 +137,9 @@ void main() {
 	#include <fog_fragment>
 	#include <premultiplied_alpha_fragment>
 	#include <dithering_fragment>
+
+	vec2 screenPos = ( gl_FragCoord.xy * 2.0 - resolution ) / resolution;
+	float vignetteAmount = min(1.0,2.0*pow(1.0 - length(0.5*screenPos),3.0));
+	
+	gl_FragColor.rgb *= vignetteAmount;
 }

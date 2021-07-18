@@ -1,7 +1,7 @@
 import { System } from "../ecs/index";
 import { TransformC, Object3DC, CCMaterialC } from "../ecs/components";
 import { applyQuery, Entity, World } from "../ecs/index";
-import { UniformsUtils, Mesh, Color, MeshStandardMaterial } from "three";
+import { UniformsUtils, Mesh, Color, MeshStandardMaterial, Vector2 } from "three";
 import { getComponent } from "./utils";
 import { ScrollAnimationSystem } from "./ScrollAnimationSystem";
 
@@ -73,8 +73,10 @@ export const CCMaterialSystem: CCMaterialSystem = {
         
         const uniforms  = {
           timeMSec : {value : 0},
-          darknessProg : {value : 0}
+          darknessProg : {value : 0},
+          resolution: {value: new Vector2(window.innerWidth, window.innerHeight)}
         }
+
 
         mesh.material.onBeforeCompile = (shader) => {
           shader.uniforms = UniformsUtils.merge([
@@ -88,6 +90,13 @@ export const CCMaterialSystem: CCMaterialSystem = {
         };
       }
     });
+
+    window.addEventListener("resize", () => {
+      this.shaders.forEach((shader) => {
+        shader.uniforms["resolution"].value.x = window.innerWidth;
+        shader.uniforms["resolution"].value.y = window.innerHeight;
+      });
+    })
   },
 
   onEntityAdd: function (ent) {
