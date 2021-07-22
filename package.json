@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack",
     "start": "webpack serve --open",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "deploy": "yarn build; scp -r dist/* kiko@codercat.tk:/home/kiko/codercat/projects/dream_demon"
   },
   "dependencies": {
     "stats.js": "^0.17.0",
