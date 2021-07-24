@@ -48,6 +48,7 @@ export default class LoadingScreen extends HTMLElement {
     this.shadowRoot?.append(style, template.content.cloneNode(true));
 
     const soundBtnEl = this.shadowRoot?.querySelector(".sound-btn");
+    // TODO (Kirill): Figure out how to pass color through props
     const color = "rgb(255, 255, 255)";
 
     if (soundBtnEl) {
@@ -66,9 +67,5 @@ export default class LoadingScreen extends HTMLElement {
         this.muted = !this.muted;
       });
     }
-  }
-
-  get color() {
-    return this.hasAttribute("color");
   }
 }

@@ -9,8 +9,8 @@ export default class Header extends HTMLElement {
     template.innerHTML = html`
       <div class="container" part="container">
         <nav id="nav">
-          <a href="#">codercat</a>
-          <a href="#">about</a>
+          <a href="https://codercat.tk" target="_blank">.other</a>
+          <a href="about.html">.about</a>
         </nav>
       </div>
     `.toString();
@@ -19,10 +19,24 @@ export default class Header extends HTMLElement {
       .container {
         position: absolute;
         display: flex;
-        justify-content: center;
+        justify-content: flex-end;
         align-items: center;
         height: 20px;
         width: 100%;
+        padding: 25px 0 0 0;
+      }
+
+      nav {
+        margin: 20px;
+      }
+
+      a {
+        color: white;
+        font-size: 20px;
+        font-family: "Courier New";
+        text-decoration: none;
+        opacity: 0.7;
+        margin: 10px;
       }
 
       @media screen and (max-width: 768px) {

@@ -41,6 +41,10 @@ module.exports = {
           to: '.',
         },
         {
+          from: 'src/about.html',
+          to: '.',
+        },
+        {
           from: 'src/examples/index.html',
           to: 'examples.html',
         },
