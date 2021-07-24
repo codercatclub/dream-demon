@@ -26,7 +26,7 @@ export default class LoadingScreen extends HTMLElement {
           <div id="progress">
             <div id="bar"></div>
           </div>
-          <div id="load-log">loading social affirmation</div>
+          <div id="load-log">loading assets...</div>
         </div>
       </div>
     `.toString();
@@ -78,14 +78,6 @@ export default class LoadingScreen extends HTMLElement {
 
     const loadingScreenEl = this.shadowRoot?.querySelector("#loading-screen") as HTMLElement;
     const barEl = this.shadowRoot?.getElementById("bar");
-    const loadLogEl = this.shadowRoot?.getElementById("load-log");
-
-    window.addEventListener("on-item-load-start", ((e: ProgressEvent) => {
-      const { src } = e.detail;
-      if (loadLogEl) {
-        loadLogEl.innerHTML = `loading ${src}`;
-      }
-    }) as EventListener);
 
     window.addEventListener("on-item-load-end", ((e: OnItemLoadEndEvent) => {
       const { total, idx } = e.detail;

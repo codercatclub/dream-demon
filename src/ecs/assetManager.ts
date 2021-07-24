@@ -10,6 +10,7 @@ export interface LoadedAsset {
   objects: Map<string, Object3D>;
   animations: Map<string, AnimationClip[]>;
   textures: Map<string, Texture>;
+  audio: Map<string, AudioBuffer>;
   sceneData: Map<string, unknown>;
 }
 
@@ -22,6 +23,7 @@ export interface Asset {
 export class AssetManager {
   private _assets: Asset[] = [];
   private _textures: Map<string, Texture> = new Map();
+  private _audio: Map<string, AudioBuffer> = new Map();
   private _objects: Map<string, Object3D> = new Map();
   private _animations: Map<string, AnimationClip[]> = new Map();
   private _sceneData: Map<string, unknown> = new Map();
@@ -31,6 +33,7 @@ export class AssetManager {
       objects: this._objects,
       animations: this._animations,
       textures: this._textures,
+      audio: this._audio,
       sceneData: this._sceneData
     };
   }
@@ -107,6 +110,11 @@ export class AssetManager {
 
           case "json":
             this._sceneData.set(src, result.value);
+            break;
+
+          case "mp3":
+            const aBuff = result.value as AudioBuffer;
+            this._audio.set(src, aBuff);
             break;
 
           default:

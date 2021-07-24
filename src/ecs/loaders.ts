@@ -8,6 +8,7 @@ import {
   TextureLoader,
   WebGLRenderer,
   FileLoader,
+  AudioLoader,
 } from "three";
 
 export type LoaderResult<T> = Promise<T>;
@@ -16,6 +17,7 @@ export type Loader<T> = (src: string) => LoaderResult<T>;
 const fbxLoader = new FBXLoader();
 const gltfLoader = new GLTFLoader();
 const fileLoader = new FileLoader();
+const audioLoader = new AudioLoader();
 
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
@@ -54,16 +56,27 @@ export const loadTexture: Loader<Texture> = (src) =>
 
 export const loadJSON: Loader<unknown> = (src) =>
   new Promise((resolve, reject) => {
-    fileLoader.load(src, (data) => {
-      resolve(JSON.parse(data as string));
-    }, () => {}, reject);
+    fileLoader.load(
+      src,
+      (data) => {
+        resolve(JSON.parse(data as string));
+      },
+      () => {},
+      reject
+    );
+  });
+
+export const loadAudio: Loader<unknown> = (src) =>
+  new Promise((resolve, reject) => {
+    audioLoader.load(src, resolve, () => {}, reject);
   });
 
 export const loaders = {
   fbx: loadFBX,
   glb: loadGLTF,
   jpg: loadTexture,
-  json: loadJSON
+  json: loadJSON,
+  mp3: loadAudio,
 };
 
 export type AssetType = keyof typeof loaders;
@@ -71,6 +84,6 @@ export type AssetType = keyof typeof loaders;
 /** Get coresponding loader for a type. Type is come from file extension */
 export function getLoader(
   type: AssetType
-): Loader<Group | Texture | GLTF | unknown> {
+): Loader<Group | Texture | GLTF | AudioBuffer | unknown> {
   return loaders[type];
 }

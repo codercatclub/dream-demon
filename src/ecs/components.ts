@@ -1,4 +1,9 @@
-import { Vector3, Color, Group } from "three";
+import { Vector3, Color, Group, Audio } from "three";
+
+interface Component<T> {
+  type: string;
+  data: T;
+}
 
 export const TransformC = {
   type: "TransformC",
@@ -52,7 +57,7 @@ export const GLTFModelC = {
   type: "GLTFModelC",
   data: {
     src: "assets/models/chair.glb",
-    part: ''
+    part: "",
   },
 };
 
@@ -82,7 +87,7 @@ export const MaterialC = {
     shader: "CCBasic",
     color1: new Color(0xacb6e5),
     color2: new Color(0x74ebd5),
-    part: '',
+    part: "",
   },
 };
 
@@ -95,14 +100,12 @@ export const CCMaterialC = {
 
 export const VineMaterialC = {
   type: "VineMaterialC",
-  data: {
-  },
+  data: {},
 };
 
 export const VoidMaterialC = {
   type: "VoidMaterialC",
-  data: {
-  },
+  data: {},
 };
 
 export const IntervalSpawnerC = {
@@ -156,5 +159,20 @@ export const LinkTransformC = {
     targetName: "",
     linkPos: true,
     linkRot: true,
+  },
+};
+
+interface AudioCData {
+  src: string;
+  audio: Audio | null;
+  volume: number;
+}
+
+export const AudioC: Component<AudioCData> = {
+  type: "AudioC",
+  data: {
+    src: "",
+    volume: 1.0,
+    audio: null,
   },
 };

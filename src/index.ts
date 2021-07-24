@@ -1,4 +1,4 @@
-import { extend, World, newComponent } from "./ecs/index";
+import { extend, World, newComponent, newEntity } from "./ecs/index";
 import { RenderSystem } from "./systems/RenderSystem";
 import { Object3DSystem } from "./systems/Object3DSystem";
 import { OrbitControlsSystem } from "./systems/OrbitControlsSystem";
@@ -20,6 +20,9 @@ import {
   ScrollAnimationC,
   ConstraintLookC,
   LinkTransformC,
+  Object3DC,
+  TransformC,
+  AudioC,
 } from "./ecs/components";
 import { MaterialSystem } from "./systems/MaterialSystem";
 import { StatsSystem } from "./systems/StatsSystem";
@@ -34,6 +37,7 @@ import { CharAnimationSystem } from "./systems/CharAnimationSystem";
 import { ScrollAnimationSystem } from "./systems/ScrollAnimationSystem";
 import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
 import { LinkTransformSystem } from "./systems/LinkTransformSystem";
+import { AudioSystem } from "./systems/AudioSystem";
 
 (async () => {
   const assetManager = new AssetManager();
@@ -56,6 +60,8 @@ import { LinkTransformSystem } from "./systems/LinkTransformSystem";
     .addAsset("assets/models/lights.glb", "lights")
     .addAsset("assets/models/cameras.glb", "cameras")
     .addAsset("assets/timeline.json", "timeline_data")
+    .addAsset("assets/sounds/Dark_SciFi_Drone_Mixed_037.mp3", "ambient_sound")
+    .addAsset("assets/sounds/servo.mp3", "servo_sound")
     .addAsset("assets/textures/env.jpg", "env_tex"); // Environmental texture for PBR material.
 
   // Wait untill all assets are loaded
@@ -65,14 +71,27 @@ import { LinkTransformSystem } from "./systems/LinkTransformSystem";
 
   const cam = Camera(new Vector3(0, 2, 4));
 
+  const ambientSound = newEntity([
+    Object3DC,
+    TransformC,
+    newComponent(AudioC, {
+      src: "assets/sounds/Dark_SciFi_Drone_Mixed_037.mp3",
+    }),
+  ]);
+
+  const servoSound = newEntity([
+    Object3DC,
+    TransformC,
+    newComponent(AudioC, {
+      src: "assets/sounds/servo.mp3",
+    }),
+  ]);
+
   const char = extend(
     Asset({
       src: "assets/models/char.glb",
     }),
-    [
-      newComponent(CharAnimationC),
-      newComponent(VoidMaterialC, {}),
-    ]
+    [newComponent(CharAnimationC), newComponent(VoidMaterialC, {})]
   );
 
   const frame = extend(
@@ -194,7 +213,9 @@ import { LinkTransformSystem } from "./systems/LinkTransformSystem";
     .addEntity(cameras)
     .addEntity(lights)
     .addEntity(char)
-    .addEntity(body_wires);
+    .addEntity(body_wires)
+    .addEntity(ambientSound)
+    .addEntity(servoSound)
 
   world
     .registerSystem(
@@ -220,7 +241,8 @@ import { LinkTransformSystem } from "./systems/LinkTransformSystem";
     .registerSystem(ScrollAnimationSystem)
     .registerSystem(CharAnimationSystem)
     .registerSystem(ConstraintLookSystem)
-    .registerSystem(LinkTransformSystem);
+    .registerSystem(LinkTransformSystem)
+    .registerSystem(AudioSystem);
 
   world.init();
 })();
