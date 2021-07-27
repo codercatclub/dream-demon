@@ -14,6 +14,7 @@ export interface ScrollAnimationSystem extends System {
   scrollTime: number;
   lastDelta: number;
   lastRealDelta: number;
+  moving: boolean;
 }
 
 export const ScrollAnimationSystem: ScrollAnimationSystem = {
@@ -23,6 +24,7 @@ export const ScrollAnimationSystem: ScrollAnimationSystem = {
   scrollTime: 0,
   lastDelta: 0,
   lastRealDelta: 0,
+  moving: false,
 
   init: function (world) {
     this.entities = applyQuery(world.entities, this.queries);
@@ -42,22 +44,27 @@ export const ScrollAnimationSystem: ScrollAnimationSystem = {
       });
     });
 
-
-    //get current time by scroll amount 
+    //get current time by scroll amount
     document.addEventListener("wheel", (event) => {
       event.preventDefault();
-      this.lastDelta = 0.5*event.deltaY;
+      this.lastDelta = 0.5 * Math.min(Math.max(event.deltaY, -5), 5);
     });
   },
 
   tick: function (_time, deltaTime) {
     let updateAmt = deltaTime * this.lastDelta;
     let newScrollTime = this.scrollTime + updateAmt;
-    if(newScrollTime > 19.99) {
+    if (newScrollTime > 19.99) {
       updateAmt = Math.max(0, 19.99 - this.scrollTime);
     }
 
-    if(newScrollTime < 0.0) {
+    if (Math.abs(updateAmt) > 0) {
+      this.moving = true;
+    } else {
+      this.moving = false;
+    }
+
+    if (newScrollTime < 0.0) {
       updateAmt = -this.scrollTime;
     }
     this.lastRealDelta = updateAmt;

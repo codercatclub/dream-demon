@@ -23,6 +23,7 @@ import {
   Object3DC,
   TransformC,
   AudioC,
+  FirstPersonC,
 } from "./ecs/components";
 import { MaterialSystem } from "./systems/MaterialSystem";
 import { StatsSystem } from "./systems/StatsSystem";
@@ -38,6 +39,7 @@ import { ScrollAnimationSystem } from "./systems/ScrollAnimationSystem";
 import { ConstraintLookSystem } from "./systems/ConstrainLookSystem";
 import { LinkTransformSystem } from "./systems/LinkTransformSystem";
 import { AudioSystem } from "./systems/AudioSystem";
+import { FirstPersoSystem } from "./systems/FirstPersonSystem";
 
 (async () => {
   const assetManager = new AssetManager();
@@ -60,8 +62,8 @@ import { AudioSystem } from "./systems/AudioSystem";
     .addAsset("assets/models/lights.glb", "lights")
     .addAsset("assets/models/cameras.glb", "cameras")
     .addAsset("assets/timeline.json", "timeline_data")
-    .addAsset("assets/sounds/Dark_SciFi_Drone_Mixed_037.mp3", "ambient_sound")
-    .addAsset("assets/sounds/servo.mp3", "servo_sound")
+    .addAsset("assets/sounds/abandoned_cathedral.mp3", "ambient_sound")
+    .addAsset("assets/sounds/step_a.mp3", "step_a_sound")
     .addAsset("assets/textures/env.jpg", "env_tex"); // Environmental texture for PBR material.
 
   // Wait untill all assets are loaded
@@ -75,15 +77,8 @@ import { AudioSystem } from "./systems/AudioSystem";
     Object3DC,
     TransformC,
     newComponent(AudioC, {
-      src: "assets/sounds/Dark_SciFi_Drone_Mixed_037.mp3",
-    }),
-  ]);
-
-  const servoSound = newEntity([
-    Object3DC,
-    TransformC,
-    newComponent(AudioC, {
-      src: "assets/sounds/servo.mp3",
+      src: "assets/sounds/abandoned_cathedral.mp3",
+      autoplay: true,
     }),
   ]);
 
@@ -187,7 +182,16 @@ import { AudioSystem } from "./systems/AudioSystem";
     Asset({
       src: "assets/models/cameras.glb",
     }),
-    [GLTFCameraC, ConstraintLookC, ScrollAnimationC]
+    [
+      GLTFCameraC,
+      ConstraintLookC,
+      ScrollAnimationC,
+      FirstPersonC,
+      newComponent(AudioC, {
+        src: "assets/sounds/step_a.mp3",
+        volume: 0.3
+      }),
+    ]
   );
 
   const lights = extend(
@@ -215,7 +219,6 @@ import { AudioSystem } from "./systems/AudioSystem";
     .addEntity(char)
     .addEntity(body_wires)
     .addEntity(ambientSound)
-    .addEntity(servoSound)
 
   world
     .registerSystem(
@@ -227,6 +230,7 @@ import { AudioSystem } from "./systems/AudioSystem";
     .registerSystem(Object3DSystem)
     .registerSystem(AssetSystem)
     .registerSystem(CameraSystem)
+    .registerSystem(AudioSystem)
     // .registerSystem(OrbitControlsSystem)
     .registerSystem(HemisphereLightSystem)
     .registerSystem(PointLightSystem)
@@ -242,7 +246,7 @@ import { AudioSystem } from "./systems/AudioSystem";
     .registerSystem(CharAnimationSystem)
     .registerSystem(ConstraintLookSystem)
     .registerSystem(LinkTransformSystem)
-    .registerSystem(AudioSystem);
+    .registerSystem(FirstPersoSystem);
 
   world.init();
 })();

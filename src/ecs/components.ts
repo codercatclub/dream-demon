@@ -166,6 +166,7 @@ interface AudioCData {
   src: string;
   audio: Audio | null;
   volume: number;
+  autoplay: boolean;
 }
 
 export const AudioC: Component<AudioCData> = {
@@ -174,5 +175,12 @@ export const AudioC: Component<AudioCData> = {
     src: "",
     volume: 1.0,
     audio: null,
+    autoplay: false,
   },
 };
+
+export const FirstPersonC: Component<null> = {
+  type: "FirstPersonC",
+  data: null,
+};
+

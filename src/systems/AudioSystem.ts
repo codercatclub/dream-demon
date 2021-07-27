@@ -49,12 +49,20 @@ export const AudioSystem: AudioSystem = {
     });
 
     this.muteAll();
-    this.playAll();
+
+    // Autoplay
+    this.entities?.forEach((ent) => {
+      const { audio, autoplay } = getComponent(ent, AudioC);
+      if (autoplay) {
+        this.isPlaying = true;
+        audio?.play();
+      }
+    });
 
     window.addEventListener("play-sounds", (() => {
       this.unmuteAll();
     }) as EventListener);
-  
+
     window.addEventListener("stop-sounds", (() => {
       this.muteAll();
     }) as EventListener);
