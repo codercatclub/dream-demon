@@ -1,23 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About Dream Demon</title>
   <style>
-    html, body {
+    html,
+    body {
       margin: 0;
-      overscroll-behavior-y: none;
-      overflow: hidden;
+      background-color: black;
+      color: white;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .center {
+      width: 60%;
+      margin: auto;
+    }
+
+    h1 {
+      margin: 65px 0 35px 0;
+    }
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    video {
+      max-width: 100%;
+      max-height: 100%;
     }
   </style>
 </head>
+
 <body>
   <script src="ui.js"></script>
 
   <cc-header></cc-header>
 
-  <div>About goes here</div>
+  <div class="center">
+    <h1>About Dream Demon</h1>
+
+    <video src="assets/videos/glow_eyes_01.mp4" autoplay muted loop></video>
+
+    <p>This project was inspired by the <a href="https://www.instagram.com/dreamdemonhouse/" target="_blank">real art
+        installation</a> at Bombay Beach created by <a href="https://www.instagram.com/takenbyamelody_/"
+        target="_blank">Melody Sample</a>. During
+      our 3 month residency at <a href="https://mars.college/" target="_blank">Mart College</a> we visited that place multiple time. It is an abandoned house that
+      decorated with wired, dry branches,
+      drawings and notes and many other elements. It is truly interesting and unique experience to be there especially
+      at night.</p>
+
+    <img src="assets/imgs/chair1.jpg" />
+    <img src="assets/imgs/wide.jpg" />
+    <img src="assets/imgs/wires.jpg" />
+    <img src="assets/imgs/wires2.jpg" />
+
+    <p>
+      This Web experience started as my desire to explore material PBR workflow and play with Blender an Houdini
+      modeling tool as well as Substance Painter. I started with modeling the chair and creating some texture for it.
+      When I used Houdini Lab Tree Generator to quickly create branches that ended up looking quite similar to the one
+      in the house.
+    </p>
+
+    <img src="assets/imgs/chair.jpg" />
+
+    <p>
+      I also created and textures few other object from the real scene such as disc hanging on the wall behind the
+      chair.
+    </p>
+
+    <video src="assets/videos/walldecor.mp4" muted loop controls></video>
+
+    <p>
+      Just to have a feel for the scene I decided to assemble it in Unreal Engine. Which ended up looking pretty cool
+      with some PBR material and volumetric lighting.
+    </p>
+
+    <video src="assets/videos/unreal1.mp4" muted loop controls></video>
+
+    <p>At this point I showed my scene to Snay and she got a bit exited to spicing it up with some shader magic and here
+      new tentacle/wires effect coming from a chest of a girl that she has been building in Houdini.</p>
+
+    <video src="assets/videos/looke2.mov" muted loop controls></video>
+
+    <p>
+      After a few brain storming session we came up with a look for propagation effect and the scrolling interaction for
+      the scene.
+      I decided to make final scene assembly in Blender since it has superior compare to Houdini GLTF Exporter. It was
+      great because I can easily create animation track for the camera and multiple animation clips for the rigged
+      character and export it to ThreeJS.
+    </p>
+
+    <video src="assets/videos/walk.mp4" muted loop controls></video>
+
+    <p>
+      It is annoyingly hard to export stuff from Blender since you need to go trough the process of selecting a target
+      object and then going <code>File > Export > GLTF...</code> set your settings find output folder ugh... I ended up
+      writing <a href="https://gist.github.com/Kif11/8d2bdcdaf4a90f8839e0a86178d4046e" target="_blank">this script</a>
+      that save me a lot of manual labour.
+      This also have a benefit of applying Draco mesh compression and KTX2 texture compression automatically.
+      Blender and PBR workflow allows me to preview scene directly in the editor which after some tweaks look pretty
+      close to the scene in browser.
+    </p>
+
+    <h2>Entity Component System</h2>
+
+    <p>
+      It just happened that at the same time I was trying to find a better tool then A-Frame for managing scene in a
+      sane way.
+      Not to say that A-Frame is a bed tool but it has it's own corks that we spend many hours trying to find work
+      around. Also I wanted to utilize amazing Type Script with the community written types for Three JS. However due to
+      some high level shenanigans with import it was impossible to set up. Due to the same imports final build size was
+      1.5 MB larger as well.
+    </p>
+
+    <p>
+      So I was writing my own ECS library and this was the first project that we tested it on.
+      Despite being quite thin layer on top of ThreeJS it allows us to organize the scene and separate logic for
+      different effects as well as deal with asynchronous loading of asset in a straight forward way.
+      You can check the code on <a href="https://github.com/codercatclub/dream-demon" target="_blank">github.</a>
+    </p>
+
+    <h2>Wires</h2>
+
+    <p>I am not sure how Melody made those cool wires but it was definitely tricky to make and I spend a day playing
+      with
+      Houdini Vellum solver and some custom VEX code.</p>
+
+    <p>!!wire image here!!</p>
+
+    <h2>Shaders</h2>
+
+    <p>!!Snay write here!!</p>
+
+  </div>
+
 </body>
+
 </html>
