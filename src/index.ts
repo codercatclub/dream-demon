@@ -56,7 +56,6 @@ import { FirstPersoSystem } from "./systems/FirstPersonSystem";
     .addAsset("assets/models/roof.glb", "roof")
     .addAsset("assets/models/ground.glb", "ground")
     .addAsset("assets/models/branches.glb", "branches")
-    .addAsset("assets/models/body_wires.glb", "body_wires")
     .addAsset("assets/models/chair.glb", "chair")
     .addAsset("assets/models/wall_decor.glb", "wall_decor")
     .addAsset("assets/models/lights.glb", "lights")
@@ -90,9 +89,9 @@ import { FirstPersoSystem } from "./systems/FirstPersonSystem";
     newComponent(AudioC, {
       src: "assets/sounds/tentacle_movement.mp3",
       autoplay: true,
-      scrollPlayTime: 15,
+      scrollPlayTime: 16,
       scrollStopTime: 18,
-      volume: 0.2,
+      volume: 0.1,
       loop: true,
     }),
   ]);
@@ -216,7 +215,7 @@ import { FirstPersoSystem } from "./systems/FirstPersonSystem";
       FirstPersonC,
       newComponent(AudioC, {
         src: "assets/sounds/step_a.mp3",
-        volume: 0.3
+        volume: 1
       }),
     ]
   );
