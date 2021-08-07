@@ -63,6 +63,8 @@ import { FirstPersoSystem } from "./systems/FirstPersonSystem";
     .addAsset("assets/models/cameras.glb", "cameras")
     .addAsset("assets/timeline.json", "timeline_data")
     .addAsset("assets/sounds/abandoned_cathedral.mp3", "ambient_sound")
+    .addAsset("assets/sounds/tentacle_movement.mp3", "body_wire_sound")
+    .addAsset("assets/sounds/ambi.mp3", "body_ambi_sound")
     .addAsset("assets/sounds/step_a.mp3", "step_a_sound")
     .addAsset("assets/textures/env.jpg", "env_tex"); // Environmental texture for PBR material.
 
@@ -79,6 +81,31 @@ import { FirstPersoSystem } from "./systems/FirstPersonSystem";
     newComponent(AudioC, {
       src: "assets/sounds/abandoned_cathedral.mp3",
       autoplay: true,
+    }),
+  ]);
+
+  const bodyWireSound = newEntity([
+    Object3DC,
+    TransformC,
+    newComponent(AudioC, {
+      src: "assets/sounds/tentacle_movement.mp3",
+      autoplay: true,
+      scrollPlayTime: 15,
+      scrollStopTime: 18,
+      volume: 0.2,
+      loop: true,
+    }),
+  ]);
+
+  const bodyAmbiSound = newEntity([
+    Object3DC,
+    TransformC,
+    newComponent(AudioC, {
+      src: "assets/sounds/ambi.mp3",
+      autoplay: true,
+      scrollPlayTime: 17,
+      volume: 2.5,
+      loop: true,
     }),
   ]);
 
@@ -219,6 +246,8 @@ import { FirstPersoSystem } from "./systems/FirstPersonSystem";
     .addEntity(char)
     .addEntity(body_wires)
     .addEntity(ambientSound)
+    .addEntity(bodyWireSound)
+    .addEntity(bodyAmbiSound)
 
   world
     .registerSystem(
