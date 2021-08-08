@@ -90,7 +90,7 @@ import { FirstPersoSystem } from "./systems/FirstPersonSystem";
       src: "assets/sounds/tentacle_movement.mp3",
       autoplay: true,
       scrollPlayTime: 16,
-      scrollStopTime: 18,
+      scrollStopTime: 18.5,
       volume: 0.1,
       loop: true,
     }),
@@ -102,8 +102,8 @@ import { FirstPersoSystem } from "./systems/FirstPersonSystem";
     newComponent(AudioC, {
       src: "assets/sounds/ambi.mp3",
       autoplay: true,
-      scrollPlayTime: 17,
-      volume: 2.5,
+      scrollPlayTime: 17.5,
+      volume: 2,
       loop: true,
     }),
   ]);
@@ -247,6 +247,7 @@ import { FirstPersoSystem } from "./systems/FirstPersonSystem";
     .addEntity(ambientSound)
     .addEntity(bodyWireSound)
     .addEntity(bodyAmbiSound)
+    .addEntity(waterMagicSound)
 
   world
     .registerSystem(

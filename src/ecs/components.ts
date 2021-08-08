@@ -169,6 +169,7 @@ interface AudioCData {
   autoplay: boolean;
   scrollPlayTime: number;
   scrollStopTime: number;
+  fadeTime: number;
   loop: boolean;
 }
 
@@ -181,6 +182,7 @@ export const AudioC: Component<AudioCData> = {
     autoplay: false,
     scrollPlayTime: -1.0,
     scrollStopTime: 100,
+    fadeTime: 0.6,
     loop: false
   },
 };

@@ -104,11 +104,11 @@ export const AudioSystem: AudioSystem = {
     const scrollAnimSystem = this.world?.getSystem<ScrollAnimationSystem>(ScrollAnimationSystem.type);
     let scrollTime = scrollAnimSystem?.scrollTime || 0;
     this.entities?.forEach((ent) => {
-      const { audio, volume, scrollPlayTime, scrollStopTime } = getComponent(ent, AudioC);
+      const { audio, volume, scrollPlayTime, scrollStopTime, fadeTime } = getComponent(ent, AudioC);
       if(scrollPlayTime > 0) {
 
 
-        const fadeT = Math.min(1, Math.max(0, scrollTime - scrollPlayTime) / 0.6);
+        const fadeT = Math.min(1, Math.max(0, scrollTime - scrollPlayTime) / fadeTime);
 
         const f = fadeT - Math.min(1, Math.max(0, scrollTime - scrollStopTime) / 0.6);
 
