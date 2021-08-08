@@ -247,7 +247,6 @@ import { FirstPersoSystem } from "./systems/FirstPersonSystem";
     .addEntity(ambientSound)
     .addEntity(bodyWireSound)
     .addEntity(bodyAmbiSound)
-    .addEntity(waterMagicSound)
 
   world
     .registerSystem(
