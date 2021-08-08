@@ -167,15 +167,23 @@ interface AudioCData {
   audio: Audio | null;
   volume: number;
   autoplay: boolean;
+  scrollPlayTime: number;
+  scrollStopTime: number;
+  fadeTime: number;
+  loop: boolean;
 }
 
 export const AudioC: Component<AudioCData> = {
   type: "AudioC",
   data: {
     src: "",
-    volume: 1.0,
+    volume: 0.5,
     audio: null,
     autoplay: false,
+    scrollPlayTime: -1.0,
+    scrollStopTime: 100,
+    fadeTime: 0.6,
+    loop: false
   },
 };
 

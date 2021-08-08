@@ -1,11 +1,13 @@
-import { System } from "../ecs/index";
+import { System, World } from "../ecs/index";
 import { TransformC, Object3DC, AudioC } from "../ecs/components";
 import { applyQuery } from "../ecs/index";
 import { getComponent } from "./utils";
 import { Audio, AudioListener } from "three";
 import { RenderSystem } from "./RenderSystem";
+import { ScrollAnimationSystem } from "./ScrollAnimationSystem";
 
 export interface AudioSystem extends System {
+  world: World | null;
   muted: boolean;
   isPlaying: boolean;
   playAll: () => void;
@@ -18,8 +20,10 @@ export const AudioSystem: AudioSystem = {
   queries: [TransformC, Object3DC, AudioC],
   muted: false,
   isPlaying: false,
+  world: null,
 
   init: function (world) {
+    this.world = world;
     this.entities = applyQuery(world.entities, this.queries);
     const renderSystem = world.getSystem<RenderSystem>(RenderSystem.type);
 
@@ -29,7 +33,7 @@ export const AudioSystem: AudioSystem = {
 
     this.entities.forEach((ent) => {
       const cmp = getComponent(ent, AudioC);
-      const { src, volume } = cmp;
+      const { src, volume, loop } = cmp;
 
       const audioBuffer = world.assets.audio.get(src);
 
@@ -38,6 +42,7 @@ export const AudioSystem: AudioSystem = {
 
         audio.setBuffer(audioBuffer);
         audio.setVolume(volume);
+        audio.loop = loop;
 
         cmp.audio = audio;
       } else {
@@ -94,4 +99,24 @@ export const AudioSystem: AudioSystem = {
       audio?.setVolume(volume);
     });
   },
+
+  tick: function() {
+    const scrollAnimSystem = this.world?.getSystem<ScrollAnimationSystem>(ScrollAnimationSystem.type);
+    let scrollTime = scrollAnimSystem?.scrollTime || 0;
+    this.entities?.forEach((ent) => {
+      const { audio, volume, scrollPlayTime, scrollStopTime, fadeTime } = getComponent(ent, AudioC);
+      if(scrollPlayTime > 0) {
+
+
+        const fadeT = Math.min(1, Math.max(0, scrollTime - scrollPlayTime) / fadeTime);
+
+        const f = fadeT - Math.min(1, Math.max(0, scrollTime - scrollStopTime) / 0.6);
+
+        if(!this.muted) {
+          audio?.setVolume(f * volume);
+        }
+      }
+    });
+
+  }
 };

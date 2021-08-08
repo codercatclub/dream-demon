@@ -56,13 +56,14 @@ import { FirstPersoSystem } from "./systems/FirstPersonSystem";
     .addAsset("assets/models/roof.glb", "roof")
     .addAsset("assets/models/ground.glb", "ground")
     .addAsset("assets/models/branches.glb", "branches")
-    .addAsset("assets/models/body_wires.glb", "body_wires")
     .addAsset("assets/models/chair.glb", "chair")
     .addAsset("assets/models/wall_decor.glb", "wall_decor")
     .addAsset("assets/models/lights.glb", "lights")
     .addAsset("assets/models/cameras.glb", "cameras")
     .addAsset("assets/timeline.json", "timeline_data")
     .addAsset("assets/sounds/abandoned_cathedral.mp3", "ambient_sound")
+    .addAsset("assets/sounds/tentacle_movement.mp3", "body_wire_sound")
+    .addAsset("assets/sounds/ambi.mp3", "body_ambi_sound")
     .addAsset("assets/sounds/step_a.mp3", "step_a_sound")
     .addAsset("assets/textures/env.jpg", "env_tex"); // Environmental texture for PBR material.
 
@@ -79,6 +80,31 @@ import { FirstPersoSystem } from "./systems/FirstPersonSystem";
     newComponent(AudioC, {
       src: "assets/sounds/abandoned_cathedral.mp3",
       autoplay: true,
+    }),
+  ]);
+
+  const bodyWireSound = newEntity([
+    Object3DC,
+    TransformC,
+    newComponent(AudioC, {
+      src: "assets/sounds/tentacle_movement.mp3",
+      autoplay: true,
+      scrollPlayTime: 16,
+      scrollStopTime: 18.5,
+      volume: 0.1,
+      loop: true,
+    }),
+  ]);
+
+  const bodyAmbiSound = newEntity([
+    Object3DC,
+    TransformC,
+    newComponent(AudioC, {
+      src: "assets/sounds/ambi.mp3",
+      autoplay: true,
+      scrollPlayTime: 17.5,
+      volume: 2,
+      loop: true,
     }),
   ]);
 
@@ -189,7 +215,7 @@ import { FirstPersoSystem } from "./systems/FirstPersonSystem";
       FirstPersonC,
       newComponent(AudioC, {
         src: "assets/sounds/step_a.mp3",
-        volume: 0.3
+        volume: 1
       }),
     ]
   );
@@ -219,6 +245,8 @@ import { FirstPersoSystem } from "./systems/FirstPersonSystem";
     .addEntity(char)
     .addEntity(body_wires)
     .addEntity(ambientSound)
+    .addEntity(bodyWireSound)
+    .addEntity(bodyAmbiSound)
 
   world
     .registerSystem(
