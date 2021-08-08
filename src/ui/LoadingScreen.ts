@@ -43,6 +43,7 @@ export default class LoadingScreen extends HTMLElement {
         justify-content: center;
         align-items: center;
         z-index: 50;
+        background-color: black;
       }
 
       .load-container {
@@ -51,20 +52,21 @@ export default class LoadingScreen extends HTMLElement {
         font-family: Courier New, Courier, monospace;
         font-size: 12px;
         width: 240px;
+        color: white;
       }
 
       #progress {
         width: 100%;
         border-style: solid;
         border-width: 1px;
-        border-color: black;
+        border-color: white;
         margin-bottom: 5px;
       }
 
       #bar {
         width: 1%;
         height: 10px;
-        background-color: rgb(14, 14, 14);
+        background-color: white;
       }
 
       @media screen and (max-width: 768px) {

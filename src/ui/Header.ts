@@ -23,7 +23,8 @@ export default class Header extends HTMLElement {
         align-items: center;
         height: 20px;
         width: 100%;
-        padding: 25px 0 0 0;
+        top: 25px;
+        /* padding: 25px 0 0 0; */
       }
 
       nav {
