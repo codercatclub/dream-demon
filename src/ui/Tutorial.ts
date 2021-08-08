@@ -16,12 +16,13 @@ export default class Tutorial extends HTMLElement {
       .tutorial {
         position: absolute;
         bottom: 20px;
-        left: 50%;
+        width: 100%;
         z-index: 999;
         opacity: 0.6;
         color: white;
         font-family: "IBM Plex Mono", monospace;
         font-size: 18px;
+        text-align: center;
       }
 
       span {

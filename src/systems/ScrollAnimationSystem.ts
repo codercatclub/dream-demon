@@ -44,10 +44,17 @@ export const ScrollAnimationSystem: ScrollAnimationSystem = {
       });
     });
 
+    let removedTutorial = false;
     //get current time by scroll amount
     document.addEventListener("wheel", (event) => {
       event.preventDefault();
       this.lastDelta = 0.5 * Math.min(Math.max(event.deltaY, -5), 5);
+      if (!removedTutorial) {
+        let tutorialEl = document.querySelector("cc-tutorial");
+        console.log(tutorialEl)
+        tutorialEl?.remove();
+        removedTutorial = true;
+      }
     });
   },
 
