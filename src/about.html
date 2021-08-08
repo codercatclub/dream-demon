@@ -38,6 +38,10 @@
       max-width: 100%;
       max-height: 100%;
     }
+
+    .end {
+      padding-bottom: 50px;
+    }
   </style>
 </head>
 
@@ -51,13 +55,12 @@
 
     <video src="assets/videos/glow_eyes_01.mp4" autoplay muted loop></video>
 
-    <p>This project was inspired by the <a href="https://www.instagram.com/dreamdemonhouse/" target="_blank">real art
+    <p>This project was inspired by a <a href="https://www.instagram.com/dreamdemonhouse/" target="_blank">physical art
         installation</a> at Bombay Beach created by <a href="https://www.instagram.com/takenbyamelody_/"
         target="_blank">Melody Sample</a>. During
-      our 3 month residency at <a href="https://mars.college/" target="_blank">Mars College</a> we visited that place
-      multiple time. It is an abandoned house that
-      decorated with wired, dry branches,
-      drawings, notes and many other elements. It is truly interesting and unique experience to be there especially
+      our 3 month residency at <a href="https://mars.college/" target="_blank">Mars College</a> we visited the location many times. It is an abandoned house that
+      is decorated with wires, dry branches,
+      drawings, notes and many other elements. There is a spiritual ambience and it is a unique experience to be present in this space, especially
       at night.</p>
 
     <img src="assets/imgs/chair1.jpg" />
@@ -66,16 +69,16 @@
     <img src="assets/imgs/wires2.jpg" />
 
     <p>
-      This Web experience started as my desire to explore material PBR workflow and play with Blender an Houdini
-      modeling tool as well as Substance Painter. I started with modeling a chair and creating some texture for it.
-      When I used Houdini Lab Tree Generator to quickly create branches that ended up looking quite similar to the one
+      This Web experience started as my desire to explore a PBR material workflow and play with Blender and Houdini
+      modeling tools, as well as Substance Painter. I started with modeling a chair and creating some textures for it.
+      Then I used Houdini Lab Tree Generator to quickly create branches that ended up looking quite similar to the one
       in the house.
     </p>
 
     <img src="assets/imgs/chair.jpg" />
 
     <p>
-      I also created and textures a few other objects from the real scene such as disc hanging on the wall behind the
+      I also modeled and textured a few other objects from the real scene such as the disc hanging on the wall behind the
       chair.
     </p>
 
@@ -83,33 +86,33 @@
 
     <p>
       Just to have a feel for the scene I decided to assemble it in Unreal Engine. Which ended up looking pretty cool
-      with some PBR material and volumetric lighting.
+      with PBR materials and volumetric lighting.
     </p>
 
     <video src="assets/videos/unreal1.mp4" muted loop controls></video>
 
-    <p>At this point I showed my scene to Snay and she got a bit exited to spice it up with some shader magic and her
-      new tentacle/wires effect coming from a chest of a girl that she has been building in Houdini.</p>
+    <p>At this point I showed my scene to Snay and she got excited to spice it up with some shader magic and her
+      new simulation that she had been building in Houdini (tentacles/wires escaping from the insides of a girl spirit).</p>
 
     <video src="assets/videos/looke2.mov" muted loop controls></video>
 
     <p>
-      After a few brain storming session we came up with a look for propagation effect and the scrolling interaction for
-      the scene.
-      I decided to make final scene assembly in Blender since it has superior compare to Houdini GLTF Exporter. It was
-      great because I can easily create animation track for the camera and multiple animation clips for the rigged
+      After a few brain storming sessions, we came up with an idea to transition the whole scene to an alternate dark void that the spirit inhabits, with a dark shadow propagation effect that Snay made.
+       We also decided on a scrolling interaction for the scene to allow for more cinematic movement.
+      I decided to make final scene assembly in Blender since it has a superior GLTF Exporter compared to Houdini. It was
+      great because I can easily create an animation track for the camera and multiple animation clips for the rigged
       character and export it to ThreeJS.
     </p>
 
     <video src="assets/videos/walk.mp4" muted loop controls></video>
 
     <p>
-      It is annoyingly hard to export stuff from Blender since you need to go trough the process of selecting a target
-      object and then going <code>File > Export > GLTF...</code> set your settings find output folder ugh... I ended up
-      writing <a href="https://gist.github.com/Kif11/8d2bdcdaf4a90f8839e0a86178d4046e" target="_blank">this script</a>
-      that save me a lot of manual labour.
-      This also have a benefit of applying Draco mesh compression and KTX2 texture compression automatically.
-      Blender and PBR workflow allows me to preview scene directly in the editor which after some tweaks look pretty
+      It is annoyingly hard to export models from Blender since you need to go through the process of selecting a target
+      object, going to <code>File > Export > GLTF...</code>, setting export settings, finding output folder, ugh... I ended up
+      writing <a href="https://gist.github.com/Kif11/8d2bdcdaf4a90f8839e0a86178d4046e" target="_blank">a script</a>
+      that saved me a lot of manual labour.
+      This also has a benefit of applying Draco mesh compression and KTX2 texture compression automatically.
+      The Blender and PBR workflow allows me to preview scenes directly in the editor, which after some tweaks look pretty
       close to the scene in the browser.
     </p>
 
@@ -119,43 +122,45 @@
       It just happened that at the same time I was trying to find a better tool then A-Frame for managing ThreeJS scenes
       in a
       sane way.
-      Not to say that A-Frame is a bad tool but it has it's own corks when you move beyond spinning cube that we spend
-      many hours trying to find work
-      around or optimize. Also I wanted to utilize amazing Type Script with the community written types for Three JS.
+      Not to say that A-Frame is a bad tool but it has it's own quirks when you move beyond a scene with one spinning cube that we spent
+      many hours trying to work
+      around or optimize. Also I wanted to utilize Type Script (amazing) with the community written types for Three JS.
       However due to
-      some high level shenanigans with import it was impossible to set up. Due to the same imports final build size was
-      1.5 MB larger as well.
+      some high level shenanigans with imports it was impossible to set up in A-Frame. These A-Frame included imports also cause the final build size
+      to be 1.5 MB larger.
     </p>
 
     <p>
-      So I was writing my own ECS library and this was the first project that we tested it on.
-      Despite being quite thin layer on top of ThreeJS it allows us to organize the scene and separate logic for
-      different effects as well as deal with asynchronous loading of asset in a straight forward way.
+      I decided to write my own ECS library to address some of those issues, and this was the first project that we tested it on.
+      Despite being quite a thin layer on top of ThreeJS, it allows us to organize the scene and separate logic for
+      different effects as well as deal with asynchronous loading of assets in a straightforward way.
       You can check the code for entire project on <a href="https://github.com/codercatclub/dream-demon"
         target="_blank">github.</a>
     </p>
 
     <h2>Wires</h2>
 
-    <p>I am not sure how Melody made those cool wires but it was definitely tricky to make and I spend a day playing
+    <p>I am not sure how Melody made those cool wires but it was definitely tricky to make and I spent a day playing
       with
-      Houdini Vellum solver and some custom VEX code. The effect was base on <a href="https://entagma.com/"
-        target="_blank">Entagma</a> sticky wires tutorial which I can
-      not find anymore. I made an HDA from it so you can check it out <a
+      Houdini Vellum solver and custom VEX code. The effect was based on <a href="https://entagma.com/"
+        target="_blank">Entagma</a> sticky wires tutorial which I cannot find anymore. I made an HDA from it so you can check it out <a
         href="https://github.com/Kif11/houdini/blob/master/hda/kif_sticky_wires.hda" target="_blank">here.</a>
     </p>
 
     <p>
       The base structure for Vellum simulation was made in a loop that connects nearest point of the arc to house
-      support beams in random fashion.
+      support beams in a random fashion.
     </p>
 
     <video src="assets/videos/wires2.mp4" muted loop controls></video>
 
 
-    <h2>Shaders</h2>
+    <h2>Fin</h2>
+    <p class="end">
+      Overall this was a typical Codercat endeavor, with many of our current interests merging into one strange piece.
+      We are excited that we finally made a project using textures and more realism, but it may be the last one ;)
+    </p>
 
-    <p>!!Snay write here!!</p>
 
   </div>
 
