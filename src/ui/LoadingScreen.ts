@@ -39,11 +39,10 @@ export default class LoadingScreen extends HTMLElement {
         bottom: 0;
         left: 0;
         right: 0;
-        background-color: rgb(255, 255, 255);
         justify-content: center;
         align-items: center;
-        z-index: 50;
-        background-color: black;
+        z-index: 1000;
+        background-color: rgb(24, 23, 23);
       }
 
       .load-container {
@@ -52,7 +51,7 @@ export default class LoadingScreen extends HTMLElement {
         font-family: Courier New, Courier, monospace;
         font-size: 12px;
         width: 240px;
-        color: white;
+        color: rgba(255, 255, 255, 0.87);
       }
 
       #progress {
@@ -78,7 +77,9 @@ export default class LoadingScreen extends HTMLElement {
 
     this.shadowRoot?.append(style, template.content.cloneNode(true));
 
-    const loadingScreenEl = this.shadowRoot?.querySelector("#loading-screen") as HTMLElement;
+    const loadingScreenEl = this.shadowRoot?.querySelector(
+      "#loading-screen"
+    ) as HTMLElement;
     const barEl = this.shadowRoot?.getElementById("bar");
 
     window.addEventListener("on-item-load-end", ((e: OnItemLoadEndEvent) => {
@@ -93,15 +94,15 @@ export default class LoadingScreen extends HTMLElement {
     }) as EventListener);
 
     window.addEventListener("on-load-start", (() => {
-        if (loadingScreenEl) {
-          loadingScreenEl.style.display = 'flex';
-        }
+      if (loadingScreenEl) {
+        loadingScreenEl.style.display = "flex";
+      }
     }) as EventListener);
-  
+
     window.addEventListener("on-load-end", (() => {
-        if (loadingScreenEl) {
-          loadingScreenEl.style.display = 'none';
-        }
+      if (loadingScreenEl) {
+        loadingScreenEl.style.display = "none";
+      }
     }) as EventListener);
   }
 }
